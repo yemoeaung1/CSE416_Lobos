@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* #map, .state-label {
+    position: absolute;
+    top: 0;
+    left: 0
+}
+
+.state-label {
+    z-index: 100000;
+    padding: 10px 60px;
+    pointer-events: none;
+} */
