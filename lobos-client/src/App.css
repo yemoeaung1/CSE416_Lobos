@@ -2,15 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-
-/* #map, .state-label {
+.leaflet-container, .layer-switch {
     position: absolute;
-    top: 0;
-    left: 0
+    top:0;
+    left: 0;
 }
 
-.state-label {
-    z-index: 100000;
-    padding: 10px 60px;
+.wrapper, .leaflet-container{
+    height: 90vh;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.wrapper {
+    position: relative;
+}
+
+.layer-switch {
+    z-index: 10000;
     pointer-events: none;
-} */
+}
+
+.navbar {
+    height: 10vh;
+    background-color: #BB0000;
+}
+
+.layer-switch > * {
+    pointer-events: auto;
+}
