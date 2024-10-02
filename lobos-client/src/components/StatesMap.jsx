@@ -5,6 +5,8 @@ import CongressionalDistrictMap from "./CongressionalDistrictMap";
 import CountyMap from "./CountyMap";
 import PrecinctMap from "./PrecinctMap";
 import Color from "color";
+import Map from "./Map";
+import USA from '../geojson/usa.json'
 // import M from "./MapViews";
 
 const StatesMap = ( { selectedArea, setSelectedArea, mapView }) => {
@@ -53,12 +55,22 @@ const StatesMap = ( { selectedArea, setSelectedArea, mapView }) => {
 
     const usaBounds = [
       [24.396308, -125.0],   // Southwest corner
-      [49.384358, -66.93457] // Northeast corner
+      [47.543285, -53.618125] // Northeast corner
     ];
+
+    const countryBorder = (feature => {
+      return ({
+          fillColor: '#ffffff',
+          fillOpacity: 0.5,
+          color: "black",
+          weight: 2,
+        })
+      });
 
 
   return (
-    <MapContainer center={[36, -92]} zoom={5} style={{ height: "89vh", zIndex: 1}} maxBounds={usaBounds} maxBoundsViscosity={0} minZoom={4.75}>
+    <>
+    <MapContainer center={[36, -92]} zoom={5} style={{ width: '100%', zIndex: 1}} maxBounds={usaBounds} maxBoundsViscosity={0} minZoom={4}>
     <MapController selectedArea={selectedArea} mapView={mapView}/>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -71,33 +83,34 @@ const StatesMap = ( { selectedArea, setSelectedArea, mapView }) => {
         />
       </Pane>
 
-      {/* <M display={display} /> */}
-      {mapView === 'State' && <GeoJSON key={display[0]} data={display[1]} onEachFeature={onEachFeature} />}
-      {mapView === 'Congressional' && <CongressionalDistrictMap display={display}/>}
-      {mapView === 'County' && <CountyMap display={display} />}
-      {mapView === 'Precinct' && <PrecinctMap display={display} />}
+      {/* Some type of border just around the US */}
+
+      {selectedArea === 'none' && <GeoJSON key={'usa'} data={USA} style={countryBorder}/>}
+
+      {/* Where stuff are displayed */}
+      <Map display={display} onEachFeature={onEachFeature}/>
+
 
     </MapContainer>
+    </>
   );
 };
 
-const MapController = ( {selectedArea }) => {
+const MapController = ( {selectedArea, mapView }) => {
   const map = useMap();
 
-  console.log(map.getBounds());
-
-  if(selectedArea === 'South Carolina') {
+  if(selectedArea === 'South Carolina' && mapView === 'State') {
     // console.log("map", map.getCenter());
-    map.flyTo([33.8176231,-78.2079802], 7.75, {
+    map.flyTo([33.5, -77.072583], 7.75, {
         animate: true,
         duration: 1,
     });
-  } else if (selectedArea === 'Utah') {
-    map.flyTo([39.7659401,-106.8108964], 7, {
+  } else if (selectedArea === 'Utah' && mapView === 'State') {
+    map.flyTo([39.7,-106], 7.25, {
         animate: true,
         duration: 1,
     });
-  } else {
+  } else if (selectedArea === 'none') {
     map.flyTo([36, -92], 5, {
       animate: true,
       duration: 1,
