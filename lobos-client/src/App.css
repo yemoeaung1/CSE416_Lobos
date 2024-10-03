@@ -9,18 +9,19 @@
 }
 
 .wrapper {
-    height: 89vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
-    /* width: 40%; */
-    border-radius: 10px;
-    border: 5px solid black;
-    /* padding: 0;
-    margin: 0; */
-    padding: 10vh;
+    height: 90vh;
 }
 
 .leaflet-container {
     height: 88vh;
+    margin: 1vh 1vw 1vh 1vw;
+    
+    border-radius: 16px;
+    border: 6px solid black;
 }
 
 .layer-switch {

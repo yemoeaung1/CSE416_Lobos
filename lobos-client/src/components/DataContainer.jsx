@@ -2,16 +2,10 @@ import { useEffect, useState } from "react";
 
 import { BsArrowBarLeft, BsArrowBarRight, BsInfoCircle, BsFillBarChartFill } from "react-icons/bs";
 
-function DataContainer() {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
-    };
-
+function DataContainer({ isOpen, setIsOpen }) {
   return (
     <div className="data-container">
-      <div className={`data-open-button ${isOpen ? "open" : ""}`} onClick={toggleMenu}>
+      <div className={`data-open-button ${isOpen ? "open" : ""}`} onClick={() => {setIsOpen(!isOpen)}}>
         {isOpen ? <BsArrowBarRight /> : <BsArrowBarLeft />}
       </div>
 

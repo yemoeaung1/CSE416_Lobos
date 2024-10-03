@@ -63,7 +63,7 @@
   
   background-color: white;
   color: white;
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.3);
 
   padding: 20px;
   z-index: 1000; 
