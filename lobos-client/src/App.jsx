@@ -4,6 +4,8 @@ import StatesMap from "./components/StatesMap";
 import NavBar from "./components/NavBar";
 import MapLayerSelector from "./components/MapLayerSelector";
 import BarGraph from "./components/barGraph";
+import { BoxPlotChart } from "@sgratzl/chartjs-chart-boxplot";
+import BoxPlotGraph from "./components/boxPlotGraph";
 
 function App() {
   const [selectedArea, setSelectedArea] = useState('none');
@@ -24,6 +26,7 @@ function App() {
         {selectedArea != 'none' && <MapLayerSelector setMapView={setMapView} state={selectedArea}/>}
       </div> */}
 
+      <BoxPlotGraph/>
       <BarGraph/>
     </div>
   );

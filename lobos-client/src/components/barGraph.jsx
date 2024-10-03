@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Chart from 'chart.js/auto';
 
+
 const BarGraph = () =>{
     const chartRef = useRef(null);
     const [chartInstance, setChartInstance] = useState(null);
@@ -43,8 +44,26 @@ const BarGraph = () =>{
               options: {
                 responsive: true,
                 scales: {
+                  x:{
+                    title:{
+                      display: true,
+                      text: "Ethnicity",
+                      font: {
+                        size: 15,
+                      },
+                      color: '#000000'
+                    }
+                  },
                   y: {
                     beginAtZero: true,
+                    title: {
+                      display: true,
+                      text: 'Number of Voters',
+                      font: {
+                        size: 15,
+                      },
+                      color: '#000000'
+                    }
                   },
                 },
                 plugins:{
@@ -53,7 +72,7 @@ const BarGraph = () =>{
                   },
                   title: {
                     display: true,
-                    text: 'Voting By Race',
+                    text: 'Support for Candidates by Racial Group',
                     font: {
                       size: 20,
                     }
@@ -78,21 +97,24 @@ const BarGraph = () =>{
         chartInstance.data.datasets[0].data = [3000, 4943, 5920, 4134, 4234];
         chartInstance.data.datasets[1].data = [3000, 894, 590, 4234, 4234];
         chartInstance.data.datasets[2].data = [30, 89, 59, 42, 44];
-        chartInstance.options.plugins.title.text = "Voting By Race";
+        chartInstance.options.plugins.title.text = "Support for Candidates by Racial Group";
+        chartInstance.options.scales.x.title.text = "Ethnicity"
       } 
       else if (type === "income") {
         chartInstance.data.labels = ["<25k", "25-50k", "50-75k", "75-100k", ">100k"];
         chartInstance.data.datasets[0].data = [2000, 1500, 3000, 4000, 6000];
         chartInstance.data.datasets[1].data = [1800, 1200, 2800, 3500, 5800];
         chartInstance.data.datasets[2].data = [100, 90, 200, 300, 400];
-        chartInstance.options.plugins.title.text = "Voting By Income";
+        chartInstance.options.plugins.title.text = "Support for Candidates by Income";
+        chartInstance.options.scales.x.title.text = "Income"
       }
       else if (type === "age"){
         chartInstance.data.labels = ["18-25", "26-30", "36-42", "43-49", "65+"];
         chartInstance.data.datasets[0].data = [2300, 1400, 1000, 2000, 4000];
         chartInstance.data.datasets[1].data = [4300, 3200, 1800, 2500, 4800];
         chartInstance.data.datasets[2].data = [60, 40, 20, 360, 99];
-        chartInstance.options.plugins.title.text = "Voting By Age";
+        chartInstance.options.plugins.title.text = "Support for Candidates by Age";
+        chartInstance.options.scales.x.title.text = "Age"
       }
   
       chartInstance.update();
