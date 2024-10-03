@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./App.css";
 import StatesMap from "./components/StatesMap";
 import NavBar from "./components/NavBar";
@@ -14,7 +14,9 @@ function App() {
   return (
     <div>
       <NavBar setMapView={setMapView} setSelectedArea={setSelectedArea} />
-      <div className="wrapper">
+      <div className="wrapper" style={{
+        width: selectedArea !== 'none' ? '40%' : '100%'
+      }}>
         <StatesMap
           setSelectedArea={setSelectedArea}
           selectedArea={selectedArea}
