@@ -1,12 +1,12 @@
 import { MapContainer, useMap, TileLayer, Pane, GeoJSON } from "react-leaflet";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import views from "../views";
 import CongressionalDistrictMap from "./CongressionalDistrictMap";
 import CountyMap from "./CountyMap";
 import PrecinctMap from "./PrecinctMap";
 import Color from "color";
 import Map from "./Map";
-import USA from '../geojson/usa.json'
+import USA from '../geojson/usa_2.json'
 // import M from "./MapViews";
 
 const StatesMap = ( { selectedArea, setSelectedArea, mapView }) => {
@@ -70,22 +70,23 @@ const StatesMap = ( { selectedArea, setSelectedArea, mapView }) => {
 
   return (
     <>
-    <MapContainer center={[36, -92]} zoom={5} style={{ width: '100%', zIndex: 1}} maxBounds={usaBounds} maxBoundsViscosity={0} minZoom={4}>
+    <MapContainer center={[36, -92]} zoom={5} style={{ width: '100%', zIndex: 1}} maxBounds={usaBounds} maxBoundsViscosity={1} minZoom={5} ref={mapRef}>
     <MapController selectedArea={selectedArea} mapView={mapView}/>
-      <TileLayer
+      {selectedArea !== 'none' && <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-      />
-      <Pane name="labels" style={{ zIndex: 650 }}>
+      />}
+      {selectedArea !== 'none' && <Pane name="labels" style={{ zIndex: 650 }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
         />
-      </Pane>
+      </Pane>}
+
 
       {/* Some type of border just around the US */}
 
-      {selectedArea === 'none' && <GeoJSON key={'usa'} data={USA} style={countryBorder}/>}
+      <GeoJSON key={'usa'} data={USA} style={countryBorder} zIndex={1}/>
 
       {/* Where stuff are displayed */}
       <Map display={display} onEachFeature={onEachFeature}/>
@@ -101,7 +102,7 @@ const MapController = ( {selectedArea, mapView }) => {
 
   if(selectedArea === 'South Carolina' && mapView === 'State') {
     // console.log("map", map.getCenter());
-    map.flyTo([33.5, -77.072583], 7.75, {
+    map.flyTo([33.5, -76], 7.5, {
         animate: true,
         duration: 1,
     });
