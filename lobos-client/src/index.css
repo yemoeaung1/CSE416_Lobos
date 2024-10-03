@@ -1,3 +1,132 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.data-container {
+  position: relative;
+  height: 100%;
+}
+
+.data-open-button {
+  position: fixed;
+  top: 55vh;
+  right: 0;
+  width: 30px;
+  height: 60px;
+  background-color: #333;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 24px;
+  z-index: 1000; 
+  border-radius: 10px 0 0 10px;
+  transition: right 0.8s ease;
+}
+
+.data-open-button.open {
+  right: 60vw;
+}
+
+.data-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;    
+
+  position: fixed;
+  height: 10vh;
+  width: 60vw;
+
+  top: 0vh;
+  right: -60vw;
+
+  background-color: transparent;
+  color: white;
+
+  z-index: 1000;
+  padding-right: 24px;
+  transition: right 0.8s ease;
+}
+
+.data-toolbar.open {
+  right: 0vw;
+}
+
+.data-component {
+  position: fixed;
+  height: 90vh;
+  width: 60vw;
+  
+  top: 10vh;
+  right: -60vw;
+  
+  background-color: white;
+  color: white;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+
+  padding: 20px;
+  z-index: 1000; 
+  transition: right 0.8s ease;  
+}
+
+.data-component.open {
+  right: 0vw;
+}
+
+.toolbar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 8px;
+  border-radius: 4px;
+  color: white;
+  
+  transition: background-color 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.data-toolbar .toolbar-item {
+  margin-left: 32px;
+}
+
+.toolbar-item:hover {
+  background-color: #a00000; /* Change background color on hover */
+}
+
+.toolbar-icon {
+  font-size: 36px;
+  margin-bottom: 5px;
+}
+
+.toolbar-label {
+  font-size: 16px;
+}
+
+.navbar {
+  display: flex;
+  height: 10vh;
+  align-items: center;    
+  background-color: #b30000;
+}
+
+.navbar-home, .navbar-title {
+  flex: 0 0 33.33%;
+  background-color: transparent;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.navbar-home {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.navbar-title  {
+  display: flex;
+  flex-direction: row;
+  align-items: center;  
+  justify-content: center;
+}
+  
