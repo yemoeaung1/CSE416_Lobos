@@ -3,6 +3,7 @@ import "./App.css";
 import StatesMap from "./components/StatesMap";
 import NavBar from "./components/NavBar";
 import MapLayerSelector from "./components/MapLayerSelector";
+import BarGraph from "./components/barGraph";
 
 function App() {
   const [selectedArea, setSelectedArea] = useState('none');
@@ -14,14 +15,16 @@ function App() {
   return (
     <div>
       <NavBar setMapView={setMapView} setSelectedArea={setSelectedArea} />
-      <div className="wrapper">
+      {/* <div className="wrapper">
         <StatesMap
           setSelectedArea={setSelectedArea}
           selectedArea={selectedArea}
           mapView={mapView}
         />
         {selectedArea != 'none' && <MapLayerSelector setMapView={setMapView} state={selectedArea}/>}
-      </div>
+      </div> */}
+
+      <BarGraph/>
     </div>
   );
 }
