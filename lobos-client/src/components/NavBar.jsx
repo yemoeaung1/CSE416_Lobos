@@ -4,7 +4,7 @@ const NavBar = ({selectedArea}) => {
     return (
         <div className="navbar">
             <div className="navbar-home text-white p-4">
-                <div className="toolbar-item" onClick={() => {onHomeClick()}}>
+                <div className="toolbar-item">
                     <GiDogHouse className="toolbar-icon"/>
                     <span className="toolbar-label">Guide</span>
                 </div>

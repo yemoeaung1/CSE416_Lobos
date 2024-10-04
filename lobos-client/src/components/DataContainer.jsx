@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { BsArrowBarLeft, BsArrowBarRight, BsInfoCircle, BsFillBarChartFill, BsBarChart } from "react-icons/bs";
+import { BsArrowBarLeft, BsArrowBarRight, BsInfoCircle, BsFillBarChartFill, BsGraphUp } from "react-icons/bs";
 import BarGraph from "./barGraph";
 import LineGraph from "./lineGraph";
 import BoxPlotGraph from "./boxPlotGraph";
@@ -22,7 +22,7 @@ function DataContainer({isOpen, setIsOpen, selectedArea}) {
       }
 
       <div>
-        <DataToolbar isOpen={isOpen} setDataTool={setDataTool} />
+        <DataToolbar isOpen={isOpen} dataTool={dataTool} setDataTool={setDataTool} />
         <DataComponent isOpen={isOpen} dataTool={dataTool}/>
       </div>
 
@@ -30,19 +30,24 @@ function DataContainer({isOpen, setIsOpen, selectedArea}) {
   );
 }
 
-function DataToolbar({ isOpen, setDataTool}){
+function DataToolbar({ isOpen, dataTool, setDataTool}){
 
     return (
       <div className={`data-toolbar ${isOpen ? "open" : ""}`}>
 
-        <div className="toolbar-item">
-          <BsInfoCircle className="toolbar-icon" onClick = {() => setDataTool('info')}/>
-          <span className="toolbar-label">Info</span>
+        <div className={`toolbar-item ${dataTool === 'info' ? "tool-selected" : ""}`} onClick = {() => setDataTool('info')}>
+          <BsInfoCircle className="toolbar-icon"/>
+          <span className="toolbar-label">State Info</span>
         </div>
 
-        <div className="toolbar-item">
-          <BsFillBarChartFill className="toolbar-icon" onClick = {() => setDataTool('graph')}/>
+        <div className={`toolbar-item ${dataTool === 'graph' ? "tool-selected" : ""}`} onClick = {() => setDataTool('graph')}>
+          <BsFillBarChartFill className="toolbar-icon"/>
           <span className="toolbar-label">Graphs</span>
+        </div>
+
+        <div className={`toolbar-item ${dataTool === 'analysis' ? "tool-selected" : ""}`} onClick = {() => setDataTool('analysis')}>
+          <BsGraphUp className="toolbar-icon"/>
+          <span className="toolbar-label">Analysis</span>
         </div>
         
       </div>

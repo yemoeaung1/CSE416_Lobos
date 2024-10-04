@@ -62,7 +62,7 @@
   right: -60vw;
   
   background-color: white;
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.3);
 
   padding: 20px;
   z-index: 1000; 
@@ -86,12 +86,17 @@
   cursor: pointer;
 }
 
-.data-toolbar .toolbar-item {
+.data-toolbar.toolbar-item {
   margin-left: 32px;
 }
 
+.toolbar-item.tool-selected {
+  background-color: #600000;
+  border: 1px solid white;
+}
+
 .toolbar-item:hover {
-  background-color: #a00000; /* Change background color on hover */
+  background-color: #800000; 
 }
 
 .toolbar-icon {
