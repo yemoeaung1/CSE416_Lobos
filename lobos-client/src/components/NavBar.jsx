@@ -1,6 +1,6 @@
 import { GiDogHouse, GiWolfHead } from "react-icons/gi";
 
-const NavBar = ({setMapView, setSelectedArea, selectedState}) => {
+const NavBar = ({setMapView, setSelectedArea, selectedArea}) => {
     const onHomeClick = () => {
         setMapView('State');
         setSelectedArea('none');
@@ -16,9 +16,7 @@ const NavBar = ({setMapView, setSelectedArea, selectedState}) => {
             </div>
             <div className="navbar-title text-white p-4">
                 <GiWolfHead size={56} />
-                <span className="text-5xl leading-none p-4">{selectedState ? selectedState : "Lobos"}</span>
-                {/* Logo */}
-                {/* Title */}
+                <span className="text-5xl leading-none p-4">{(selectedArea !== 'none') ? selectedArea : "Lobos"}</span>
             </div>
         </div>
     )

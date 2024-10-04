@@ -13,7 +13,7 @@ function DataContainer() {
 
   return (
     <div className="data-container">
-      <div className={`data-open-button ${isOpen ? "open" : ""}`} onClick={toggleMenu}>
+      <div className={`data-open-button ${isOpen ? "open" : ""}`} onClick={() => {setIsOpen(!isOpen)}}>
         {isOpen ? <BsArrowBarRight /> : <BsArrowBarLeft />}
       </div>
 
