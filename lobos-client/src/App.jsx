@@ -15,6 +15,8 @@ function App() {
 
     const [isOpen, setIsOpen] = useState(false);
 
+    const [filter, setFilter] = useState('age');
+
     useEffect(() => {
         if (selectedArea !== "none" && !isOpen) setIsOpen(true);
         else if (selectedArea === "none" && isOpen) setIsOpen(false);
@@ -42,6 +44,7 @@ function App() {
                     selectedArea={selectedArea}
                     mapView={mapView}
                     isOpen={isOpen}
+                    filter={filter}
                 />
                 {isOpen && (
                     <MapLayerSelector

@@ -14,15 +14,22 @@ import CountyMap from "./CountyMap";
 import PrecinctMap from "./PrecinctMap";
 import Color from "color";
 import USA from "../geojson/usa_2.json";
-// import M from "./MapViews";
+import MapLegend from "./legend";
 
-const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen }) => {
+const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen, filter }) => {
   const mapRef = useRef(null);
   console.log(selectedArea);
   // const [currentState, setCurrentState] = useState('South Carolina');
   // const [display, setDisplay] = useState([mapView, views['none'][mapView.toLowerCase()]]);
 
+  const [colors, setColors] = useState([]);
   const [geoJSONLayer, setgeoJSONLayer] = useState(views["none"]["state"]);
+
+
+  /* Pick colors for heatmap */
+  useEffect(() => {
+    setColors(getShades(filter, 4));
+  }, [filter])
 
   /* Change view */
   useEffect(() => {
@@ -55,12 +62,12 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen }) => {
     // layer.bindPopup(popupContent);
     layer.bindPopup(renderToString(<PopUpCustom content={popupContent} />));
 
-    layer.setStyle({
-      fillColor: "#ff6961",
-      fillOpacity: 0.5,
-      color: "black",
-      weight: 1,
-    });
+    // layer.setStyle({
+    //   fillColor: "#ff6961",
+    //   fillOpacity: 0.5,
+    //   color: "black",
+    //   weight: 1,
+    // });
     console.log(feature);
     layer.on({
       mouseover: (e) => {
@@ -95,6 +102,87 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen }) => {
     };
   };
 
+
+  const filterToColor = {
+    'republican': '#FF0000',
+    'democratic': '#0000FF',
+    'white': '#A661C0',
+    'black': '#EC4807',
+    'income': '#BCAC04',
+    'age': '#DAC809'
+  }
+  
+  const getRandomColor = () => {
+    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    return `#${randomColor.padStart(6, '0')}`; // Ensures the color is always 6 digits
+  }
+  
+  const getShades = (filter, numShades) => {
+    let color = filterToColor[filter];
+    if(!color) {
+      color = getRandomColor();
+    }
+    // Remove the '#' character if it's present
+    color = color.replace('#', '');
+    console.log(color);
+  
+    // Parse the base color into RGB components
+    const r = parseInt(color.substring(0, 2), 16);
+    const g = parseInt(color.substring(2, 4), 16);
+    const b = parseInt(color.substring(4, 6), 16);
+  
+    const shades = [];
+  
+    // Generate shades by adjusting the RGB values
+    for (let i = 0; i < numShades; i++) {
+      // Calculate a factor to lighten or darken the color
+      const factor = (i + 1) / (numShades + 1); // Create a value between 0 and 1
+  
+      // Adjust RGB values
+      const newR = Math.min(255, Math.floor(r + (255 - r) * factor)); // Lightening
+      const newG = Math.min(255, Math.floor(g + (255 - g) * factor)); // Lightening
+      const newB = Math.min(255, Math.floor(b + (255 - b) * factor)); // Lightening
+  
+      // Convert the new RGB values back to hexadecimal format
+      let newShade = ((1 << 24) + (newR << 16) + (newG << 8) + newB).toString(16).slice(1);
+      newShade = `#${newShade}`;
+      newShade = Color(newShade).lighten(0.3).hex();
+      shades.push(newShade);
+    }
+  
+    return shades;
+  }
+  
+  const mapPolygonColor = ((colors) => {
+    return colors[Math.floor(Math.random() * colors.length)]
+  })
+
+  const styleWithFilter = (feature => {
+    // let colors = getShades(filter, 5);
+    return ({
+        fillColor: mapPolygonColor(colors),
+        weight: 1,
+        opacity: 1,
+        color: 'white',
+        dashArray: '2',
+        fillOpacity: 0.5
+    });
+});
+
+const style = (feature) => {
+  if(mapView !== 'State') {
+    if(filter) {
+      return styleWithFilter(feature)
+    }
+  }
+  return {
+    fillColor: "#ff6961",
+    fillOpacity: 0.5,
+    color: "black",
+    weight: 1,
+  };
+};
+
   return (
     <>
       <MapContainer
@@ -122,6 +210,7 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen }) => {
             </Pane>
           </>
         )}
+        {/* <Legend colors={colors} /> */}
 
         {/* Some type of border just around the US */}
         <GeoJSON key={"usa"} data={USA} style={countryBorder} zIndex={1} />
@@ -131,8 +220,10 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen }) => {
           data={geoJSONLayer}
           onEachFeature={onEachFeature}
           zIndex={10}
+          style={style}
         />
       </MapContainer>
+      {filter && isOpen && <MapLegend colors={colors} />}
     </>
   );
 };
