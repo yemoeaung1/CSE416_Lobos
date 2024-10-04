@@ -76,9 +76,10 @@
 .toolbar-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center;  
 
-  padding: 8px;
+  padding: 6px;
+  width: 96px;
   border-radius: 4px;
   color: white;
   
@@ -105,7 +106,9 @@
 }
 
 .toolbar-label {
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .navbar {
@@ -113,6 +116,7 @@
   height: 10vh;
   align-items: center;    
   background-color: #b30000;
+  box-shadow: 0 2px 4px 2px rgba(200, 0, 0, 0.6);
 }
 
 .navbar-home, .navbar-title {
@@ -124,6 +128,8 @@
 
 .navbar-home {
   display: flex;
+  flex-direction: row;
+  align-items: center;  
   justify-content: flex-start;
 }
 
@@ -133,4 +139,36 @@
   align-items: center;  
   justify-content: center;
 }
+
+.data-component-info-top{
+  display: flex;
+  flex-direction: row; 
+  align-items: center;  
+  justify-content: flex-start;
+  width: fit-content;
+}
+
+.data-component-info-right{
+  display: flex;
+  flex-direction: column; 
+  justify-content: center;
+  border: 4px solid black;
+  border-left: 0px;
+}
   
+.flag-container {
+  border: 4px solid black;
+}
+
+.data-component-info-text{
+  font-size: 24px;
+  line-height: 32px;
+  padding: 24px;
+  
+  background: linear-gradient(to bottom right, #b5acac, #ffffff); /* Example colors: red to blue */
+}
+
+.averia-serif{
+  font-family: "Averia Serif Libre", serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}

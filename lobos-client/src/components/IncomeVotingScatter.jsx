@@ -364,7 +364,7 @@ const IncomeVotingScatter = () => {
                 },
                 title: {
                     display: true,
-                    text: "Income vs Voting Preference",
+                    text: "Voting Trends by Income",
                     font: {
                         size: 30,
                         weight: "bold",
