@@ -95,11 +95,13 @@ function DataComponent({ isOpen, dataTool, selectedArea, setFilter }) {
         <DataComponent_Info selectedArea={selectedArea} />
       )}
       {dataTool === "graph" && <DataComponent_Graph setFilter={setFilter} />}
-      {dataTool === "analysis" && (
+      {/* {dataTool === "analysis" && (
         <div>
           <IncomeVotingScatter />
         </div>
       )}
+       */}
+       {dataTool === "analysis" && <DataComponent_Analysis />}
     </div>
   );
 }
@@ -301,6 +303,47 @@ function DataComponent_Graph({ setFilter }) {
       </div>
     </div>
   );
+}
+
+function DataComponent_Analysis() {
+    const [selectedChart, setSelectedChart] = useState("scatter");
+
+                // {graphType === "box" && <BoxPlotGraph />}
+    return (
+        <div className="flex flex-col h-full">
+            {/* Tab Selector */}
+            <div className="flex justify-end mb-4 mt-5 space-x-4">
+                <button
+                    className={
+                        selectedChart === "scatter"
+                            ? "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                            : "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                    }
+                    onClick={() => setSelectedChart("scatter")}
+                >
+                    Scatter Plot
+                </button>
+{/* 
+                {graphType === "line" && <LineGraph />} */}
+                <button
+                    className={
+                        selectedChart === "anotherChart"
+                            ? "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                            : "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                    }
+                    onClick={() => setSelectedChart("anotherChart")}
+                >
+                    Another Chart
+                </button>
+            </div>
+            {/* Chart Display */}
+            <div className="h-3/4 w-full">
+                {selectedChart === "scatter" && <IncomeVotingScatter />}
+                {selectedChart === "anotherChart"}{" "}
+                {/* Replace with the other chart component */}
+            </div>
+        </div>
+    );
 }
 
 export default DataContainer;
