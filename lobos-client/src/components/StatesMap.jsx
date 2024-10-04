@@ -36,7 +36,7 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen }) => {
   useEffect(() => {
     if (!isOpen) {
       setgeoJSONLayer(views["none"]["state"]);
-      setSelectedArea("none");
+      // setSelectedArea("none");
     }
   }, [isOpen]);
 
@@ -105,7 +105,7 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen }) => {
         maxBoundsViscosity={1}
         minZoom={5}
       >
-        <MapController selectedArea={selectedArea} mapView={mapView} />
+        <MapController selectedArea={selectedArea} isOpen={isOpen} />
         {selectedArea !== "none" && (
           <>
             <TileLayer
@@ -135,25 +135,44 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen }) => {
   );
 };
 
-const MapController = ({ selectedArea, mapView }) => {
+const MapController = ({ selectedArea, isOpen }) => {
   const map = useMap();
 
-  if (selectedArea === "South Carolina" && mapView === "State") {
-    // console.log("map", map.getCenter());
-    map.flyTo([33.5, -76], 7.5, {
-      animate: true,
-      duration: 1,
-    });
-  } else if (selectedArea === "Utah" && mapView === "State") {
-    map.flyTo([39.7, -106], 7.25, {
-      animate: true,
-      duration: 1,
-    });
-  } else if (selectedArea === "none") {
+  if(!isOpen) {
     map.flyTo([36, -92], 5, {
       animate: true,
       duration: 1,
     });
+  } else {
+    if (selectedArea === "South Carolina") {
+      // console.log("map", map.getCenter());
+      map.flyTo([33.5, -76], 7.5, {
+        animate: true,
+        duration: 1,
+      });
+    } else if (selectedArea === "Utah") {
+      map.flyTo([39.7, -106], 7.25, {
+        animate: true,
+        duration: 1,
+      });
+  }
+
+  // if (selectedArea === "South Carolina" && isOpen) {
+  //   // console.log("map", map.getCenter());
+  //   map.flyTo([33.5, -76], 7.5, {
+  //     animate: true,
+  //     duration: 1,
+  //   });
+  // } else if (selectedArea === "Utah" && mapView === "State") {
+  //   map.flyTo([39.7, -106], 7.25, {
+  //     animate: true,
+  //     duration: 1,
+  //   });
+  // } else if (selectedArea === "none") {
+  //   map.flyTo([36, -92], 5, {
+  //     animate: true,
+  //     duration: 1,
+  //   });
     // map.setMaxBounds(usaBounds);
   }
   return null;
