@@ -10,49 +10,52 @@ import BoxPlotGraph from "./components/boxPlotGraph";
 import LineGraph from "./components/lineGraph";
 
 function App() {
-  const [selectedArea, setSelectedArea] = useState("none");
-  const [mapView, setMapView] = useState("State");
+    const [selectedArea, setSelectedArea] = useState("none");
+    const [mapView, setMapView] = useState("State");
 
-  const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    if (selectedArea !== "none" && !isOpen) setIsOpen(true);
-    else if (selectedArea === "none" && isOpen) setIsOpen(false);
-  }, [selectedArea]);
+    useEffect(() => {
+        if (selectedArea !== "none" && !isOpen) setIsOpen(true);
+        else if (selectedArea === "none" && isOpen) setIsOpen(false);
+    }, [selectedArea]);
 
-  console.log(selectedArea);
-  console.log(mapView);
+    console.log(selectedArea);
+    console.log(mapView);
 
-  return (
-    <div>
-      <NavBar selectedArea={selectedArea} />
-      <DataContainer
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        selectedArea={selectedArea}
-      />
-      <div
-        className="wrapper"
-        style={{
-          width: isOpen ? "38%" : "98%",
-        }}
-      >
-        <StatesMap
-          setSelectedArea={setSelectedArea}
-          selectedArea={selectedArea}
-          mapView={mapView}
-          isOpen={isOpen}
-        />
-        {isOpen && (
-          <MapLayerSelector setMapView={setMapView} state={selectedArea} />
-        )}
-      </div>
+    return (
+        <div>
+            <NavBar selectedArea={selectedArea} />
+            <DataContainer
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                selectedArea={selectedArea}
+            />
+            <div
+                className="wrapper"
+                style={{
+                    width: isOpen ? "38%" : "98%",
+                }}
+            >
+                <StatesMap
+                    setSelectedArea={setSelectedArea}
+                    selectedArea={selectedArea}
+                    mapView={mapView}
+                    isOpen={isOpen}
+                />
+                {isOpen && (
+                    <MapLayerSelector
+                        setMapView={setMapView}
+                        state={selectedArea}
+                    />
+                )}
+            </div>
 
-      {/* <BoxPlotGraph/>
+            {/* <BoxPlotGraph/>
       <BarGraph/>
       <LineGraph/> */}
-    </div>
-  );
+        </div>
+    );
 }
 
 export default App;
