@@ -34,7 +34,7 @@ function App() {
       <div
         className="wrapper"
         style={{
-          width: selectedArea !== "none" ? "38%" : "98%",
+          width: isOpen ? "38%" : "98%",
         }}
       >
         <StatesMap
@@ -43,7 +43,7 @@ function App() {
           mapView={mapView}
           isOpen={isOpen}
         />
-        {selectedArea != "none" && (
+        {isOpen && (
           <MapLayerSelector setMapView={setMapView} state={selectedArea} />
         )}
       </div>
