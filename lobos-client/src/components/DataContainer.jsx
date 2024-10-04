@@ -3,19 +3,17 @@ import { useEffect, useState } from "react";
 import { BsArrowBarLeft, BsArrowBarRight, BsInfoCircle, BsFillBarChartFill, BsBarChart } from "react-icons/bs";
 import BarGraph from "./barGraph";
 
-function DataContainer() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [dataTool, setDataTool ] = useState('info')
-
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
-    };
+function DataContainer({isOpen, setIsOpen, selectedArea}) {
+  const [dataTool, setDataTool ] = useState('info')
 
   return (
     <div className="data-container">
-      <div className={`data-open-button ${isOpen ? "open" : ""}`} onClick={() => {setIsOpen(!isOpen)}}>
-        {isOpen ? <BsArrowBarRight /> : <BsArrowBarLeft />}
-      </div>
+      { (selectedArea !== 'none' || isOpen) && 
+
+        <div className={`data-open-button ${isOpen ? "open" : ""}`} onClick={() => {setIsOpen(!isOpen)}}>
+          {isOpen ? <BsArrowBarRight /> : <BsArrowBarLeft />}
+        </div>
+      }
 
       <div>
         <DataToolbar isOpen={isOpen} setDataTool={setDataTool} />
