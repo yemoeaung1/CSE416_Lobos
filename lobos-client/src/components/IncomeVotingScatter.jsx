@@ -402,7 +402,7 @@ const IncomeVotingScatter = () => {
     }, []);
 
     return (
-        <div className="flex justify-center items-center">
+        <div className="border-2 rounded-xl border-black">
             <canvas ref={chartRef} className="w-full h-full"></canvas>
         </div>
     );
