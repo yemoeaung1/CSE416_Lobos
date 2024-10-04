@@ -102,6 +102,7 @@ const BoxPlotGraph = () =>{
       if (!chartInstance) return;
   
       if (type === "race") {
+        setCurrentDataset('race')
         chartInstance.data.labels = ["Asian", "Hispanic", "Black", "White", "American Indian"];
         chartInstance.data.datasets[0].data = [3000, 4943, 5920, 4134, 4234];
         chartInstance.data.datasets[1].data = [3000, 894, 590, 4234, 4234];
@@ -110,6 +111,7 @@ const BoxPlotGraph = () =>{
         chartInstance.options.scales.x.title.text = "Ethnicity"
       } 
       else if (type === "income") {
+        setCurrentDataset('income')
         chartInstance.data.labels = ["<25k", "25-50k", "50-75k", "75-100k", ">100k"];
         chartInstance.data.datasets[0].data = [2000, 1500, 3000, 4000, 6000];
         chartInstance.data.datasets[1].data = [1800, 1200, 2800, 3500, 5800];
@@ -118,6 +120,7 @@ const BoxPlotGraph = () =>{
         chartInstance.options.scales.x.title.text = "Income"
       }
       else if (type === "age"){
+        setCurrentDataset('age')
         chartInstance.data.labels = ["18-25", "26-30", "36-42", "43-49", "65+"];
         chartInstance.data.datasets[0].data = [2300, 1400, 1000, 2000, 4000];
         chartInstance.data.datasets[1].data = [4300, 3200, 1800, 2500, 4800];
@@ -130,13 +133,19 @@ const BoxPlotGraph = () =>{
     };
 
     return (
-        <div className= "flex flex-col w-3/5 border-2 border-gray-800">
-          <div className="border-b-2 border-gray-800">
-            <button className="border-2 border-black rounded-xl p-1 pl-4 pr-4"
+        // <div className= "flex flex-col w-3/5 border-2 border-gray-800">
+        <div className= "border-2 border-gray-800 rounded-xl shadow-xl">
+          <div className="justify-center flex m-8">
+            <button className= {currentDataset === 'race' ? 'border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-red-400' :
+            'border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-red-200'}
             onClick={() => updateChart("race")}>Race </button>
-            <button className="border-2 border-black rounded-xl p-1 pl-4 pr-4"
+
+            <button className={currentDataset === 'income' ? 'border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 bg-red-400' :
+            'border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-red-200'}
              onClick={() => updateChart("income")}> Income </button>
-             <button className="border-2 border-black rounded-xl p-1 pl-4 pr-4"
+
+             <button className={currentDataset === 'age' ? 'border-2 border-black rounded-xl p-1 pl-4 pr-4 bg-red-400' :
+            'border-2 border-black rounded-xl p-1 pl-4 pr-4 hover:bg-red-200'}
              onClick={() => updateChart("age")}> Age </button>
           </div>
           <div className="flex-1 flex justify-center items-center">

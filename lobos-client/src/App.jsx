@@ -27,8 +27,8 @@ function App() {
 
   return (
     <div>
-      <NavBar selectedArea={selectedArea} setMapView={setMapView} setSelectedArea={setSelectedArea} />
-      <DataContainer isOpen={isOpen} setIsOpen={setIsOpen}/>
+      <NavBar selectedArea={selectedArea} />
+      <DataContainer isOpen={isOpen} setIsOpen={setIsOpen} selectedArea={selectedArea}/>
       <div className="wrapper" style={{
         width: selectedArea !== 'none' ? '38%' : '98%'
       }}>

@@ -124,8 +124,7 @@ const BarGraph = () =>{
     };
 
     return (
-        <div className= "m-4 flex flex-col w-3/5 border-2 border-gray-800">
-          
+        <div className= " border-2 border-gray-800 rounded-xl shadow-xl">
           <div className="border-gray-800 justify-center flex m-8">
             <button className= {currentDataset === 'race' ? 'border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-red-400' :
             'border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-red-200'}
@@ -141,7 +140,7 @@ const BarGraph = () =>{
           </div>
 
           <div className="flex-1 flex justify-center items-center">
-            <canvas ref={chartRef} className="w-full h-full"></canvas>
+            <canvas ref={chartRef} ></canvas>
           </div>
 
         </div>
