@@ -129,7 +129,8 @@ function DataComponent_Info({ selectedArea, selectedState }) {
               flex: 1,
             }}
           >
-            <span className="font-bold underline">Population</span>: 100,000
+            <span className="font-bold underline merriweather">Population</span>
+            <span className="lato">: 100,000</span>
           </div>
           <div
             className="data-component-info-text"
@@ -138,7 +139,8 @@ function DataComponent_Info({ selectedArea, selectedState }) {
               flex: 1,
             }}
           >
-            <span className="font-bold underline">Average Income</span>: 100,000
+            <span className="font-bold underline merriweather">Average Income</span>
+            <span className="lato">: 100,000</span>
           </div>
           <div
             className="data-component-info-text"
@@ -147,7 +149,8 @@ function DataComponent_Info({ selectedArea, selectedState }) {
               flex: 1,
             }}
           >
-            <span className="font-bold underline">Majority Race</span>: White
+            <span className="font-bold underline merriweather">Majority Race</span>
+            <span className="lato">: White</span>
           </div>
           <div
             className="data-component-info-text"
@@ -156,9 +159,14 @@ function DataComponent_Info({ selectedArea, selectedState }) {
               flex: 1,
             }}
           >
-            <span className="font-bold underline">Party</span>: Democrat
+            <span className="font-bold underline merriweather">Party</span>
+            <span className="lato">: Democrat</span>
           </div>
         </div>
+      </div>
+      <div className="flex flex-col items-center justify-center">
+        <span className="font-bold underline merriweather text-4xl mb-16">Precinct/District/County Data</span>
+        <span className="font-bold underline lato text-2xl">{(selectedArea === selectedState) ? "[Select A Precinct/District/County]" : "[Information Goes Here]"}</span>
       </div>
     </>
   );

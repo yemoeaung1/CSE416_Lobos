@@ -145,7 +145,7 @@
   flex-direction: row; 
   align-items: center;  
   justify-content: flex-start;
-  width: fit-content;
+  width: inherit;
 }
 
 .data-component-info-right{
@@ -171,4 +171,14 @@
 .averia-serif{
   font-family: "Averia Serif Libre", serif;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.merriweather{
+  font-family: "Merriweather", serif;
+}
+
+.lato{
+  font-family: "Lato", sans-serif;
+  font-weight: 500;
+  font-style: normal;
 }
