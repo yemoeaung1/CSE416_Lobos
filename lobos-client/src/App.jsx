@@ -8,7 +8,6 @@ import BarGraph from "./components/barGraph";
 import { BoxPlotChart } from "@sgratzl/chartjs-chart-boxplot";
 import BoxPlotGraph from "./components/boxPlotGraph";
 import LineGraph from "./components/lineGraph";
-import DataContainer from "./components/DataContainer";
 
 function App() {
   const [selectedArea, setSelectedArea] = useState('none');
