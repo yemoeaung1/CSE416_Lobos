@@ -13,11 +13,11 @@ import CongressionalDistrictMap from "./CongressionalDistrictMap";
 import CountyMap from "./CountyMap";
 import PrecinctMap from "./PrecinctMap";
 import Color from "color";
-import Map from "./Map";
 import USA from "../geojson/usa_2.json";
 // import M from "./MapViews";
 
 const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen }) => {
+  const mapRef = useRef(null);
   console.log(selectedArea);
   // const [currentState, setCurrentState] = useState('South Carolina');
   // const [display, setDisplay] = useState([mapView, views['none'][mapView.toLowerCase()]]);
@@ -104,8 +104,10 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen }) => {
         maxBounds={usaBounds}
         maxBoundsViscosity={1}
         minZoom={5}
+        ref={mapRef}
       >
         <MapController selectedArea={selectedArea} isOpen={isOpen} />
+        {/* <MapResizeHandler /> */}
         {selectedArea !== "none" && (
           <>
             <TileLayer
@@ -135,46 +137,67 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen }) => {
   );
 };
 
+
 const MapController = ({ selectedArea, isOpen }) => {
   const map = useMap();
 
-  if(!isOpen) {
-    map.flyTo([36, -92], 5, {
-      animate: true,
-      duration: 1,
-    });
-  } else {
-    if (selectedArea === "South Carolina") {
-      // console.log("map", map.getCenter());
-      map.flyTo([33.5, -76], 7.5, {
-        animate: true,
-        duration: 1,
-      });
-    } else if (selectedArea === "Utah") {
-      map.flyTo([39.7, -106], 7.25, {
-        animate: true,
-        duration: 1,
-      });
+  map.set
+  // map.invalidateSize();
+  
+  // map.invalidateSize();
+  console.log(map.getBounds());
+  console.log(map.getCenter());
+
+  const states = {
+    'Utah': {
+      'bounds': [[37.0, -114.052], [42.0016, -109.0419]],
+      'center': [39.7, -106],
+      // 'center': [39.308056, -111.638889]
+    },
+    'South Carolina': {
+      'bounds': [[32.0333, -83.3540], [35.2154, -78.5420]],
+      'center': [33.5, -76]
+    },
+    'none': {
+      'bounds': [[24.396308, -125.0], [47.543285, -53.618125]],
+      'center': [36, -92]
+    }
   }
 
-  // if (selectedArea === "South Carolina" && isOpen) {
-  //   // console.log("map", map.getCenter());
-  //   map.flyTo([33.5, -76], 7.5, {
-  //     animate: true,
-  //     duration: 1,
-  //   });
-  // } else if (selectedArea === "Utah" && mapView === "State") {
-  //   map.flyTo([39.7, -106], 7.25, {
-  //     animate: true,
-  //     duration: 1,
-  //   });
-  // } else if (selectedArea === "none") {
+  const zoomToState = (state, states) => {
+    console.log(states[state]);
+    // map.fitBounds(states[state].bounds);
+    map.flyTo(states[state].center, 7.25, {
+      animate: true,
+      duration: 2,
+    }).setMaxBounds(states[state].bounds);
+  }
+
+  useEffect(() => {
+    map.invalidateSize();
+    map.setMinZoom(isOpen ? 7.25 : 5);
+    if(!isOpen) {
+      map.flyTo([36, -92], 5, {
+        animate: true,
+        duration: 2,
+      }).setMaxBounds(states['none'].bounds);
+    } else {
+      if (selectedArea in states) {
+        zoomToState(selectedArea, states);
+      }
+    }
+  }, [isOpen, selectedArea, map])
+
+  // if(!isOpen) {
   //   map.flyTo([36, -92], 5, {
   //     animate: true,
-  //     duration: 1,
-  //   });
-    // map.setMaxBounds(usaBounds);
-  }
+  //     duration: 2,
+  //   }).setMaxBounds(states['none'].bounds);
+  // } else {
+  //   if (selectedArea in states) {
+  //     zoomToState(selectedArea, states);
+  //   }
+  // }
   return null;
 };
 
