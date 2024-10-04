@@ -327,15 +327,15 @@ const IncomeVotingScatter = () => {
                         text: "Annual Income Range ($)",
                         font: {
                             size: 18,
+                            weight: "bold",
+                            color: "#000000",
                         },
                     },
                     ticks: {
                         callback: function (value) {
                             return value.toLocaleString(); // Display original x-values
                         },
-                        font: {
-                            size: 14,
-                        },
+                        font: { size: 14 },
                     },
                 },
                 y: {
@@ -345,6 +345,7 @@ const IncomeVotingScatter = () => {
                         display: true,
                         text: "Percentage of Voters",
                         font: {
+                            weight: "bold",
                             size: 18,
                         },
                     },
