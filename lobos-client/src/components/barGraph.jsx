@@ -124,7 +124,7 @@ const BarGraph = () =>{
     };
 
     return (
-        <div className= "m-4 flex flex-col w-3/5 border-2 border-gray-800 float-right">
+        <div className= "m-4 flex flex-col w-3/5 border-2 border-gray-800">
           
           <div className="border-gray-800 justify-center flex m-8">
             <button className= {currentDataset === 'race' ? 'border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-red-400' :
