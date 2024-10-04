@@ -128,6 +128,8 @@
 
 .navbar-home {
   display: flex;
+  flex-direction: row;
+  align-items: center;  
   justify-content: flex-start;
 }
 
@@ -164,4 +166,9 @@
   padding: 24px;
   
   background: linear-gradient(to bottom right, #b5acac, #ffffff); /* Example colors: red to blue */
+}
+
+.averia-serif{
+  font-family: "Averia Serif Libre", serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }

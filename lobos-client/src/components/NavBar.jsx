@@ -1,17 +1,18 @@
 import { GiDogHouse, GiWolfHead } from "react-icons/gi";
 
-const NavBar = ({selectedArea}) => {
+function NavBar({ setSelectedArea, selectedArea }) {
+    const clearState = () => {
+        setSelectedArea('none');
+    }
+
     return (
         <div className="navbar">
             <div className="navbar-home text-white p-4">
-                <div className="toolbar-item">
-                    <GiDogHouse className="toolbar-icon"/>
-                    <span className="toolbar-label">Guide</span>
-                </div>
+                <GiWolfHead className="cursor-pointer" size={56} onClick={() => clearState()}/>
+                <span className="text-5xl leading-none p-4 averia-serif cursor-pointer" onClick={() => clearState()}>Lobos</span>
             </div>
             <div className="navbar-title text-white p-4">
-                <GiWolfHead size={56} />
-                <span className="text-5xl leading-none p-4">{(selectedArea !== 'none') ? selectedArea : "Lobos"}</span>
+                <span className="text-5xl leading-none p-4 averia-serif">{(selectedArea !== 'none') ? selectedArea : "[Select A State]"}</span>
             </div>
         </div>
     )
