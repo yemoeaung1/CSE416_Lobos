@@ -70,7 +70,7 @@ const StatesMap = ( { selectedArea, setSelectedArea, mapView }) => {
 
   return (
     <>
-    <MapContainer center={[36, -92]} zoom={5} style={{ width: '100%', zIndex: 1}} maxBounds={usaBounds} maxBoundsViscosity={1} minZoom={5} ref={mapRef}>
+    <MapContainer center={[36, -92]} zoom={5} style={{ width: '100%', zIndex: 1}} maxBounds={usaBounds} maxBoundsViscosity={1} minZoom={5}>
     <MapController selectedArea={selectedArea} mapView={mapView}/>
       {selectedArea !== 'none' && <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
