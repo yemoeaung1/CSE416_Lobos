@@ -1,20 +1,50 @@
-const MapLegend = ({ colors }) => {
-    const scale = 100;
-    return (
-        <div className="legend">
-        <div className="text-center text-lg mb-4 mx-2">Legend</div>
-            {colors.map((color, index) => {
-                const quarter = scale / 4; // Calculate quarter of scale
-                const currentScale = scale - (index * quarter); // Decrease scale by quarter for each color
-                const nextScale = currentScale - quarter; // Get next scale
-                return (
-                    <div className="text-center w-24 h-20 my-2 mx-auto"
-                    key={color} style={{ backgroundColor: color, display: 'block' }}>{currentScale}% - {nextScale}%</div>
-                );
-            })}
-        </div>
-    );
-};
+const MapLegend = ({ colors, filter}) => {
 
+    let filter_ = filter === 'race' ? 'white' : filter;
+  const scale = 100;
+  return (
+    <div className="legend">
+           <div 
+        className="mx-auto mb-4 font-bold"
+        style={{
+          textAlign: "center",
+          width: "fit-content",
+          padding: "0 10px" // Optional: adds padding so the text doesn't stick to the edges
+        }}
+      >
+        Legend ({filter_})
+      </div>
+
+      <div
+        className="text-center w-24 h-20 my-2 mx-auto"
+        key={0}
+        style={{ backgroundColor: colors[0], display: "block" }}
+      >
+        100%-75%
+      </div>
+      <div
+        className="text-center w-24 h-20 my-2 mx-auto"
+        key={1}
+        style={{ backgroundColor: colors[1], display: "block" }}
+      >
+        75%-50%
+      </div>
+      <div
+        className="text-center w-24 h-20 my-2 mx-auto"
+        key={2}
+        style={{ backgroundColor: colors[2], display: "block" }}
+      >
+        50%-25%
+      </div>
+      <div
+        className="text-center w-24 h-20 my-2 mx-auto"
+        key={3}
+        style={{ backgroundColor: colors[3], display: "block" }}
+      >
+        25%-0%
+      </div>
+    </div>
+  );
+};
 
 export default MapLegend;

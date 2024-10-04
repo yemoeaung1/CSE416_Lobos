@@ -15,7 +15,7 @@ function App() {
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const [filter, setFilter] = useState('age');
+    const [filter, setFilter] = useState();
 
     useEffect(() => {
         if (selectedArea !== "none" && !isOpen) setIsOpen(true);
@@ -27,11 +27,12 @@ function App() {
 
     return (
         <div>
-            <NavBar selectedArea={selectedArea} setSelectedArea={setSelectedArea} />
+            <NavBar selectedArea={selectedArea} setSelectedArea={setSelectedArea}/>
             <DataContainer
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 selectedArea={selectedArea}
+                setFilter={setFilter}
             />
             <div
                 className="wrapper"
@@ -45,6 +46,7 @@ function App() {
                     mapView={mapView}
                     isOpen={isOpen}
                     filter={filter}
+                    setIsOpen={setIsOpen}
                 />
                 {isOpen && (
                     <MapLayerSelector

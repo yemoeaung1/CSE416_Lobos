@@ -21,7 +21,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import IncomeVotingScatter from "./IncomeVotingScatter";
 
-function DataContainer({ isOpen, setIsOpen, selectedArea }) {
+function DataContainer({ isOpen, setIsOpen, selectedArea, setFilter }) {
     const [dataTool, setDataTool] = useState("info");
 
     return (
@@ -43,7 +43,7 @@ function DataContainer({ isOpen, setIsOpen, selectedArea }) {
                     dataTool={dataTool}
                     setDataTool={setDataTool}
                 />
-                <DataComponent isOpen={isOpen} dataTool={dataTool} selectedArea={selectedArea} />
+                <DataComponent isOpen={isOpen} dataTool={dataTool} selectedArea={selectedArea} setFilter={setFilter}/>
             </div>
         </div>
     );
@@ -85,11 +85,11 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
     );
 }
 
-function DataComponent({ isOpen, dataTool, selectedArea }) {
+function DataComponent({ isOpen, dataTool, selectedArea, setFilter }) {
     return (
         <div className={`data-component ${isOpen ? "open" : ""}`}>
             {dataTool === "info" && <DataComponent_Info selectedArea={selectedArea}/>}
-            {dataTool === "graph" && <DataComponent_Graph />}
+            {dataTool === "graph" && <DataComponent_Graph setFilter={setFilter}/>}
             {dataTool === "analysis" && (
                 <div>
                     <IncomeVotingScatter />
@@ -122,7 +122,7 @@ function DataComponent_Info({ selectedArea }){
   );
 }
 
-function DataComponent_Graph(){
+function DataComponent_Graph({setFilter}){
   const [graphType, setGraphType] = useState('bar')
   const [dataSetType, setDataSetType] = useState('party');
 
@@ -168,20 +168,20 @@ function DataComponent_Graph(){
               {graphType === 'bar' && 
                 <button className= {dataSetType === 'party' ? 'text-2xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white' :
                 'text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl'}
-                onClick={() => {setDataSetType("party")}}>Party </button>
+                onClick={() => {setDataSetType("party"); setFilter("republican")}}>Party </button>
               }
             
               <button className= {dataSetType === 'race' ? 'text-2xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white' :
               'text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl'}
-              onClick={() => setDataSetType("race")}>Race </button>
+              onClick={() => {setDataSetType("race"); setFilter("race");}}>Race </button>
 
               <button className={dataSetType === 'income' ? 'text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white' :
               'text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl'}
-              onClick={() => setDataSetType("income")}> Income </button>
+              onClick={() => {setDataSetType("income"); setFilter("income")}}> Income </button>
 
               <button className={dataSetType === 'age' ? 'text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white' :
               'text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl'}
-              onClick={() => setDataSetType("age")}> Age </button>
+              onClick={() => {setDataSetType("age"); setFilter("age")}}> Age </button>
           </div>
 
           </div>

@@ -16,7 +16,7 @@ import Color from "color";
 import USA from "../geojson/usa_2.json";
 import MapLegend from "./legend";
 
-const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen, filter }) => {
+const StatesMap = ({ selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, filter }) => {
   const mapRef = useRef(null);
   console.log(selectedArea);
   // const [currentState, setCurrentState] = useState('South Carolina');
@@ -26,10 +26,9 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen, filter }) =
   const [geoJSONLayer, setgeoJSONLayer] = useState(views["none"]["state"]);
 
 
-  /* Pick colors for heatmap */
   useEffect(() => {
-    setColors(getShades(filter, 4));
-  }, [filter])
+    setColors(getShades(filter, 4)); // Directly set the new colors
+}, [filter]);
 
   /* Change view */
   useEffect(() => {
@@ -82,8 +81,13 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen, filter }) =
         layer.closePopup();
       },
       click: (e) => {
-        // console.log(feature.p);
-        setSelectedArea(feature.properties.NAME);
+        // console.log(feature.p); 
+        if(selectedArea == feature.properties.NAME && !isOpen) {
+          // setSelectedArea(feature.properties.NAME);
+          setIsOpen(true);
+        } else {
+          setSelectedArea(feature.properties.NAME)
+        }
       },
     });
   };
@@ -104,13 +108,13 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen, filter }) =
 
 
   const filterToColor = {
-    'republican': '#FF0000',
-    'democratic': '#0000FF',
-    'white': '#A661C0',
-    'black': '#EC4807',
-    'income': '#BCAC04',
-    'age': '#DAC809'
-  }
+    'republican': '#A30000',  // Darker red
+    'democratic': '#000080',  // Darker blue
+    'race': '#6A2C7D',       // Darker purple
+    'black': '#9C3500',       // Darker orange
+    'income': '#7A8503',      // Darker gold
+    'age': '#A18C04'          // Darker yellow
+  };
   
   const getRandomColor = () => {
     const randomColor = Math.floor(Math.random() * 16777215).toString(16);
@@ -146,11 +150,11 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, isOpen, filter }) =
       // Convert the new RGB values back to hexadecimal format
       let newShade = ((1 << 24) + (newR << 16) + (newG << 8) + newB).toString(16).slice(1);
       newShade = `#${newShade}`;
-      newShade = Color(newShade).lighten(0.3).hex();
+      newShade = Color(newShade).darken(0.1).hex();
       shades.push(newShade);
     }
   
-    return shades;
+    return shades.slice(0, numShades);
   }
   
   const mapPolygonColor = ((colors) => {
@@ -174,7 +178,7 @@ const style = (feature) => {
     if(filter) {
       return styleWithFilter(feature)
     }
-  }
+  } else {
   return {
     fillColor: "#ff6961",
     fillOpacity: 0.5,
@@ -182,6 +186,7 @@ const style = (feature) => {
     weight: 1,
   };
 };
+}
 
   return (
     <>
@@ -196,7 +201,7 @@ const style = (feature) => {
       >
         <MapController selectedArea={selectedArea} isOpen={isOpen} />
         {/* <MapResizeHandler /> */}
-        {selectedArea !== "none" && (
+        {isOpen && (
           <>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -223,7 +228,7 @@ const style = (feature) => {
           style={style}
         />
       </MapContainer>
-      {filter && isOpen && <MapLegend colors={colors} />}
+      {filter && isOpen && <MapLegend colors={colors} filter={filter}/>}
     </>
   );
 };
