@@ -25,7 +25,7 @@ function App() {
 
     return (
         <div>
-            <NavBar selectedArea={selectedArea} />
+            <NavBar selectedArea={selectedArea} setSelectedArea={setSelectedArea} />
             <DataContainer
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}

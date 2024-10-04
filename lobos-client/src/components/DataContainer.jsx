@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+import UtahFlag from "../assets/us_flags/ut.svg";
+import SCarolinaFlag from "../assets/us_flags/sc.svg";
+
 import {
     BsArrowBarLeft,
     BsArrowBarRight,
@@ -36,7 +39,7 @@ function DataContainer({ isOpen, setIsOpen, selectedArea }) {
                     dataTool={dataTool}
                     setDataTool={setDataTool}
                 />
-                <DataComponent isOpen={isOpen} dataTool={dataTool} />
+                <DataComponent isOpen={isOpen} dataTool={dataTool} selectedArea={selectedArea} />
             </div>
         </div>
     );
@@ -78,15 +81,10 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
     );
 }
 
-function DataComponent({ isOpen, dataTool }) {
+function DataComponent({ isOpen, dataTool, selectedArea }) {
     return (
         <div className={`data-component ${isOpen ? "open" : ""}`}>
-            {dataTool === "info" && (
-                <div>
-                    <h1>State Info:</h1>
-                </div>
-            )}
-
+            {dataTool === "info" && <DataComponent_Info selectedArea={selectedArea}/>}
             {dataTool === "graph" && <DataComponent_Graph />}
             {dataTool === "analysis" && (
                 <div>
@@ -95,6 +93,29 @@ function DataComponent({ isOpen, dataTool }) {
             )}
         </div>
     );
+}
+
+function DataComponent_Info({ selectedArea }){
+  const flagMapping = {
+    "Utah": UtahFlag,
+    "South Carolina": SCarolinaFlag
+  };
+
+  return (
+    <>
+      <div className="data-component-info-top p-4">
+        <div className="flag-container p-1">
+          <img src={flagMapping[selectedArea]} alt="No Flag Found" style={{ width: '500px', height: '333px' }} />
+        </div>
+        <div className="data-component-info-right">
+          <div className="data-component-info-text" style={{ backgroundColor: 'rgba(255, 215, 0, 1)', flex: 1 }}><span className="font-bold underline">Population</span>: 100,000</div>
+          <div className="data-component-info-text" style={{ backgroundColor: 'rgba(180, 180, 180, 0.8)', flex: 1 }}><span className="font-bold underline">Average Income</span>: 100,000</div>
+          <div className="data-component-info-text" style={{ backgroundColor: 'rgba(220, 220, 220, 0.8)', flex: 1 }}><span className="font-bold underline">Majority Race</span>: White</div>
+          <div className="data-component-info-text" style={{ backgroundColor: 'rgba(180, 180, 180, 0.8)', flex: 1 }}><span className="font-bold underline">Party</span>: Democrat</div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 function DataComponent_Graph() {
