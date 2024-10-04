@@ -1,6 +1,6 @@
 import { GiDogHouse, GiWolfHead } from "react-icons/gi";
 
-function NavBar({ setSelectedArea, selectedArea }) {
+function NavBar({ setSelectedArea, selectedState }) {
     const clearState = () => {
         setSelectedArea('none');
     }
@@ -12,7 +12,7 @@ function NavBar({ setSelectedArea, selectedArea }) {
                 <span className="text-5xl leading-none p-4 averia-serif cursor-pointer hover:bg-red-800" onClick={() => clearState()}>Lobos</span>
             </div>
             <div className="navbar-title text-white p-4">
-                <span className="text-5xl leading-none p-4 averia-serif">{(selectedArea !== 'none') ? selectedArea : "[Select A State]"}</span>
+                <span className="text-5xl leading-none p-4 averia-serif">{(selectedState !== 'none') ? selectedState : "[Select A State]"}</span>
             </div>
         </div>
     )

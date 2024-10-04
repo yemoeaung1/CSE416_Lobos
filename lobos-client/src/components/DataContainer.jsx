@@ -21,7 +21,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import IncomeVotingScatter from "./IncomeVotingScatter";
 
-function DataContainer({ isOpen, setIsOpen, selectedArea, setFilter }) {
+function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, setFilter }) {
   const [dataTool, setDataTool] = useState("info");
 
   return (
@@ -47,6 +47,7 @@ function DataContainer({ isOpen, setIsOpen, selectedArea, setFilter }) {
           isOpen={isOpen}
           dataTool={dataTool}
           selectedArea={selectedArea}
+          selectedState={selectedState}
           setFilter={setFilter}
         />
       </div>
@@ -88,11 +89,11 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
   );
 }
 
-function DataComponent({ isOpen, dataTool, selectedArea, setFilter }) {
+function DataComponent({ isOpen, dataTool, selectedArea, selectedState, setFilter }) {
   return (
     <div className={`data-component ${isOpen ? "open" : ""}`}>
       {dataTool === "info" && (
-        <DataComponent_Info selectedArea={selectedArea} />
+        <DataComponent_Info selectedArea={selectedArea} selectedState={selectedState} />
       )}
       {dataTool === "graph" && <DataComponent_Graph setFilter={setFilter} />}
       {dataTool === "analysis" && (
@@ -104,9 +105,9 @@ function DataComponent({ isOpen, dataTool, selectedArea, setFilter }) {
   );
 }
 
-function DataComponent_Info({ selectedArea }) {
+function DataComponent_Info({ selectedArea, selectedState }) {
   const flagMapping = {
-    Utah: UtahFlag,
+    "Utah": UtahFlag,
     "South Carolina": SCarolinaFlag,
   };
 
@@ -115,7 +116,7 @@ function DataComponent_Info({ selectedArea }) {
       <div className="data-component-info-top p-4">
         <div className="flag-container p-1">
           <img
-            src={flagMapping[selectedArea]}
+            src={flagMapping[selectedState]}
             alt="No Flag Found"
             style={{ width: "500px", height: "333px" }}
           />

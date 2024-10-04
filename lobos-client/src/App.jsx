@@ -10,6 +10,7 @@ import BoxPlotGraph from "./components/boxPlotGraph";
 import LineGraph from "./components/lineGraph";
 
 function App() {
+    const [selectedState, setSelectedState] = useState("none");
     const [selectedArea, setSelectedArea] = useState("none");
     const [mapView, setMapView] = useState("State");
 
@@ -18,8 +19,11 @@ function App() {
     const [filter, setFilter] = useState();
 
     useEffect(() => {
-        if (selectedArea !== "none" && !isOpen) setIsOpen(true);
-        else if (selectedArea === "none" && isOpen) setIsOpen(false);
+      if(selectedArea == 'Utah' || selectedArea == 'South Carolina' || selectedArea == 'none')
+        setSelectedState(selectedArea);
+
+      if (selectedArea !== "none" && !isOpen) setIsOpen(true);
+      else if (selectedArea === "none" && isOpen) setIsOpen(false);
     }, [selectedArea]);
 
     console.log(selectedArea);
@@ -27,11 +31,12 @@ function App() {
 
     return (
         <div>
-            <NavBar selectedArea={selectedArea} setSelectedArea={setSelectedArea}/>
+            <NavBar selectedState={selectedState} setSelectedArea={setSelectedArea}/>
             <DataContainer
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 selectedArea={selectedArea}
+                selectedState={selectedState}
                 setFilter={setFilter}
             />
             <div
