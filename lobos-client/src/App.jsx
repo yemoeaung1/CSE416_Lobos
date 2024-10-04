@@ -4,6 +4,10 @@ import StatesMap from "./components/StatesMap";
 import NavBar from "./components/NavBar";
 import MapLayerSelector from "./components/MapLayerSelector";
 import DataContainer from "./components/DataContainer";
+import BarGraph from "./components/barGraph";
+import { BoxPlotChart } from "@sgratzl/chartjs-chart-boxplot";
+import BoxPlotGraph from "./components/boxPlotGraph";
+import LineGraph from "./components/lineGraph";
 
 function App() {
   const [selectedArea, setSelectedArea] = useState("none");
@@ -21,8 +25,12 @@ function App() {
 
   return (
     <div>
-      <NavBar setMapView={setMapView} setSelectedArea={setSelectedArea} selectedArea={selectedArea} />
-      <DataContainer setIsOpen={setIsOpen} isOpen={isOpen}/>
+      <NavBar selectedArea={selectedArea} />
+      <DataContainer
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        selectedArea={selectedArea}
+      />
       <div
         className="wrapper"
         style={{
@@ -39,6 +47,10 @@ function App() {
           <MapLayerSelector setMapView={setMapView} state={selectedArea} />
         )}
       </div>
+
+      {/* <BoxPlotGraph/>
+      <BarGraph/>
+      <LineGraph/> */}
     </div>
   );
 }
