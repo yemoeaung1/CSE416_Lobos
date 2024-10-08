@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 import regression from "regression";
-
+// Test commit
 const IncomeVotingScatter = () => {
     const chartRef = useRef(null);
 
