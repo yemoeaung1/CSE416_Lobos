@@ -107,7 +107,7 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
           }`}
         onClick={() => setDataTool("ensemble")}
       >
-        <BsMap className="toolbar-icon" />
+        <BsGraphUp className="toolbar-icon" />
         <span className="toolbar-label">Ensemble</span>
       </div>
     </div>
