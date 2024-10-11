@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import UtahFlag from "../assets/us_flags/ut.svg";
 import SCarolinaFlag from "../assets/us_flags/sc.svg";
 
+import { retrieveInfo } from "./SimpleClientRequest";
+
 import {
   BsArrowBarLeft,
   BsArrowBarRight,
@@ -21,8 +23,20 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import IncomeVotingScatter from "./IncomeVotingScatter";
 
-function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, setFilter }) {
-  const [dataTool, setDataTool] = useState("info");
+function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, dataTool, setDataTool, setFilter }) {
+  const [dataMapping, setDataMapping] = useState({});
+
+  useEffect(() => {
+    if (dataTool === "info") {
+    
+      retrieveInfo(setDataMapping);
+
+    } else if (dataTool === "graph") {
+
+    } else if (dataTool === "analysis") {
+
+    }
+  }, [dataTool])
 
   return (
     <div className="data-container">
@@ -49,6 +63,7 @@ function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, setFilt
           selectedArea={selectedArea}
           selectedState={selectedState}
           setFilter={setFilter}
+          dataMapping={dataMapping}
         />
       </div>
     </div>
@@ -67,9 +82,8 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
       </div>
 
       <div
-        className={`toolbar-item ${
-          dataTool === "graph" ? "tool-selected" : ""
-        }`}
+        className={`toolbar-item ${dataTool === "graph" ? "tool-selected" : ""
+          }`}
         onClick={() => setDataTool("graph")}
       >
         <BsFillBarChartFill className="toolbar-icon" />
@@ -77,9 +91,8 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
       </div>
 
       <div
-        className={`toolbar-item ${
-          dataTool === "analysis" ? "tool-selected" : ""
-        }`}
+        className={`toolbar-item ${dataTool === "analysis" ? "tool-selected" : ""
+          }`}
         onClick={() => setDataTool("analysis")}
       >
         <BsGraphUp className="toolbar-icon" />
@@ -89,11 +102,17 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
   );
 }
 
-function DataComponent({ isOpen, dataTool, selectedArea, selectedState, setFilter }) {
+function DataComponent({ isOpen, dataTool, selectedArea, selectedState, setFilter, dataMapping }) {
+  if (!isOpen) {
+    return (
+      <div className={`data-component ${isOpen ? "open" : ""}`}></div>
+    );
+  }
+
   return (
     <div className={`data-component ${isOpen ? "open" : ""}`}>
       {dataTool === "info" && (
-        <DataComponent_Info selectedArea={selectedArea} selectedState={selectedState} />
+        <DataComponent_Info selectedArea={selectedArea} selectedState={selectedState} dataMapping={dataMapping} />
       )}
       {dataTool === "graph" && <DataComponent_Graph setFilter={setFilter} />}
       {/* {dataTool === "analysis" && (
@@ -102,12 +121,12 @@ function DataComponent({ isOpen, dataTool, selectedArea, selectedState, setFilte
         </div>
       )}
        */}
-       {dataTool === "analysis" && <DataComponent_Analysis />}
+      {dataTool === "analysis" && <DataComponent_Analysis />}
     </div>
   );
 }
 
-function DataComponent_Info({ selectedArea, selectedState }) {
+function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
   const flagMapping = {
     "Utah": UtahFlag,
     "South Carolina": SCarolinaFlag,
@@ -132,7 +151,7 @@ function DataComponent_Info({ selectedArea, selectedState }) {
             }}
           >
             <span className="font-bold underline merriweather">Population</span>
-            <span className="lato">: 100,000</span>
+            <span className="lato">{`: ${dataMapping.Population}`}</span>
           </div>
           <div
             className="data-component-info-text"
@@ -142,7 +161,7 @@ function DataComponent_Info({ selectedArea, selectedState }) {
             }}
           >
             <span className="font-bold underline merriweather">Average Income</span>
-            <span className="lato">: 100,000</span>
+            <span className="lato">{`: ${dataMapping.Income}`}</span>
           </div>
           <div
             className="data-component-info-text"
@@ -152,7 +171,7 @@ function DataComponent_Info({ selectedArea, selectedState }) {
             }}
           >
             <span className="font-bold underline merriweather">Majority Race</span>
-            <span className="lato">: White</span>
+            <span className="lato">{`: ${dataMapping.Race}`}</span>
           </div>
           <div
             className="data-component-info-text"
@@ -162,7 +181,7 @@ function DataComponent_Info({ selectedArea, selectedState }) {
             }}
           >
             <span className="font-bold underline merriweather">Party</span>
-            <span className="lato">: Democrat</span>
+            <span className="lato">{`: ${dataMapping.Party}`}</span>
           </div>
         </div>
       </div>
@@ -315,44 +334,44 @@ function DataComponent_Graph({ setFilter }) {
 }
 
 function DataComponent_Analysis() {
-    const [selectedChart, setSelectedChart] = useState("scatter");
+  const [selectedChart, setSelectedChart] = useState("scatter");
 
-                // {graphType === "box" && <BoxPlotGraph />}
-    return (
-        <div className="flex flex-col h-full">
-            {/* Tab Selector */}
-            <div className="flex justify-end mb-4 mt-5 space-x-4">
-                <button
-                    className={
-                        selectedChart === "scatter"
-                            ? "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                            : "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
-                    }
-                    onClick={() => setSelectedChart("scatter")}
-                >
-                    Scatter Plot
-                </button>
-{/* 
+  // {graphType === "box" && <BoxPlotGraph />}
+  return (
+    <div className="flex flex-col h-full">
+      {/* Tab Selector */}
+      <div className="flex justify-end mb-4 mt-5 space-x-4">
+        <button
+          className={
+            selectedChart === "scatter"
+              ? "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+              : "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+          }
+          onClick={() => setSelectedChart("scatter")}
+        >
+          Scatter Plot
+        </button>
+        {/* 
                 {graphType === "line" && <LineGraph />} */}
-                <button
-                    className={
-                        selectedChart === "anotherChart"
-                            ? "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                            : "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
-                    }
-                    onClick={() => setSelectedChart("anotherChart")}
-                >
-                    Another Chart
-                </button>
-            </div>
-            {/* Chart Display */}
-            <div className="h-3/4 w-full">
-                {selectedChart === "scatter" && <IncomeVotingScatter />}
-                {selectedChart === "anotherChart"}{" "}
-                {/* Replace with the other chart component */}
-            </div>
-        </div>
-    );
+        <button
+          className={
+            selectedChart === "anotherChart"
+              ? "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+              : "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+          }
+          onClick={() => setSelectedChart("anotherChart")}
+        >
+          Another Chart
+        </button>
+      </div>
+      {/* Chart Display */}
+      <div className="h-3/4 w-full">
+        {selectedChart === "scatter" && <IncomeVotingScatter />}
+        {selectedChart === "anotherChart"}{" "}
+        {/* Replace with the other chart component */}
+      </div>
+    </div>
+  );
 }
 
 export default DataContainer;
