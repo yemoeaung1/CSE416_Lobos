@@ -96,7 +96,7 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
       <div
         className={`toolbar-item ${dataTool === "gingles" ? "tool-selected" : ""
           }`}
-        onClick={() => setDataTool("analysis")}
+        onClick={() => setDataTool("gingles")}
       >
         <BsGraphUp className="toolbar-icon" />
         <span className="toolbar-label">Gingles</span>
@@ -126,8 +126,8 @@ function DataComponent({ isOpen, dataTool, selectedArea, selectedState, setFilte
       {dataTool === "info" && (
         <DataComponent_Info selectedArea={selectedArea} selectedState={selectedState} dataMapping={dataMapping} />
       )}
-      {dataTool === "graph" && <DataComponent_Graph setFilter={setFilter} />}
-      {/* {dataTool === "analysis" && (
+      {dataTool === "data" && <DataComponent_Data setFilter={setFilter} />}
+      {/* {dataTool === "gingles" && (
         <div>
           <IncomeVotingScatter />
         </div>
