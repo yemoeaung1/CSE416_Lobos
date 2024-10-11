@@ -20,12 +20,13 @@ const BoxPlotGraph = ({dataSetType}) =>{
         const dataSets = {
           race: {
             labels: ["Asian", "Hispanic", "Black", "White", "American Indian"],
-            data: [ {label: 'Republican', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red', borderWidth: 1, outlierColor: '#999999', padding: 5, itemRadius: 0,
-              data:[randomValues(100, 60, 100),
-              randomValues(100, 0, 100),
-              randomValues(100, 0, 20),
-              randomValues(100, 20, 70),
-              randomValues(100, 60, 120)]},
+            data: [ 
+            //   {label: 'Republican', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red', borderWidth: 1, outlierColor: '#999999', padding: 5, itemRadius: 0,
+            //   data:[randomValues(100, 60, 100),
+            //   randomValues(100, 0, 100),
+            //   randomValues(100, 0, 20),
+            //   randomValues(100, 20, 70),
+            //   randomValues(100, 60, 120)]},
 
               {label: 'Democrat', backgroundColor:  'rgba(0,0,255,0.5)', borderColor: 'blue', borderWidth: 1, outlierColor: '#999999', padding: 5,itemRadius: 0, 
                 data:[randomValues(100, 60, 100),
@@ -34,25 +35,26 @@ const BoxPlotGraph = ({dataSetType}) =>{
                 randomValues(100, 20, 70),
                 randomValues(100, 60, 120)]},
 
-              {label: 'Independent', backgroundColor: 'rgba(0, 255, 0, 0.5)', borderColor: 'green', borderWidth: 1, outlierColor: '#999999', padding: 5, itemRadius: 0, data:[
-                  randomValues(100, 60, 100),
-                  randomValues(100, 0, 100),
-                  randomValues(100, 0, 20),
-                  randomValues(100, 20, 70),
-                  randomValues(100, 60, 120)
-                ]}
+              // {label: 'Independent', backgroundColor: 'rgba(0, 255, 0, 0.5)', borderColor: 'green', borderWidth: 1, outlierColor: '#999999', padding: 5, itemRadius: 0, data:[
+              //     randomValues(100, 60, 100),
+              //     randomValues(100, 0, 100),
+              //     randomValues(100, 0, 20),
+              //     randomValues(100, 20, 70),
+              //     randomValues(100, 60, 120)
+              //   ]}
               
             ],
             title: "Support for Candidates by Racial Group"
           },
           income: {
             labels: ["<25k", "25-50k", "50-75k", "75-100k", ">100k"],
-            data: [ {label: 'Republican', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red', borderWidth: 1, outlierColor: '#999999', padding: 5, itemRadius: 0,
-              data:[randomValues(100, 60, 100),
-              randomValues(100, 0, 100),
-              randomValues(100, 0, 20),
-              randomValues(100, 20, 70),
-              randomValues(100, 60, 120)]},
+            data: [ 
+              // {label: 'Republican', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red', borderWidth: 1, outlierColor: '#999999', padding: 5, itemRadius: 0,
+              // data:[randomValues(100, 60, 100),
+              // randomValues(100, 0, 100),
+              // randomValues(100, 0, 20),
+              // randomValues(100, 20, 70),
+              // randomValues(100, 60, 120)]},
 
               {label: 'Democrat', backgroundColor:  'rgba(0,0,255,0.5)', borderColor: 'blue', borderWidth: 1, outlierColor: '#999999', padding: 5,itemRadius: 0, 
                 data:[randomValues(100, 60, 100),
@@ -61,25 +63,26 @@ const BoxPlotGraph = ({dataSetType}) =>{
                 randomValues(100, 20, 70),
                 randomValues(100, 60, 120)]},
 
-              {label: 'Independent', backgroundColor: 'rgba(0, 255, 0, 0.5)', borderColor: 'green', borderWidth: 1, outlierColor: '#999999', padding: 5, itemRadius: 0, data:[
-                  randomValues(100, 60, 100),
-                  randomValues(100, 0, 100),
-                  randomValues(100, 0, 20),
-                  randomValues(100, 20, 70),
-                  randomValues(100, 60, 120)
-                ]}
+              // {label: 'Independent', backgroundColor: 'rgba(0, 255, 0, 0.5)', borderColor: 'green', borderWidth: 1, outlierColor: '#999999', padding: 5, itemRadius: 0, data:[
+              //     randomValues(100, 60, 100),
+              //     randomValues(100, 0, 100),
+              //     randomValues(100, 0, 20),
+              //     randomValues(100, 20, 70),
+              //     randomValues(100, 60, 120)
+              //   ]}
               
             ],
             title: "Support for Candidates by Income Bracket"
           },
           age: {
             labels: ["18-25", "26-30", "36-42", "43-49", "65+"],
-            data: [ {label: 'Republican', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red', borderWidth: 1, outlierColor: '#999999', padding: 5, itemRadius: 0,
-              data:[randomValues(100, 60, 100),
-              randomValues(100, 0, 100),
-              randomValues(100, 0, 20),
-              randomValues(100, 20, 70),
-              randomValues(100, 60, 120)]},
+            data: [
+            // [ {label: 'Republican', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red', borderWidth: 1, outlierColor: '#999999', padding: 5, itemRadius: 0,
+            //   data:[randomValues(100, 60, 100),
+            //   randomValues(100, 0, 100),
+            //   randomValues(100, 0, 20),
+            //   randomValues(100, 20, 70),
+            //   randomValues(100, 60, 120)]},
 
               {label: 'Democrat', backgroundColor:  'rgba(0,0,255,0.5)', borderColor: 'blue', borderWidth: 1, outlierColor: '#999999', padding: 5,itemRadius: 0, 
                 data:[randomValues(100, 60, 100),
@@ -88,13 +91,13 @@ const BoxPlotGraph = ({dataSetType}) =>{
                 randomValues(100, 20, 70),
                 randomValues(100, 60, 120)]},
 
-              {label: 'Independent', backgroundColor: 'rgba(0, 255, 0, 0.5)', borderColor: 'green', borderWidth: 1, outlierColor: '#999999', padding: 5, itemRadius: 0, data:[
-                  randomValues(100, 60, 100),
-                  randomValues(100, 0, 100),
-                  randomValues(100, 0, 20),
-                  randomValues(100, 20, 70),
-                  randomValues(100, 60, 120)
-                ]}
+              // {label: 'Independent', backgroundColor: 'rgba(0, 255, 0, 0.5)', borderColor: 'green', borderWidth: 1, outlierColor: '#999999', padding: 5, itemRadius: 0, data:[
+              //     randomValues(100, 60, 100),
+              //     randomValues(100, 0, 100),
+              //     randomValues(100, 0, 20),
+              //     randomValues(100, 20, 70),
+              //     randomValues(100, 60, 120)
+              //   ]}
               
             ],
             title: "Support for Candidates by Age Group"

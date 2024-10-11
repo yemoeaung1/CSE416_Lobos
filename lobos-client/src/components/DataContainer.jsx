@@ -233,7 +233,7 @@ function DataComponent_Graph({ setFilter }) {
               label="Bar Graph"
             />
 
-            {dataSetType !== "party" && (
+            {dataSetType !== "party"  && dataSetType !== "race" && dataSetType !== "income" && dataSetType !== "age" && (
               <>
                 <FormControlLabel
                   value="box"

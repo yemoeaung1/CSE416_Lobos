@@ -12,27 +12,21 @@ const LineGraph = ({dataSetType}) =>{
             race: {
               labels: ["Asian", "Hispanic", "Black", "White", "American Indian"],
               data: [
-                { label: "Republican", data: [3000, 4943, 5920, 4134, 4234], backgroundColor: "rgba(255, 0, 0, 0.5)", borderColor: "rgba(255, 0, 0, 1)", borderWidth: 1, fill: {target: 'origin', above: 'rgba(255, 0, 0, 0.2)'}, tension: 0.5 },
                 { label: "Democrat", data: [3000, 894, 590, 4234, 4234], backgroundColor: "rgba(0, 0, 255, 0.5)", borderColor: "rgba(0, 0, 255, 1)", borderWidth: 1, fill: {target: 'origin', above: 'rgba(0, 0, 255, 0.2)'}, tension: 0.5 },
-                { label: "Independent", data: [30, 89, 59, 42, 44], backgroundColor: "rgba(0, 255, 0, 0.5)", borderColor: "rgba(0, 255, 0, 1)", borderWidth: 1, fill: {target: 'origin', above: 'rgba(0, 255, 0, 0.2)'}, tension: 0.5 }
               ],
               title: "Support for Candidates by Racial Group",
             },
             income: {
               labels: ["<25k", "25-50k", "50-75k", "75-100k", ">100k"],
               data: [
-                { label: "Republican", data: [2000, 1500, 3000, 4000, 6000], backgroundColor: "rgba(255, 0, 0, 0.5)",  borderColor: "rgba(255, 0, 0, 1)", borderWidth: 1, fill: {target: 'origin', above: 'rgba(255, 0, 0, 0.2)'}},
                 { label: "Democrat", data: [1800, 1200, 2800, 3500, 5800], backgroundColor: "rgba(0, 0, 255, 0.5)", borderColor: "rgba(0, 0, 255, 1)", borderWidth: 1, fill: {target: 'origin', above: 'rgba(0, 0, 255, 0.2)'}},
-                { label: "Independent", data: [100, 90, 200, 300, 400], backgroundColor: "rgba(0, 255, 0, 0.5)", borderColor: "rgba(0, 255, 0, 1)", borderWidth: 1, fill: {target: 'origin', above: 'rgba(0, 255, 0, 0.2)'} }
               ],
               title: "Support for Candidates by Income Bracket",
             },
             age: {
               labels: ["18-25", "26-30", "36-42", "43-49", "65+"],
               data: [
-                { label: "Republican", data: [2300, 1400, 1000, 2000, 4000], backgroundColor: "rgba(255, 0, 0, 0.5)", borderColor: "rgba(255, 0, 0, 1)", borderWidth: 1, fill: {target: 'origin', above: 'rgba(255, 0, 0, 0.2)'}, tension: 0.5},
                 { label: "Democrat", data: [4300, 3200, 1800, 2500, 4800], backgroundColor: "rgba(0, 0, 255, 0.5)",borderColor: "rgba(0, 0, 255, 1)", borderWidth: 1, fill: {target: 'origin', above: 'rgba(0, 0, 255, 0.2)'}, tension: 0.5},
-                { label: "Independent", data: [60, 40, 20, 360, 99], backgroundColor: "rgba(0, 255, 0, 0.5)",  borderColor: "rgba(0, 255, 0, 1)", borderWidth: 1, fill: {target: 'origin', above: 'rgba(0, 255, 0, 0.2)'}, tension: 0.5 }
               ],
               title: "Support for Candidates by Age Group",
             }
@@ -123,6 +117,7 @@ const LineGraph = ({dataSetType}) =>{
                 },
                 plugins:{
                   legend: {
+                    display: false,
                     position: 'top',
                     labels:{
                         font:{
