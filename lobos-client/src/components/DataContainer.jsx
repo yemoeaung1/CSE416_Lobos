@@ -35,7 +35,8 @@ function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, dataToo
     } else if (dataTool === "data") {
 
     } else if (dataTool === "gingles") {
-    } else if (dataTool === "gingles") {
+
+    } else if (dataTool === "ensemble") {
 
     }
   }, [dataTool])
@@ -81,7 +82,6 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
       >
         <BsInfoCircle className="toolbar-icon" />
         <span className="toolbar-label">State Info</span>
-        <span className="toolbar-label">State Info</span>
       </div>
 
       <div
@@ -97,15 +97,6 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
         className={`toolbar-item ${dataTool === "gingles" ? "tool-selected" : ""
           }`}
         onClick={() => setDataTool("gingles")}
-      >
-        <BsGraphUp className="toolbar-icon" />
-        <span className="toolbar-label">Gingles</span>
-      </div>
-
-      <div
-        className={`toolbar-item ${dataTool === "ensemble" ? "tool-selected" : ""
-          }`}
-        onClick={() => setDataTool("ensemble")}
       >
         <BsGraphUp className="toolbar-icon" />
         <span className="toolbar-label">Gingles</span>
@@ -142,7 +133,6 @@ function DataComponent({ isOpen, dataTool, selectedArea, selectedState, setFilte
         </div>
       )}
        */}
-      {dataTool === "gingles" && <DataComponent_Gingles />}
       {dataTool === "gingles" && <DataComponent_Gingles />}
     </div>
   );
@@ -357,8 +347,6 @@ function DataComponent_Data({ setFilter }) {
 
 function DataComponent_Gingles() {
   const [selectedChart, setSelectedChart] = useState("precinct-analysis");
-function DataComponent_Gingles() {
-  const [selectedChart, setSelectedChart] = useState("precinct-analysis");
 
   // {graphType === "box" && <BoxPlotGraph />}
   return (
@@ -368,14 +356,11 @@ function DataComponent_Gingles() {
         <button
           className={
             selectedChart === "precinct-analysis"
-            selectedChart === "precinct-analysis"
               ? "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
               : "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
           }
           onClick={() => setSelectedChart("precinct-analysis")}
-          onClick={() => setSelectedChart("precinct-analysis")}
         >
-          Precinct Analysis
           Precinct Analysis
         </button>
         {/* 
@@ -383,21 +368,16 @@ function DataComponent_Gingles() {
         <button
           className={
             selectedChart === "ecological-inference"
-            selectedChart === "ecological-inference"
               ? "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
               : "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
           }
           onClick={() => setSelectedChart("ecological-inference")}
-          onClick={() => setSelectedChart("ecological-inference")}
         >
-          Ecological Inference
           Ecological Inference
         </button>
       </div>
       {/* Chart Display */}
       <div className="h-3/4 w-full">
-        {selectedChart === "precinct-analysis" && <IncomeVotingScatter />}
-        {selectedChart === "ecological-inference"}{" "}
         {selectedChart === "precinct-analysis" && <IncomeVotingScatter />}
         {selectedChart === "ecological-inference"}{" "}
         {/* Replace with the other chart component */}
