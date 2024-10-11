@@ -344,10 +344,57 @@ function DataComponent_Graph({ setFilter }) {
 
 function DataComponent_Gingles() {
   const [selectedChart, setSelectedChart] = useState("precinct-analysis");
+  const [graphType, setGraphType] = useState("box")
+
+  const handleSwitchChange = (event, type) => {
+    if (event.target.checked) {
+      setGraphType(type);
+    }
+  };
 
   // {graphType === "box" && <BoxPlotGraph />}
   return (
     <div className="flex flex-col h-full">
+      <div className="mb-8 flex justify-between">
+      <FormControl>
+              <FormLabel
+                id="demo-row-radio-buttons-group-label"
+                sx={{ fontSize: "1.5rem", fontWeight: "bold" }}
+              >
+                Graph Filters:{" "}
+              </FormLabel>
+              <RadioGroup
+                row
+                aria-labelledby="demo-row-radio-buttons-group-label"
+                name="row-radio-buttons-group"
+              >
+                {(
+                  <>
+                    <FormControlLabel
+                      value="box"
+                      control={
+                        <Radio
+                          checked={graphType === "box"}
+                          onChange={(e) => handleSwitchChange(e, "box")}
+                        />
+                      }
+                      label="Box Plot"
+                    />
+                    <FormControlLabel
+                      value="line"
+                      control={
+                        <Radio
+                          checked={graphType === "line"}
+                          onChange={(e) => handleSwitchChange(e, "line")}
+                        />
+                      }
+                      label="Line Graph"
+                    />
+                  </>
+                )}
+              </RadioGroup>
+          </FormControl>  
+      
       {/* Tab Selector */}
       <div className="flex justify-end mb-4 mt-5 space-x-4">
         <button
@@ -373,11 +420,28 @@ function DataComponent_Gingles() {
           Ecological Inference
         </button>
       </div>
+      </div>
       {/* Chart Display */}
       <div className="h-3/4 w-full">
         {selectedChart === "precinct-analysis" && <IncomeVotingScatter />}
-        {selectedChart === "ecological-inference"}{" "}
-        {/* Replace with the other chart component */}
+        {selectedChart === "ecological-inference" && (
+          <div className="flex flex-col space-y-4 w-full h-full">
+          {/* Line Graph 1 */}
+          <div className="flex-1 w-full">
+              <LineGraph dataSetType={"trump"} />
+          </div>
+
+          {/* Line Graph 2 */}
+          <div className="flex-1 w-full">
+              <LineGraph dataSetType={"biden"} />
+          </div>
+
+          {/* Line Graph 3 */}
+          <div className="flex-1 w-full">
+              <LineGraph dataSetType={"jo_jorgensen"} />
+          </div>
+        </div>
+        )}
       </div>
     </div>
   );
