@@ -25,12 +25,12 @@ import FormLabel from "@mui/material/FormLabel";
 import IncomeVotingScatter from "./IncomeVotingScatter";
 
 function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, dataTool, setDataTool, setFilter }) {
-  const [dataMapping, setDataMapping] = useState({});
+  const [dataMapping, setDataMapping] = useState(new Map());
 
   useEffect(() => {
     if (dataTool === "info") {
 
-      retrieveInfo(setDataMapping);
+      retrieveInfo(selectedState, setDataMapping);
 
     } else if (dataTool === "data") {
 
@@ -39,7 +39,7 @@ function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, dataToo
     } else if (dataTool === "ensemble") {
 
     }
-  }, [dataTool])
+  }, [selectedState, dataTool])
 
   return (
     <div className="data-container">
@@ -144,6 +144,11 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
     "South Carolina": SCarolinaFlag,
   };
 
+  let party = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Political Party"] : "";
+  let population = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Total Population"] : "";
+  let income = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Median Household Income"] : "";
+  let race = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Majority Race"] : "";
+
   return (
     <>
       <div className="data-component-info-top p-4">
@@ -163,7 +168,7 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
             }}
           >
             <span className="font-bold underline merriweather">Population</span>
-            <span className="lato">{`: ${dataMapping.Population}`}</span>
+            <span className="lato">{`: ${population}`}</span>
           </div>
           <div
             className="data-component-info-text"
@@ -172,8 +177,8 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
               flex: 1,
             }}
           >
-            <span className="font-bold underline merriweather">Average Income</span>
-            <span className="lato">{`: ${dataMapping.Income}`}</span>
+            <span className="font-bold underline merriweather">Median Income</span>
+            <span className="lato">{`: ${income}`}</span>
           </div>
           <div
             className="data-component-info-text"
@@ -183,7 +188,7 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
             }}
           >
             <span className="font-bold underline merriweather">Majority Race</span>
-            <span className="lato">{`: ${dataMapping.Race}`}</span>
+            <span className="lato">{`: ${race}`}</span>
           </div>
           <div
             className="data-component-info-text"
@@ -193,7 +198,7 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
             }}
           >
             <span className="font-bold underline merriweather">Party</span>
-            <span className="lato">{`: ${dataMapping.Party}`}</span>
+            <span className="lato">{`: ${party}`}</span>
           </div>
         </div>
       </div>

@@ -20,15 +20,30 @@ import java.util.Map;
 public class SimpleRESTController {
     @GetMapping("/state-info")
     public Map<String, Object> getInfo(
-            @RequestParam(value = "state", required = false) String state) {
+            @RequestParam(value = "state", required = true) String state) {
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("Population", Integer.parseInt("100000"));
-        data.put("Income", Integer.parseInt("100000"));
-        data.put("Race", "White");
-        data.put("Party", "Democrat");
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        return data;
+        String stateAbbr = "";
+
+        switch(state){
+            case "Utah": stateAbbr = "ut"; break;
+            case "South Carolina": stateAbbr = "sc"; break;
+        }
+
+        String stateJSON = "src/main/resources/data/" + stateAbbr + "_info.json";
+
+        try {
+            // Read JSON file and map it to a generic Map
+            Map<String, Object> data = objectMapper.readValue(new File(stateJSON), Map.class);
+            System.out.println(data);
+
+            return data;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @GetMapping("/state-data")
