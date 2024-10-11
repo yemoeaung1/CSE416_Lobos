@@ -3,12 +3,41 @@
     "Total Population": 5142750,
     "Median Household Income": 63623,
     "Bachelors": 32.9,
-    "Congressional Districts": 7,
     "Employment Rate": 41.6,
     "Without Healthcare": 9.1,
     "Majority Race": "White",
     "Median age": 40,
     "Source": "2022: ACS 5-Year Estimates",
+    "Congressional Districts": {
+      "District 1": {
+        "Representative": "Nancy Mace",
+        "Party": "Republican"
+      },
+      "District 2": {
+        "Representative": "Joe Wilson",
+        "Party": "Republican"
+      },
+      "District 3": {
+        "Representative": "Jeff Duncan",
+        "Party": "Republican"
+      },
+      "District 4": {
+        "Representative": "William Timmons",
+        "Party": "Republican"
+      },
+      "District 5": {
+        "Representative": "Ralph Norman",
+        "Party": "Republican"
+      },
+      "District 6": {
+        "Representative": "James “Jim” Clyburn",
+        "Party": "Democratic"
+      },
+      "District 7": {
+        "Representative": "Russell Fry",
+        "Party": "Republican"
+      }
+    },
     "Race": {
       "White": {
         "Estimate": 3240171,

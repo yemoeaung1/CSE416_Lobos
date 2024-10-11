@@ -32,8 +32,8 @@ function App() {
         else if (selectedArea === "none" && isOpen) setIsOpen(false);
     }, [selectedArea]);
 
-    console.log(selectedArea);
-    console.log(mapView);
+    // console.log(selectedArea);
+    // console.log(mapView);
 
     return (
         <div>
