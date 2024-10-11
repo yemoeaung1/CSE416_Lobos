@@ -155,12 +155,12 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
         <div className="data-component-info-top-left">
           <div className="data-component-info-stat-box">
             <span className="font-bold underline merriweather pb-2">Population</span>
-            <span className="lato">{`${population.toLocaleString()}`}</span>
+            <span className="montserrat">{`${population.toLocaleString()}`}</span>
           </div>
           <div className="data-component-info-stat-box">
             <span className="font-bold underline merriweather">Median</span>
             <span className="font-bold underline merriweather pb-2">Household Income</span>
-            <span className="lato">{`${income.toLocaleString()}`}</span>
+            <span className="montserrat">{`${income.toLocaleString()}`}</span>
           </div>
         </div>
         <div className="data-component-info-top-middle p-1">
@@ -174,11 +174,11 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
         <div className="data-component-info-top-right">
           <div className="data-component-info-stat-box">
             <span className="font-bold underline merriweather pb-2">Majority Race</span>
-            <span className="lato">{`${race}`}</span>
+            <span className="montserrat">{`${race}`}</span>
           </div>
           <div className="data-component-info-stat-box">
             <span className="font-bold underline merriweather pb-2">Majority Party</span>
-            <span className="lato">{`${party}`}</span>
+            <span className="montserrat">{`${party}`}</span>
           </div>
         </div>
       </div>
@@ -375,7 +375,6 @@ function DataComponent_Gingles() {
 
 function RepresentativesData ({ dataMapping, selectedState }) {
   let districts = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Congressional Districts"] : null;
-  console.log(districts);
 
   if(districts === null) {
     return <></>;
