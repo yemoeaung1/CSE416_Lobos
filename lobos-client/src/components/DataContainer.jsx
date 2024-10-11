@@ -144,10 +144,10 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
     "South Carolina": SCarolinaFlag,
   };
 
-  let party = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Political Party"] : "";
-  let population = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Total Population"] : "";
-  let income = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Median Household Income"] : "";
-  let race = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Majority Race"] : "";
+  let party = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Political Party"] : "N/A";
+  let population = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Total Population"] : "N/A";
+  let income = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Median Household Income"] : "N/A";
+  let race = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Majority Race"] : "N/A";
 
   return (
     <>
@@ -168,7 +168,7 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
             }}
           >
             <span className="font-bold underline merriweather">Population</span>
-            <span className="lato">{`: ${population}`}</span>
+            <span className="lato">{`: ${population.toLocaleString()}`}</span>
           </div>
           <div
             className="data-component-info-text"
@@ -178,7 +178,7 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
             }}
           >
             <span className="font-bold underline merriweather">Median Income</span>
-            <span className="lato">{`: ${income}`}</span>
+            <span className="lato">{`: ${income.toLocaleString()}`}</span>
           </div>
           <div
             className="data-component-info-text"
