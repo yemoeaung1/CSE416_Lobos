@@ -36,6 +36,8 @@ function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, dataToo
 
     } else if (dataTool === "gingles") {
 
+    } else if (dataTool === "ensemble") {
+
     }
   }, [dataTool])
 
@@ -97,7 +99,16 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
         onClick={() => setDataTool("analysis")}
       >
         <BsGraphUp className="toolbar-icon" />
-        <span className="toolbar-label">Analysis</span>
+        <span className="toolbar-label">Gingles</span>
+      </div>
+
+      <div
+        className={`toolbar-item ${dataTool === "ensemble" ? "tool-selected" : ""
+          }`}
+        onClick={() => setDataTool("ensemble")}
+      >
+        <BsMap className="toolbar-icon" />
+        <span className="toolbar-label">Ensemble</span>
       </div>
     </div>
   );
