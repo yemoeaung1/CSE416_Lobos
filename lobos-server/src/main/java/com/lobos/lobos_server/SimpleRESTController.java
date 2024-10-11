@@ -2,8 +2,17 @@ package com.lobos.lobos_server;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.io.File;
+
 import java.util.HashMap;
 import java.util.Map;
+
+
 
 @RestController
 @RequestMapping("/api")
@@ -11,7 +20,7 @@ import java.util.Map;
 public class SimpleRESTController {
     @GetMapping("/state-info")
     public Map<String, Object> getInfo(
-            @RequestParam(value = "state", required = false) String name) {
+            @RequestParam(value = "state", required = false) String state) {
 
         Map<String, Object> data = new HashMap<>();
         data.put("Population", Integer.parseInt("100000"));
