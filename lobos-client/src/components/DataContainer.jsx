@@ -11,6 +11,7 @@ import {
   BsInfoCircle,
   BsFillBarChartFill,
   BsGraphUp,
+  BsMap
 } from "react-icons/bs";
 import BarGraph from "./barGraph";
 import LineGraph from "./lineGraph";
@@ -31,7 +32,7 @@ function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, dataToo
 
       retrieveInfo(setDataMapping);
 
-    } else if (dataTool === "graph") {
+    } else if (dataTool === "data") {
 
     } else if (dataTool === "gingles") {
 
@@ -82,12 +83,12 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
       </div>
 
       <div
-        className={`toolbar-item ${dataTool === "graph" ? "tool-selected" : ""
+        className={`toolbar-item ${dataTool === "data" ? "tool-selected" : ""
           }`}
-        onClick={() => setDataTool("graph")}
+        onClick={() => setDataTool("data")}
       >
         <BsFillBarChartFill className="toolbar-icon" />
-        <span className="toolbar-label">Graphs</span>
+        <span className="toolbar-label">Data</span>
       </div>
 
       <div
@@ -104,7 +105,7 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
           }`}
         onClick={() => setDataTool("ensemble")}
       >
-        <BsGraphUp className="toolbar-icon" />
+        <BsMap className="toolbar-icon" />
         <span className="toolbar-label">Ensemble</span>
       </div>
     </div>
@@ -123,7 +124,7 @@ function DataComponent({ isOpen, dataTool, selectedArea, selectedState, setFilte
       {dataTool === "info" && (
         <DataComponent_Info selectedArea={selectedArea} selectedState={selectedState} dataMapping={dataMapping} />
       )}
-      {dataTool === "graph" && <DataComponent_Graph setFilter={setFilter} />}
+      {dataTool === "data" && <DataComponent_Data setFilter={setFilter} />}
       {/* {dataTool === "gingles" && (
         <div>
           <IncomeVotingScatter />
@@ -202,7 +203,7 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
   );
 }
 
-function DataComponent_Graph({ setFilter }) {
+function DataComponent_Data({ setFilter }) {
   const [graphType, setGraphType] = useState("bar");
   const [dataSetType, setDataSetType] = useState("party");
 
