@@ -28,12 +28,12 @@ function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, dataToo
 
   useEffect(() => {
     if (dataTool === "info") {
-    
+
       retrieveInfo(setDataMapping);
 
     } else if (dataTool === "graph") {
 
-    } else if (dataTool === "analysis") {
+    } else if (dataTool === "gingles") {
 
     }
   }, [dataTool])
@@ -78,7 +78,7 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
         onClick={() => setDataTool("info")}
       >
         <BsInfoCircle className="toolbar-icon" />
-        <span className="toolbar-label">Info</span>
+        <span className="toolbar-label">State Info</span>
       </div>
 
       <div
@@ -91,12 +91,21 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
       </div>
 
       <div
-        className={`toolbar-item ${dataTool === "analysis" ? "tool-selected" : ""
+        className={`toolbar-item ${dataTool === "gingles" ? "tool-selected" : ""
           }`}
-        onClick={() => setDataTool("analysis")}
+        onClick={() => setDataTool("gingles")}
       >
         <BsGraphUp className="toolbar-icon" />
-        <span className="toolbar-label">Analysis</span>
+        <span className="toolbar-label">Gingles</span>
+      </div>
+
+      <div
+        className={`toolbar-item ${dataTool === "ensemble" ? "tool-selected" : ""
+          }`}
+        onClick={() => setDataTool("ensemble")}
+      >
+        <BsGraphUp className="toolbar-icon" />
+        <span className="toolbar-label">Ensemble</span>
       </div>
     </div>
   );
@@ -115,13 +124,13 @@ function DataComponent({ isOpen, dataTool, selectedArea, selectedState, setFilte
         <DataComponent_Info selectedArea={selectedArea} selectedState={selectedState} dataMapping={dataMapping} />
       )}
       {dataTool === "graph" && <DataComponent_Graph setFilter={setFilter} />}
-      {/* {dataTool === "analysis" && (
+      {/* {dataTool === "gingles" && (
         <div>
           <IncomeVotingScatter />
         </div>
       )}
        */}
-      {dataTool === "analysis" && <DataComponent_Analysis />}
+      {dataTool === "gingles" && <DataComponent_Gingles />}
     </div>
   );
 }
@@ -333,8 +342,8 @@ function DataComponent_Graph({ setFilter }) {
   );
 }
 
-function DataComponent_Analysis() {
-  const [selectedChart, setSelectedChart] = useState("scatter");
+function DataComponent_Gingles() {
+  const [selectedChart, setSelectedChart] = useState("precinct-analysis");
 
   // {graphType === "box" && <BoxPlotGraph />}
   return (
@@ -343,31 +352,31 @@ function DataComponent_Analysis() {
       <div className="flex justify-end mb-4 mt-5 space-x-4">
         <button
           className={
-            selectedChart === "scatter"
+            selectedChart === "precinct-analysis"
               ? "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
               : "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
           }
-          onClick={() => setSelectedChart("scatter")}
+          onClick={() => setSelectedChart("precinct-analysis")}
         >
-          Scatter Plot
+          Precinct Analysis
         </button>
         {/* 
                 {graphType === "line" && <LineGraph />} */}
         <button
           className={
-            selectedChart === "anotherChart"
+            selectedChart === "ecological-inference"
               ? "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
               : "text-2xl font-semibold border-2 border-black rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
           }
-          onClick={() => setSelectedChart("anotherChart")}
+          onClick={() => setSelectedChart("ecological-inference")}
         >
-          Another Chart
+          Ecological Inference
         </button>
       </div>
       {/* Chart Display */}
       <div className="h-3/4 w-full">
-        {selectedChart === "scatter" && <IncomeVotingScatter />}
-        {selectedChart === "anotherChart"}{" "}
+        {selectedChart === "precinct-analysis" && <IncomeVotingScatter />}
+        {selectedChart === "ecological-inference"}{" "}
         {/* Replace with the other chart component */}
       </div>
     </div>
