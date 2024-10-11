@@ -17,7 +17,6 @@ import USA from "../geojson/usa_2.json";
 import MapLegend from "./legend";
 
 const StatesMap = ({ selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, filter }) => {
-  const mapRef = useRef(null);
   console.log(selectedArea);
   // const [currentState, setCurrentState] = useState('South Carolina');
   // const [display, setDisplay] = useState([mapView, views['none'][mapView.toLowerCase()]]);
@@ -166,9 +165,8 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, 
     return ({
         fillColor: mapPolygonColor(colors),
         weight: 1,
-        opacity: 1,
-        color: 'white',
-        dashArray: '2',
+        opacity: 0.5,
+        color: 'black',
         fillOpacity: 0.5
     });
 });
@@ -197,10 +195,9 @@ const style = (feature) => {
         maxBounds={usaBounds}
         maxBoundsViscosity={1}
         minZoom={5}
-        ref={mapRef}
+        preferCanvas={true} 
       >
         <MapController selectedArea={selectedArea} isOpen={isOpen} />
-        {/* <MapResizeHandler /> */}
         {isOpen && (
           <>
             <TileLayer
@@ -228,7 +225,7 @@ const style = (feature) => {
           style={style}
         />
       </MapContainer>
-      {filter && isOpen && <MapLegend colors={colors} filter={filter}/>}
+      {/* {filter && isOpen && <MapLegend colors={colors} filter={filter}/>} */}
     </>
   );
 };
@@ -236,8 +233,6 @@ const style = (feature) => {
 
 const MapController = ({ selectedArea, isOpen }) => {
   const map = useMap();
-
-  map.set
   // map.invalidateSize();
   
   // map.invalidateSize();

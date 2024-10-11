@@ -16,24 +16,21 @@ function App() {
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const [dataTool, setDataTool] = useState("");
+    const [dataTool, setDataTool] = useState("info");
 
     const [filter, setFilter] = useState();
 
     useEffect(() => {
         if (selectedArea == 'Utah' || selectedArea == 'South Carolina' || selectedArea == 'none') {
             setSelectedState(selectedArea);
-
-            if(selectedArea != 'none')
-                setDataTool("info");
         }
 
         if (selectedArea !== "none" && !isOpen) setIsOpen(true);
         else if (selectedArea === "none" && isOpen) setIsOpen(false);
     }, [selectedArea]);
 
-    console.log(selectedArea);
-    console.log(mapView);
+    // console.log(selectedArea);
+    // console.log(mapView);
 
     return (
         <div>

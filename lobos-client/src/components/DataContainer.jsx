@@ -11,6 +11,7 @@ import {
   BsInfoCircle,
   BsFillBarChartFill,
   BsGraphUp,
+  BsMap
 } from "react-icons/bs";
 import BarGraph from "./barGraph";
 import LineGraph from "./lineGraph";
@@ -24,19 +25,21 @@ import FormLabel from "@mui/material/FormLabel";
 import IncomeVotingScatter from "./IncomeVotingScatter";
 
 function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, dataTool, setDataTool, setFilter }) {
-  const [dataMapping, setDataMapping] = useState({});
+  const [dataMapping, setDataMapping] = useState(new Map());
 
   useEffect(() => {
     if (dataTool === "info") {
 
-      retrieveInfo(setDataMapping);
+      retrieveInfo(selectedState, setDataMapping);
 
-    } else if (dataTool === "graph") {
+    } else if (dataTool === "data") {
 
     } else if (dataTool === "gingles") {
 
+    } else if (dataTool === "ensemble") {
+
     }
-  }, [dataTool])
+  }, [selectedState, dataTool])
 
   return (
     <div className="data-container">
@@ -82,12 +85,12 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
       </div>
 
       <div
-        className={`toolbar-item ${dataTool === "graph" ? "tool-selected" : ""
+        className={`toolbar-item ${dataTool === "data" ? "tool-selected" : ""
           }`}
-        onClick={() => setDataTool("graph")}
+        onClick={() => setDataTool("data")}
       >
         <BsFillBarChartFill className="toolbar-icon" />
-        <span className="toolbar-label">Graphs</span>
+        <span className="toolbar-label">Data</span>
       </div>
 
       <div
@@ -104,7 +107,7 @@ function DataToolbar({ isOpen, dataTool, setDataTool }) {
           }`}
         onClick={() => setDataTool("ensemble")}
       >
-        <BsGraphUp className="toolbar-icon" />
+        <BsMap className="toolbar-icon" />
         <span className="toolbar-label">Ensemble</span>
       </div>
     </div>
@@ -123,7 +126,7 @@ function DataComponent({ isOpen, dataTool, selectedArea, selectedState, setFilte
       {dataTool === "info" && (
         <DataComponent_Info selectedArea={selectedArea} selectedState={selectedState} dataMapping={dataMapping} />
       )}
-      {dataTool === "graph" && <DataComponent_Graph setFilter={setFilter} />}
+      {dataTool === "data" && <DataComponent_Data setFilter={setFilter} />}
       {/* {dataTool === "gingles" && (
         <div>
           <IncomeVotingScatter />
@@ -140,6 +143,11 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
     "Utah": UtahFlag,
     "South Carolina": SCarolinaFlag,
   };
+
+  let party = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Political Party"] : "";
+  let population = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Total Population"] : "";
+  let income = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Median Household Income"] : "";
+  let race = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Majority Race"] : "";
 
   return (
     <>
@@ -160,7 +168,7 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
             }}
           >
             <span className="font-bold underline merriweather">Population</span>
-            <span className="lato">{`: ${dataMapping.Population}`}</span>
+            <span className="lato">{`: ${population}`}</span>
           </div>
           <div
             className="data-component-info-text"
@@ -169,8 +177,8 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
               flex: 1,
             }}
           >
-            <span className="font-bold underline merriweather">Average Income</span>
-            <span className="lato">{`: ${dataMapping.Income}`}</span>
+            <span className="font-bold underline merriweather">Median Income</span>
+            <span className="lato">{`: ${income}`}</span>
           </div>
           <div
             className="data-component-info-text"
@@ -180,7 +188,7 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
             }}
           >
             <span className="font-bold underline merriweather">Majority Race</span>
-            <span className="lato">{`: ${dataMapping.Race}`}</span>
+            <span className="lato">{`: ${race}`}</span>
           </div>
           <div
             className="data-component-info-text"
@@ -190,7 +198,7 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
             }}
           >
             <span className="font-bold underline merriweather">Party</span>
-            <span className="lato">{`: ${dataMapping.Party}`}</span>
+            <span className="lato">{`: ${party}`}</span>
           </div>
         </div>
       </div>
@@ -202,7 +210,7 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
   );
 }
 
-function DataComponent_Graph({ setFilter }) {
+function DataComponent_Data({ setFilter }) {
   const [graphType, setGraphType] = useState("bar");
   const [dataSetType, setDataSetType] = useState("party");
 

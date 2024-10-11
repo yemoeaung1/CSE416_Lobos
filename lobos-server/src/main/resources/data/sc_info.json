@@ -1,0 +1,211 @@
+{
+  "South Carolina": {
+    "Political Party": "Republican",
+    "Total Population": 5142750,
+    "Median Household Income": 63623,
+    "Bachelors": 32.9,
+    "Employment Rate": 41.6,
+    "Without Healthcare": 9.1,
+    "Majority Race": "White",
+    "Median age": 40,
+    "Source": "2022: ACS 5-Year Estimates",
+    "Congressional Districts": {
+      "District 1": {
+        "Representative": "Nancy Mace",
+        "Party": "Republican"
+      },
+      "District 2": {
+        "Representative": "Joe Wilson",
+        "Party": "Republican"
+      },
+      "District 3": {
+        "Representative": "Jeff Duncan",
+        "Party": "Republican"
+      },
+      "District 4": {
+        "Representative": "William Timmons",
+        "Party": "Republican"
+      },
+      "District 5": {
+        "Representative": "Ralph Norman",
+        "Party": "Republican"
+      },
+      "District 6": {
+        "Representative": "James “Jim” Clyburn",
+        "Party": "Democratic"
+      },
+      "District 7": {
+        "Representative": "Russell Fry",
+        "Party": "Republican"
+      }
+    },
+    "Race": {
+      "White": {
+        "Estimate": 3240171,
+        "MOE": 4651,
+        "Percentage": 63.0,
+        "PercentError": 0.1
+      },
+      "Black": {
+        "Estimate": 1316074,
+        "MOE": 1379,
+        "Percentage": 25.6,
+        "PercentError": 0.1
+      },
+      "Native American": {
+        "Estimate": 10304,
+        "MOE": 695,
+        "Percentage": 0.2,
+        "PercentError": 0.1
+      },
+      "Asian": {
+        "Estimate": 84972,
+        "MOE": 1634,
+        "Percentage": 1.7,
+        "PercentError": 0.1
+      },
+      "Pacific Islanders": {
+        "Estimate": 2443,
+        "MOE": 405,
+        "Percentage": 0.0,
+        "PercentError": 0.1
+      },
+      "Hispanic or Latino": {
+        "Estimate": 318875,
+        "MOE": 142,
+        "Percentage": 6.2,
+        "PercentError": 0.1
+      },
+      "Some other race": {
+        "Estimate": 19361,
+        "MOE": 2410,
+        "Percentage": 0.4,
+        "PercentError": 0.1
+      },
+      "Two or More Races": {
+        "Estimate": 150550,
+        "MOE": 5002,
+        "Percentage": 2.9,
+        "PercentError": 0.1
+      }
+    },
+    "Age": {
+      "Under 5 years": {
+        "Estimate": 283281,
+        "MOE": 517,
+        "Percentage": 5.5,
+        "PercentError": 0.1
+      },
+      "5 to 9 years": {
+        "Estimate": 304256,
+        "MOE": 3982,
+        "Percentage": 5.9,
+        "PercentError": 0.1
+      },
+      "10 to 14 years": {
+        "Estimate": 323263,
+        "MOE": 3923,
+        "Percentage": 6.3,
+        "PercentError": 0.1
+      },
+      "15 to 19 years": {
+        "Estimate": 341792,
+        "MOE": 1372,
+        "Percentage": 6.6,
+        "PercentError": 0.1
+      },
+      "20 to 24 years": {
+        "Estimate": 336837,
+        "MOE": 1383,
+        "Percentage": 6.5,
+        "PercentError": 0.1
+      },
+      "25 to 34 years": {
+        "Estimate": 664060,
+        "MOE": 1244,
+        "Percentage": 12.9,
+        "PercentError": 0.1
+      },
+      "35 to 44 years": {
+        "Estimate": 631951,
+        "MOE": 1219,
+        "Percentage": 12.3,
+        "PercentError": 0.1
+      },
+      "45 to 54 years": {
+        "Estimate": 633020,
+        "MOE": 1091,
+        "Percentage": 12.3,
+        "PercentError": 0.1
+      },
+      "55 to 59 years": {
+        "Estimate": 338038,
+        "MOE": 3855,
+        "Percentage": 6.6,
+        "PercentError": 0.1
+      },
+      "60 to 64 years": {
+        "Estimate": 347735,
+        "MOE": 3914,
+        "Percentage": 6.8,
+        "PercentError": 0.1
+      },
+      "65 to 74 years": {
+        "Estimate": 573897,
+        "MOE": 649,
+        "Percentage": 11.2,
+        "PercentError": 0.1
+      },
+      "75 to 84 years": {
+        "Estimate": 272327,
+        "MOE": 2665,
+        "Percentage": 5.3,
+        "PercentError": 0.1
+      },
+      "85 years and over": {
+        "Estimate": 92293,
+        "MOE": 2628,
+        "Percentage": 1.8,
+        "PercentError": 0.1
+      }
+    },
+    "Household Income": {
+       "$0 to $14999": {
+        "Percentage": 10.3,
+        "PercentError": 0.1
+       },
+       "$15000 to $24999": {
+        "Percentage": 8.4,
+        "PercentError": 0.2
+       },
+       "$25000 to $34999": {
+        "Percentage": 8.7,
+        "PercentError": 0.2
+       },
+       "$35000 to $49999": {
+        "Percentage": 12.4,
+        "PercentError": 0.2
+       },
+       "$50,000 to $74,999": {
+        "Percentage": 17.5,
+        "PercentError": 0.2
+       } ,
+       "$75,000 to $99,999": {
+        "Percentage": 12.9,
+        "PercentError": 0.2
+       },
+       "$100,000 to $149,999": {
+        "Percentage": 15.4,
+        "PercentError": 0.2
+       },
+       "$150,000 to $199,999": {
+        "Percentage": 6.9,
+        "PercentError": 0.1
+       },
+       "$200,000 or more": {
+        "Percentage": 7.4,
+        "PercentError": 0.1
+       }
+    }
+  }
+}
