@@ -17,7 +17,7 @@ import USA from "../geojson/usa_2.json";
 import MapLegend from "./legend";
 
 const StatesMap = ({ selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, filter }) => {
-  console.log(selectedArea);
+  // console.log(selectedArea);
   // const [currentState, setCurrentState] = useState('South Carolina');
   // const [display, setDisplay] = useState([mapView, views['none'][mapView.toLowerCase()]]);
 
@@ -32,7 +32,7 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, 
   /* Change view */
   useEffect(() => {
     if (selectedArea === "South Carolina" || selectedArea === "Utah") {
-      console.log(views[selectedArea][mapView.toLowerCase()]);
+      // console.log(views[selectedArea][mapView.toLowerCase()]);
       setgeoJSONLayer(views[selectedArea][mapView.toLowerCase()]);
     }
   }, [mapView, selectedArea]);
@@ -45,10 +45,10 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, 
     }
   }, [isOpen]);
 
-  /* Logging purposes */
-  useEffect(() => {
-    console.log("Display updated:", geoJSONLayer);
-  }, [geoJSONLayer]);
+  // /* Logging purposes */
+  // useEffect(() => {
+  //   console.log("Display updated:", geoJSONLayer);
+  // }, [geoJSONLayer]);
 
   /**
    * ? does the hover effect but don't know if this is the best place to show popups
@@ -60,13 +60,12 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, 
     // layer.bindPopup(popupContent);
     layer.bindPopup(renderToString(<PopUpCustom content={popupContent} />));
 
-    // layer.setStyle({
-    //   fillColor: "#ff6961",
-    //   fillOpacity: 0.5,
-    //   color: "black",
-    //   weight: 1,
-    // });
-    console.log(feature);
+    layer.setStyle({
+      fillColor: "#ff6961",
+      fillOpacity: 0.5,
+      color: "black",
+      weight: 1,
+    });
     layer.on({
       mouseover: (e) => {
         originalColor = e.target.options.fillColor;
@@ -236,8 +235,8 @@ const MapController = ({ selectedArea, isOpen }) => {
   // map.invalidateSize();
   
   // map.invalidateSize();
-  console.log(map.getBounds());
-  console.log(map.getCenter());
+  // console.log(map.getBounds());
+  // console.log(map.getCenter());
 
   const states = {
     'Utah': {
@@ -256,7 +255,7 @@ const MapController = ({ selectedArea, isOpen }) => {
   }
 
   const zoomToState = (state, states) => {
-    console.log(states[state]);
+    // console.log(states[state]);
     // map.fitBounds(states[state].bounds);
     map.flyTo(states[state].center, 7.25, {
       animate: true,

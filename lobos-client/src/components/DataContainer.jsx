@@ -203,8 +203,9 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
         </div>
       </div>
       <div className="flex flex-col items-center justify-center">
-        <span className="font-bold underline merriweather text-4xl mb-16">Precinct/District/County Data</span>
-        <span className="font-bold underline lato text-2xl">{(selectedArea === selectedState) ? "[Select A Precinct/District/County]" : "[Information Goes Here]"}</span>
+            <RepresentativesData dataMapping={dataMapping} selectedState={selectedState}/>
+        {/* <span className="font-bold underline merriweather text-4xl mb-16">Precinct/District/County Data</span>
+        <span className="font-bold underline lato text-2xl">{(selectedArea === selectedState) ? "[Select A Precinct/District/County]" : "[Information Goes Here]"}</span> */}
       </div>
     </>
   );
@@ -390,5 +391,40 @@ function DataComponent_Gingles() {
     </div>
   );
 }
+
+
+function RepresentativesData ({ dataMapping, selectedState }) {
+  let districts = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Congressional Districts"] : null;
+  console.log(districts);
+
+  if(districts === null) {
+    return <></>;
+  } else {
+    districts = Object.entries(districts);
+    return (
+      <div className="table-container">
+          <table className="merriweather congress-table">
+        <thead>
+          <tr>
+            <th className="text-xl">Congressional District</th>
+            <th className="text-xl">Representative</th>
+            <th className="text-xl">Party</th>
+          </tr>
+        </thead>
+        <tbody>
+          {districts.map(([districtName, details]) => (
+            <tr key={districtName} className={details.Party === 'Democratic' ? 'hover:text-blue-500' : 'hover:text-red-500'}>
+              <td>{districtName}</td>
+              <td>{details.Representative}</td>
+              <td>{details.Party}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      </div>
+
+  );
+  }
+};
 
 export default DataContainer;
