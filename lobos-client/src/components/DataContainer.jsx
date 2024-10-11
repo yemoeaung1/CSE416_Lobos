@@ -152,53 +152,33 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
   return (
     <>
       <div className="data-component-info-top p-4">
-        <div className="flag-container p-1">
+        <div className="data-component-info-top-left">
+          <div className="data-component-info-stat-box">
+            <span className="font-bold underline merriweather pb-2">Population</span>
+            <span className="lato">{`${population.toLocaleString()}`}</span>
+          </div>
+          <div className="data-component-info-stat-box">
+            <span className="font-bold underline merriweather">Median</span>
+            <span className="font-bold underline merriweather pb-2">Household Income</span>
+            <span className="lato">{`${income.toLocaleString()}`}</span>
+          </div>
+        </div>
+        <div className="data-component-info-top-middle p-1">
           <img
+            className={"border-4 border-black p-1"}
             src={flagMapping[selectedState]}
             alt="No Flag Found"
             style={{ width: "500px", height: "333px" }}
           />
         </div>
-        <div className="data-component-info-right">
-          <div
-            className="data-component-info-text"
-            style={{
-              backgroundColor: "rgba(255, 215, 0, 1)",
-              flex: 1,
-            }}
-          >
-            <span className="font-bold underline merriweather">Population</span>
-            <span className="lato">{`: ${population.toLocaleString()}`}</span>
+        <div className="data-component-info-top-right">
+          <div className="data-component-info-stat-box">
+            <span className="font-bold underline merriweather pb-2">Majority Race</span>
+            <span className="lato">{`${race}`}</span>
           </div>
-          <div
-            className="data-component-info-text"
-            style={{
-              backgroundColor: "rgba(180, 180, 180, 0.8)",
-              flex: 1,
-            }}
-          >
-            <span className="font-bold underline merriweather">Median Income</span>
-            <span className="lato">{`: ${income.toLocaleString()}`}</span>
-          </div>
-          <div
-            className="data-component-info-text"
-            style={{
-              backgroundColor: "rgba(220, 220, 220, 0.8)",
-              flex: 1,
-            }}
-          >
-            <span className="font-bold underline merriweather">Majority Race</span>
-            <span className="lato">{`: ${race}`}</span>
-          </div>
-          <div
-            className="data-component-info-text"
-            style={{
-              backgroundColor: "rgba(180, 180, 180, 0.8)",
-              flex: 1,
-            }}
-          >
-            <span className="font-bold underline merriweather">Party</span>
-            <span className="lato">{`: ${party}`}</span>
+          <div className="data-component-info-stat-box">
+            <span className="font-bold underline merriweather pb-2">Majority Party</span>
+            <span className="lato">{`${party}`}</span>
           </div>
         </div>
       </div>
