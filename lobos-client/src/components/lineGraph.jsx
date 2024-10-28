@@ -156,7 +156,7 @@ const LineGraph = ({dataSetType}) =>{
     return (
         <div className= "flex flex-col border-2 border-gray-800 rounded-xl shadow-xl">
           <div className="flex-1 flex justify-center items-center">
-            <canvas ref={chartRef} className="w-20  h-20"></canvas>
+            <canvas ref={chartRef} className="w-full h-full" height={65}></canvas>
           </div>
         </div>
       

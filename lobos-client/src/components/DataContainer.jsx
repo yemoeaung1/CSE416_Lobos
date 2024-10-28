@@ -433,19 +433,16 @@ function DataComponent_Gingles() {
       <div className="h-3/4 w-full">
         {selectedChart === "precinct-analysis" && <IncomeVotingScatter />}
         {selectedChart === "ecological-inference" && (
-          <div className="flex flex-col space-y-4 w-full h-full">
-          {/* Line Graph 1 */}
-          <div className="flex-1 w-full">
+          <div className="flex flex-col space-y-8 h-full">
+          <div className="flex-1 h-1/3 w-full">
               <LineGraph dataSetType={"trump"} />
           </div>
 
-          {/* Line Graph 2 */}
-          <div className="flex-1 w-full">
+          <div className="flex-1 h-1/3 w-full">
               <LineGraph dataSetType={"biden"} />
           </div>
 
-          {/* Line Graph 3 */}
-          <div className="flex-1 w-full">
+          <div className="flex-1 h-1/3 w-full">
               <LineGraph dataSetType={"jo_jorgensen"} />
           </div>
         </div>
