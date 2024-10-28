@@ -152,59 +152,40 @@ function DataComponent_Info({ selectedArea, selectedState, dataMapping }) {
   return (
     <>
       <div className="data-component-info-top p-4">
-        <div className="flag-container p-1">
+        <div className="data-component-info-top-left">
+          <div className="data-component-info-stat-box">
+            <span className="font-bold underline merriweather pb-2">Population</span>
+            <span className="montserrat">{`${population.toLocaleString()}`}</span>
+          </div>
+          <div className="data-component-info-stat-box">
+            <span className="font-bold underline merriweather">Median</span>
+            <span className="font-bold underline merriweather pb-2">Household Income</span>
+            <span className="montserrat">{`${income.toLocaleString()}`}</span>
+          </div>
+        </div>
+        <div className="data-component-info-top-middle p-1">
           <img
+            className={"border-4 border-black p-1"}
             src={flagMapping[selectedState]}
             alt="No Flag Found"
             style={{ width: "500px", height: "333px" }}
           />
         </div>
-        <div className="data-component-info-right">
-          <div
-            className="data-component-info-text"
-            style={{
-              backgroundColor: "rgba(255, 215, 0, 1)",
-              flex: 1,
-            }}
-          >
-            <span className="font-bold underline merriweather">Population</span>
-            <span className="lato">{`: ${population.toLocaleString()}`}</span>
+        <div className="data-component-info-top-right">
+          <div className="data-component-info-stat-box">
+            <span className="font-bold underline merriweather pb-2">Majority Race</span>
+            <span className="montserrat">{`${race}`}</span>
           </div>
-          <div
-            className="data-component-info-text"
-            style={{
-              backgroundColor: "rgba(180, 180, 180, 0.8)",
-              flex: 1,
-            }}
-          >
-            <span className="font-bold underline merriweather">Median Income</span>
-            <span className="lato">{`: ${income.toLocaleString()}`}</span>
-          </div>
-          <div
-            className="data-component-info-text"
-            style={{
-              backgroundColor: "rgba(220, 220, 220, 0.8)",
-              flex: 1,
-            }}
-          >
-            <span className="font-bold underline merriweather">Majority Race</span>
-            <span className="lato">{`: ${race}`}</span>
-          </div>
-          <div
-            className="data-component-info-text"
-            style={{
-              backgroundColor: "rgba(180, 180, 180, 0.8)",
-              flex: 1,
-            }}
-          >
-            <span className="font-bold underline merriweather">Party</span>
-            <span className="lato">{`: ${party}`}</span>
+          <div className="data-component-info-stat-box">
+            <span className="font-bold underline merriweather pb-2">Majority Party</span>
+            <span className="montserrat">{`${party}`}</span>
           </div>
         </div>
       </div>
       <div className="flex flex-col items-center justify-center">
-        <span className="font-bold underline merriweather text-4xl mb-16">Precinct/District/County Data</span>
-        <span className="font-bold underline lato text-2xl">{(selectedArea === selectedState) ? "[Select A Precinct/District/County]" : "[Information Goes Here]"}</span>
+            <RepresentativesData dataMapping={dataMapping} selectedState={selectedState}/>
+        {/* <span className="font-bold underline merriweather text-4xl mb-16">Precinct/District/County Data</span>
+        <span className="font-bold underline lato text-2xl">{(selectedArea === selectedState) ? "[Select A Precinct/District/County]" : "[Information Goes Here]"}</span> */}
       </div>
     </>
   );
@@ -454,5 +435,39 @@ function DataComponent_Gingles() {
     </div>
   );
 }
+
+
+function RepresentativesData ({ dataMapping, selectedState }) {
+  let districts = (dataMapping && selectedState in dataMapping) ? dataMapping[selectedState]["Congressional Districts"] : null;
+
+  if(districts === null) {
+    return <></>;
+  } else {
+    districts = Object.entries(districts);
+    return (
+      <div className="table-container">
+          <table className="merriweather congress-table">
+        <thead>
+          <tr>
+            <th className="text-xl">Congressional District</th>
+            <th className="text-xl">Representative</th>
+            <th className="text-xl">Party</th>
+          </tr>
+        </thead>
+        <tbody>
+          {districts.map(([districtName, details]) => (
+            <tr key={districtName} className={details.Party === 'Democratic' ? 'hover:text-blue-500' : 'hover:text-red-500'}>
+              <td>{districtName}</td>
+              <td>{details.Representative}</td>
+              <td>{details.Party}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      </div>
+
+  );
+  }
+};
 
 export default DataContainer;
