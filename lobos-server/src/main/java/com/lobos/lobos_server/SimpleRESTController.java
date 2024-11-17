@@ -1,6 +1,10 @@
 package com.lobos.lobos_server;
 
+import com.lobos.lobos_server.service.DocumentService;
+import com.lobos.lobos_server.model.StateInfo;
+
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,7 +24,14 @@ import java.util.Iterator;
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
 public class SimpleRESTController {
+    @Autowired
+    private DocumentService documentService;
     
+    @PostMapping("/add-example")
+    public StateInfo addExample() {
+        return documentService.addExampleDocument();
+    }
+
     @GetMapping("/state-info")
     public Map<String, Object> getInfo(
             @RequestParam(value = "state", required = true) String state) {
