@@ -4,35 +4,25 @@ import {
   TileLayer,
   Pane,
   GeoJSON,
-  Popup,
 } from "react-leaflet";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { renderToString } from "react-dom/server";
-import views from "../views";
-import CongressionalDistrictMap from "./CongressionalDistrictMap";
-import CountyMap from "./CountyMap";
-import PrecinctMap from "./PrecinctMap";
+import views from "./Views";
 import Color from "color";
-import USA from "../geojson/usa_2.json";
-import MapLegend from "./legend";
+import USA from "../../geojson/usa_2.json";
+import { States } from "../../enums";
 
-const StatesMap = ({ selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, filter }) => {
-  // console.log(selectedArea);
-  // const [currentState, setCurrentState] = useState('South Carolina');
-  // const [display, setDisplay] = useState([mapView, views['none'][mapView.toLowerCase()]]);
-
+const StatesMap = ({ selectedState, setHoveredArea, selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, filter }) => {
   const [colors, setColors] = useState([]);
-  const [geoJSONLayer, setgeoJSONLayer] = useState(views["none"]["state"]);
-
+  const [geoJSONLayer, setgeoJSONLayer] = useState(views[States.NONE]["state"]);
 
   useEffect(() => {
     setColors(getShades(filter, 4)); // Directly set the new colors
-}, [filter]);
+  }, [filter]);
 
   /* Change view */
   useEffect(() => {
-    if (selectedArea === "South Carolina" || selectedArea === "Utah") {
-      // console.log(views[selectedArea][mapView.toLowerCase()]);
+    if (selectedState !== States.NONE) {
       setgeoJSONLayer(views[selectedArea][mapView.toLowerCase()]);
     }
   }, [mapView, selectedArea]);
@@ -40,24 +30,14 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, 
   /* Change to original 2 state view */
   useEffect(() => {
     if (!isOpen) {
-      setgeoJSONLayer(views["none"]["state"]);
-      // setSelectedArea("none");
+      setgeoJSONLayer(views[States.NONE]["state"]);
     }
   }, [isOpen]);
 
-  // /* Logging purposes */
-  // useEffect(() => {
-  //   console.log("Display updated:", geoJSONLayer);
-  // }, [geoJSONLayer]);
-
-  /**
-   * ? does the hover effect but don't know if this is the best place to show popups
-   **/
   let originalColor;
 
   const onEachFeature = (feature, layer) => {
     let popupContent = feature.properties.NAME;
-    // layer.bindPopup(popupContent);
     layer.bindPopup(renderToString(<PopUpCustom content={popupContent} />));
 
     layer.setStyle({
@@ -72,11 +52,13 @@ const StatesMap = ({ selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, 
         const darkerColor = Color(originalColor).darken(0.5).hex(); // Darken by 20%
         e.target.setStyle({ fillColor: darkerColor });
         layer.openPopup();
+        setHoveredArea(feature.properties.NAME);
       },
       // Mouseout event - Revert to original color
       mouseout: (e) => {
         e.target.setStyle({ fillColor: originalColor });
         layer.closePopup();
+        setHoveredArea(States.NONE);
       },
       click: (e) => {
         // console.log(feature.p); 
@@ -224,7 +206,6 @@ const style = (feature) => {
           style={style}
         />
       </MapContainer>
-      {/* {filter && isOpen && <MapLegend colors={colors} filter={filter}/>} */}
     </>
   );
 };
@@ -232,31 +213,23 @@ const style = (feature) => {
 
 const MapController = ({ selectedArea, isOpen }) => {
   const map = useMap();
-  // map.invalidateSize();
-  
-  // map.invalidateSize();
-  // console.log(map.getBounds());
-  // console.log(map.getCenter());
 
   const states = {
-    'Utah': {
+    [States.UTAH]: {
       'bounds': [[37.0, -114.052], [42.0016, -109.0419]],
       'center': [39.7, -106],
-      // 'center': [39.308056, -111.638889]
     },
-    'South Carolina': {
+    [States.SOUTH_CAROLINA]: {
       'bounds': [[32.0333, -83.3540], [35.2154, -78.5420]],
       'center': [33.5, -76]
     },
-    'none': {
+    [States.NONE]: {
       'bounds': [[24.396308, -125.0], [47.543285, -53.618125]],
       'center': [36, -92]
     }
   }
 
   const zoomToState = (state, states) => {
-    // console.log(states[state]);
-    // map.fitBounds(states[state].bounds);
     map.flyTo(states[state].center, 7.25, {
       animate: true,
       duration: 2,
@@ -270,7 +243,7 @@ const MapController = ({ selectedArea, isOpen }) => {
       map.flyTo([36, -92], 5, {
         animate: true,
         duration: 2,
-      }).setMaxBounds(states['none'].bounds);
+      }).setMaxBounds(states[States.NONE].bounds);
     } else {
       if (selectedArea in states) {
         zoomToState(selectedArea, states);
@@ -278,16 +251,6 @@ const MapController = ({ selectedArea, isOpen }) => {
     }
   }, [isOpen, selectedArea, map])
 
-  // if(!isOpen) {
-  //   map.flyTo([36, -92], 5, {
-  //     animate: true,
-  //     duration: 2,
-  //   }).setMaxBounds(states['none'].bounds);
-  // } else {
-  //   if (selectedArea in states) {
-  //     zoomToState(selectedArea, states);
-  //   }
-  // }
   return null;
 };
 
