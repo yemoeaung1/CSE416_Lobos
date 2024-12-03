@@ -1,4 +1,7 @@
 {
+  "state": "Utah",
+  "view": "State",
+  "geoJSON": {
     "type": "Feature",
     "properties": {
       "GEO_ID": "0400000US49",
@@ -269,3 +272,4 @@
       ]
     }
   }
+}

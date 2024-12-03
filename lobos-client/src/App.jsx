@@ -1,74 +1,56 @@
-import { useEffect, useState, useRef } from "react";
 import "./App.css";
-import StatesMap from "./components/StatesMap";
+import { useEffect, useState } from "react";
 import NavBar from "./components/NavBar";
-import MapLayerSelector from "./components/MapLayerSelector";
 import DataContainer from "./components/DataContainer";
-import BarGraph from "./components/barGraph";
-import { BoxPlotChart } from "@sgratzl/chartjs-chart-boxplot";
-import BoxPlotGraph from "./components/boxPlotGraph";
-import LineGraph from "./components/lineGraph";
+import StateMapContainer from "./components/StateMapContainer";
+import { MapViewOptions, States } from "./enums";
 
 function App() {
-    const [selectedState, setSelectedState] = useState("none");
-    const [selectedArea, setSelectedArea] = useState("none");
-    const [mapView, setMapView] = useState("State");
-
     const [isOpen, setIsOpen] = useState(false);
-
-    const [dataTool, setDataTool] = useState("info");
-
     const [filter, setFilter] = useState();
 
+    const [mapView, setMapView] = useState(MapViewOptions.STATE);
+    const [hoveredArea, setHoveredArea] = useState(States.NONE);
+    const [selectedArea, setSelectedArea] = useState(States.NONE);
+    const [selectedState, setSelectedState] = useState(States.NONE);
+
     useEffect(() => {
-        if (selectedArea == 'Utah' || selectedArea == 'South Carolina' || selectedArea == 'none') {
+        if (Object.values(States).includes(selectedArea))
             setSelectedState(selectedArea);
-        }
 
-        if (selectedArea !== "none" && !isOpen) setIsOpen(true);
-        else if (selectedArea === "none" && isOpen) setIsOpen(false);
+        if (selectedArea !== States.NONE && !isOpen)
+            setIsOpen(true);
+        else if (selectedArea === States.NONE && isOpen)
+            setIsOpen(false);
     }, [selectedArea]);
-
-    // console.log(selectedArea);
-    // console.log(mapView);
 
     return (
         <div>
-            <NavBar selectedState={selectedState} setSelectedArea={setSelectedArea} />
+            <NavBar
+                setMapView={setMapView}
+                hoveredArea={hoveredArea}
+                setHoveredArea={setHoveredArea}
+                setSelectedArea={setSelectedArea}
+                selectedState={selectedState}
+            />
             <DataContainer
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 selectedArea={selectedArea}
                 selectedState={selectedState}
-                dataTool={dataTool}
-                setDataTool={setDataTool}
                 setFilter={setFilter}
             />
-            <div
-                className="wrapper"
-                style={{
-                    width: isOpen ? "38%" : "98%",
-                }}
-            >
-                <StatesMap
-                    setSelectedArea={setSelectedArea}
-                    selectedArea={selectedArea}
-                    mapView={mapView}
-                    isOpen={isOpen}
-                    filter={filter}
-                    setIsOpen={setIsOpen}
-                />
-                {isOpen && (
-                    <MapLayerSelector
-                        setMapView={setMapView}
-                        state={selectedArea}
-                    />
-                )}
-            </div>
-
-            {/* <BoxPlotGraph/>
-      <BarGraph/>
-      <LineGraph/> */}
+            <StateMapContainer
+                mapView={mapView}
+                setMapView={setMapView}
+                selectedState={selectedState}
+                setHoveredArea={setHoveredArea}
+                setSelectedArea={setSelectedArea}
+                selectedArea={selectedArea}
+                isOpen={isOpen}
+                filter={filter}
+                setIsOpen={setIsOpen}
+            />
         </div>
     );
 }
