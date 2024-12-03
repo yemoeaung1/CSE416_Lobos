@@ -1,4 +1,5 @@
 export default function SummaryTab({ selectedArea, selectedState }) {
+    return;
     const flagMapping = {
       "Utah": UtahFlag,
       "South Carolina": SCarolinaFlag,

@@ -11,4 +11,10 @@ const DataTabOptions = Object.freeze({
     ENSEMBLE: "ensemble"
 })
 
-export { States, DataTabOptions }
+const MapViewOptions = Object.freeze({
+    STATE: "State",
+    DISTRICT: "District",
+    PRECINCT: "Precinct"
+})
+
+export { States, DataTabOptions, MapViewOptions }

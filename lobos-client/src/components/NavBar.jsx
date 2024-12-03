@@ -1,7 +1,7 @@
 import { GiWolfHead } from "react-icons/gi";
-import { States } from "../enums";
+import { MapViewOptions, States } from "../enums";
 
-export default function NavBar({ hoveredArea, setHoveredArea, setSelectedArea, selectedState }) {
+export default function NavBar({ setMapView, hoveredArea, setHoveredArea, setSelectedArea, selectedState }) {
     return (
         <div className="navbar">
             <NavLogo 
@@ -18,6 +18,7 @@ export default function NavBar({ hoveredArea, setHoveredArea, setSelectedArea, s
 
 function NavLogo({ setHoveredArea, setSelectedArea }) {
     const clearSelection = () => {
+        setMapView(MapViewOptions.STATE);
         setHoveredArea(States.NONE);
         setSelectedArea(States.NONE);
     }
@@ -33,12 +34,10 @@ function NavLogo({ setHoveredArea, setSelectedArea }) {
 }
 
 function NavTitle({ hoveredArea, selectedState }) {
-    let showHoverText = selectedState === States.NONE || hoveredArea !== States.NONE;
-
     return (
         <div className="navbar-title flex flex-col items-center justify-center">
             <span className="text-4xl text-white averia-serif">{(selectedState !== States.NONE) ? selectedState : "[Select A State]"}</span>
-            { showHoverText && <span className="text-base text-white averia-serif">{`Hovering: ${(hoveredArea !== States.NONE) ? hoveredArea : "...    "}`}</span> }
+            <span className="text-base text-white averia-serif">{`Hovering: ${(hoveredArea !== States.NONE) ? hoveredArea : "...    "}`}</span>
         </div>
     )
 }
