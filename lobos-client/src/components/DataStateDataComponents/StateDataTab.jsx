@@ -1,4 +1,4 @@
-export default function FiltersTab({ setFilter }) {
+export default function StateDataTab({ setFilter }) {
     const [graphType, setGraphType] = useState("bar");
     const [dataSetType, setDataSetType] = useState("party");
   

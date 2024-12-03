@@ -19,7 +19,7 @@
 
 .leaflet-container {
   height: 88vh;
-  margin: 1vh 1vw 1vh 1vw;
+  margin: 1vh 0 0 0;
 
   border-radius: 16px;
   border: 4px solid black;

@@ -1,20 +1,18 @@
-const MapLayerSelector = ({ state, setMapView }) => {
-    const views = ["State", "Congressional", "County", "Precinct"];
+import { MapViewOptions } from "../../enums";
+
+const MapLayerSelector = ({ mapView, setMapView }) => {
+    const views = [MapViewOptions.STATE, MapViewOptions.DISTRICT, MapViewOptions.PRECINCT];
 
     const changeMapView = (e) => {
-        console.log(e.target.value);
         setMapView(e.target.value);
     };
 
     return (
-        <div className="layer-switch h-9 w-full flex items-center justify-end">
-            <label htmlFor="mapViewSelector" className="sr-only">
-                Select Map View
-            </label>
+        <div className="layer-switch h-8 w-full flex items-center justify-end">
             <select
-                id="mapViewSelector"
+                value={mapView}
                 onChange={changeMapView}
-                className="h-9 w-48 px-7 font-dark bg-white border-2 border-gray-700 rounded-lg text-lg mt-11"
+                className="h-8 w-36 mt-12 mr-4 px-2 bg-white border-2 border-gray-700 rounded-lg text-lg"
             >
                 {views.map((view) => (
                     <option key={view} value={view}>
