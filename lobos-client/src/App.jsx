@@ -7,15 +7,18 @@ import { MapViewOptions, States } from "./enums";
 
 function App() {
     const [isOpen, setIsOpen] = useState(false);
-    const [filter, setFilter] = useState();
 
     const [mapView, setMapView] = useState(MapViewOptions.STATE);
+    const [heatmapOpts, setHeatmapOpts] = useState(null);
+
     const [hoveredArea, setHoveredArea] = useState(States.NONE);
     const [selectedArea, setSelectedArea] = useState(States.NONE);
     const [selectedState, setSelectedState] = useState(States.NONE);
 
+    const [highlightedDistrict, setHighlightedDistrict] = useState(0);
+
     useEffect(() => {
-        if (Object.values(States).includes(selectedArea))
+        if (selectedState !== selectedArea && Object.values(States).includes(selectedArea))
             setSelectedState(selectedArea);
 
         if (selectedArea !== States.NONE && !isOpen)
@@ -38,18 +41,19 @@ function App() {
                 setIsOpen={setIsOpen}
                 selectedArea={selectedArea}
                 selectedState={selectedState}
-                setFilter={setFilter}
+                setMapView={setMapView}
+                setHighlightedDistrict={setHighlightedDistrict}
             />
             <StateMapContainer
                 mapView={mapView}
-                setMapView={setMapView}
                 selectedState={selectedState}
                 setHoveredArea={setHoveredArea}
                 setSelectedArea={setSelectedArea}
                 selectedArea={selectedArea}
                 isOpen={isOpen}
-                filter={filter}
                 setIsOpen={setIsOpen}
+                heatmapOpts={heatmapOpts}
+                highlightedDistrict={highlightedDistrict}
             />
         </div>
     );

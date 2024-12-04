@@ -70,7 +70,7 @@
 }
 
 .congress-table {
-  width: 80%;
+  width: 90%;
   border-collapse: collapse;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   background-color: #fff;
@@ -84,7 +84,7 @@
 }
 
 .congress-table th {
-  background-color: #251ea4;
+  background-color: #000000;
   color: white;
   font-weight: bold;
   text-transform: uppercase;

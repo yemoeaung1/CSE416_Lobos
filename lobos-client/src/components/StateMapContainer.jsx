@@ -1,8 +1,6 @@
-import { useState } from "react";
-import MapLayerSelector from "./MapComponents/MapLayerSelector";
 import StatesMap from "./MapComponents/StatesMap";
 
-export default function StateMapContainer({ mapView, setMapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, isOpen, filter, setIsOpen }) {
+export default function StateMapContainer({ mapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, isOpen, filter, setIsOpen, highlightedDistrict }) {
     return (
         <div className="flex items-center justify-center" style={{ width: isOpen ? "40%" : "100%" }}>
             <div className="wrapper" style={{ width: "98%" }}>
@@ -15,13 +13,8 @@ export default function StateMapContainer({ mapView, setMapView, selectedState, 
                     isOpen={isOpen}
                     filter={filter}
                     setIsOpen={setIsOpen}
+                    highlightedDistrict={highlightedDistrict}
                 />
-                {isOpen && (
-                    <MapLayerSelector
-                        mapView={mapView}
-                        setMapView={setMapView}
-                    />
-                )}
             </div>
         </div>
     )

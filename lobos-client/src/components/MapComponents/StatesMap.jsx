@@ -1,20 +1,26 @@
 import {
   MapContainer,
   GeoJSON,
-  useMap,
+  useMap
 } from "react-leaflet";
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import Color from "color";
 import { States } from "../../enums";
 
-const StatesMap = ({ selectedState, setHoveredArea, selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, filter }) => {
+function StatesMap ({ selectedState, setHoveredArea, selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, heatmapOpts, highlightedDistrict }) {
   const [mapData, setMapData] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/state-map?state=${selectedState}&view=${mapView}`)
+    axios.get(`http://localhost:8080/api/state-map`, {
+      params: {
+        state: selectedState,
+        view: mapView,
+        heatmapOpts
+      }
+    })
       .then(response => {
-        setMapData(response.data)
+        setMapData(response.data);
       })
       .catch(error => {
         console.error("Error Retrieving Map:", error);
@@ -85,10 +91,10 @@ const StatesMap = ({ selectedState, setHoveredArea, selectedArea, setSelectedAre
         minZoom={mapData.properties.MIN_ZOOM}
         maxZoom={mapData.properties.MAX_ZOOM}
       >
-        <MapController 
-          isOpen={isOpen} 
-          selectedArea={selectedArea} 
-          mapData={mapData} 
+        <MapController
+          isOpen={isOpen}
+          selectedArea={selectedArea}
+          mapData={mapData}
         />
 
         <GeoJSON key={JSON.stringify(mapData.geoJSON)} data={mapData.geoJSON} onEachFeature={onEachFeature} zIndex={1} />
