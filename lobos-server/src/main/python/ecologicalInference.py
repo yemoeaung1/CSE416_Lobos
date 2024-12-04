@@ -119,9 +119,9 @@ def main():
     ei = perform_2x2_ei(df)
 
 #     # 4.Plot the Results and save the image
-#     ei.plot()
-#     plt.savefig("plot3.png")
-    print(ei.summary())
+    ei.plot()
+    plt.savefig("plot3.png")
+#     print(ei.summary())
 # santa_clara_data = Datasets.Santa_Clara.to_dataframe()
 
 # group_fraction_2by2 = np.array(santa_clara_data["pct_e_asian_vote"])
