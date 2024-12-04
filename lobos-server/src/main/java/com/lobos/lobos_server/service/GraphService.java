@@ -26,7 +26,6 @@ public class GraphService {
     //Returns the graph based on the state and the filter
     public Graph getGraphForState(String state, String filter) {
         StateInfo stateInfo = stateInfoRepository.findFirstByState(state);
-        System.out.println(stateInfo);
 
         if (stateInfo == null) {
             throw new IllegalArgumentException("State not found");
@@ -51,7 +50,6 @@ public class GraphService {
             default:
                 throw new IllegalArgumentException("Invalid filter: " + filter);
         }
-
         return graph;
     }
 
@@ -65,18 +63,16 @@ public class GraphService {
         List<Double> data = new ArrayList<>();
         List<DataSet> dataSets = new ArrayList<>();
 
-         if (stateInfo.getData().containsKey("Race")) {
+        if (stateInfo.getData().containsKey("Race")) {
         Map<String, Object> raceData = (Map<String, Object>) stateInfo.getData().get("Race");
 
         for (String race : raceData.keySet()) {
             Map<String, Object> raceDetails = (Map<String, Object>) raceData.get(race);
             Object estimateObj = raceDetails.get("Estimate");
 
-            System.out.println(estimateObj);
-
             if (estimateObj != null) {
                 labels.add(race);
-                data.add(Double.parseDouble(estimateObj.toString())); // Ensure conversion to Double
+                data.add(Double.parseDouble(estimateObj.toString()));
             }
         }
     }
@@ -84,7 +80,7 @@ public class GraphService {
     // Create dataset
     DataSet raceDataSet = new DataSet();
     raceDataSet.setLabel("Population by Race");
-    raceDataSet.setData(data); // Add all race data
+    raceDataSet.setData(data);
     raceDataSet.setBackgroundColor("rgba(0, 0, 255, 0.5)");
     raceDataSet.setBorderColor("black");
     raceDataSet.setBorderWidth(1);
@@ -114,7 +110,7 @@ public class GraphService {
 
             // Add the bracket and percentage to labels and data
             labels.add(formatIncomeLabel(incomeBracket));
-            data.add(Double.parseDouble(incomeDetails.get("Percentage").toString())); // Assuming Percentage is stored as Double
+            data.add(Double.parseDouble(incomeDetails.get("Percentage").toString()));
         }
         }
 
@@ -183,8 +179,8 @@ public class GraphService {
         Object republicanPopulation = stateInfo.getData().get("Republican");
 
         // Add population data
-        data.add(Double.parseDouble(democraticPopulation.toString())); // Democratic
-        data.add(Double.parseDouble(republicanPopulation.toString())); // Republican
+        data.add(Double.parseDouble(democraticPopulation.toString()));
+        data.add(Double.parseDouble(republicanPopulation.toString()));
     }
 
     // Create dataset
@@ -200,22 +196,6 @@ public class GraphService {
     graph.setLabels(labels);
     graph.setDataSets(dataSets);
 }
-
-    // //The color for the races
-    // private String getColorForRace(String race) {
-    //     switch (race) {
-    //         case "White":
-    //             return "rgba(255, 99, 132, 0.5)";
-    //         case "Black":
-    //             return "rgba(54, 162, 235, 0.5)";
-    //         case "Asian":
-    //             return "rgba(255, 206, 86, 0.5)";
-    //         case "Hispanic":
-    //             return "rgba(75, 192, 192, 0.5)";
-    //         default:
-    //             return "rgba(201, 203, 207, 0.5)";
-    //     }
-    // }
 
     private String formatIncomeLabel(String incomeBracket) {
     //Removes the '$' and ',' characters

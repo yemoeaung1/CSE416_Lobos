@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -7,14 +7,35 @@ import {
   Radio,
   Checkbox,
 } from "@mui/material";
-
 import BarGraph from "../GraphPlotComponents/BarGraph";
+import axios from "axios";
 
-export default function StateDataTab({ setFilter, selectedState }) {
+function formatNumberWithCommas(number) {
+  return number.toLocaleString();
+}
+
+export default function StateDataTab({ selectedState }) {
   const [graphType, setGraphType] = useState("bar");
   const [dataSetType, setDataSetType] = useState("race");
   const [heatMapEnabled, setHeatMapEnabled] = useState(false);
-  const [selectedRace, setSelectedRace] = useState("All"); // Default race selection
+  const [selectedRace, setSelectedRace] = useState("All");
+  const [stateInfo, setStateInfo] = useState(null);
+  
+  useEffect(() => {
+      axios.get(`http://localhost:8080/api/state-info`, {
+        params: {
+          state: selectedState
+        }
+      })
+        .then(response => {
+          console.log(response.data)
+          setStateInfo(response.data)
+        })
+        .catch(error => {
+          console.error("Error Retrieving Info:", error);
+        });
+    }
+  , [selectedState]);
 
   //Enables the Heat Map
   const handleHeatMapChange = (event) => {
@@ -30,15 +51,15 @@ export default function StateDataTab({ setFilter, selectedState }) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="mb-8 flex justify-between ">
+      <div className="mb-4 flex justify-between">
         {/*Buttons on the top right corner*/}
-        <div className="mt-5">
+        <div className="flex ">
           {graphType === "bar" && (
             <button
               className={
                 dataSetType === "party"
-                  ? "text-2xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                  : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                  ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                  : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
               }
               onClick={() => {
                 setDataSetType("party");
@@ -52,8 +73,8 @@ export default function StateDataTab({ setFilter, selectedState }) {
           <button
             className={
               dataSetType === "race"
-                ? "text-2xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
             }
             onClick={() => {
               setDataSetType("race");
@@ -66,8 +87,8 @@ export default function StateDataTab({ setFilter, selectedState }) {
           <button
             className={
               dataSetType === "income"
-                ? "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                ? "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
             }
             onClick={() => {
               setDataSetType("income");
@@ -81,8 +102,8 @@ export default function StateDataTab({ setFilter, selectedState }) {
           <button
             className={
               dataSetType === "region"
-                ? "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                ? "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
             }
             onClick={() => {
               setDataSetType("region");
@@ -92,23 +113,22 @@ export default function StateDataTab({ setFilter, selectedState }) {
             {" "}
             Region Type{" "}
           </button>
+
+        <div className="text-2xl font-bold text-center font-roboto ml-24 mt-2">
+          Total Population:
+          <span className="text-2xl font-normal"> {stateInfo ? formatNumberWithCommas(stateInfo.data["Total Population"]) : "Loading..."} </span>
+        </div>
         </div>
 
-        <div className="text-3xl font-bold text-center font-roboto mr-8">
-          Total Population:
-          <span className="text-2xl font-normal"> 1720817</span>
-        </div>
       </div>
 
       <div className="h-3/4 w-full">
         {graphType === "bar" && (
           <BarGraph dataSetType={dataSetType} selectedState={selectedState} />
         )}
-        {/* {graphType === "box" && <BoxPlotGraph dataSetType={dataSetType} />}
-          {graphType === "line" && <LineGraph dataSetType={dataSetType} />} */}
 
         {/* Checkbox for HeatMap */}
-        <div className="items-center flex flex-col mt-8 ">
+        <div className="items-center flex flex-col ">
           <FormControlLabel
             control={
               <Checkbox
@@ -130,7 +150,7 @@ export default function StateDataTab({ setFilter, selectedState }) {
           />
         </div>
 
-        <div className="mt-8">
+        <div className="">
           {/* Race Selection (Radio Group) */}
           {dataSetType === "race" && (
             <div className="flex flex-col items-center">
@@ -148,14 +168,14 @@ export default function StateDataTab({ setFilter, selectedState }) {
                     <Radio
                       sx={{
                         "& .MuiSvgIcon-root": {
-                          fontSize: 28,
+                          fontSize: 20,
                         },
                       }}
                       disabled={!heatMapEnabled}
                     />
                   }
                   label={
-                    <span style={{ fontSize: "1.3rem"}}>
+                    <span style={{ fontSize: "1.0rem"}}>
                       White
                     </span>
                   }
@@ -166,14 +186,14 @@ export default function StateDataTab({ setFilter, selectedState }) {
                     <Radio
                       sx={{
                         "& .MuiSvgIcon-root": {
-                          fontSize: 28,
+                          fontSize: 20,
                         },
                       }}
                       disabled={!heatMapEnabled}
                     />
                   }
                   label={
-                    <span style={{ fontSize: "1.3rem" }}>
+                    <span style={{ fontSize: "1.0rem" }}>
                       Black
                     </span>
                   }
@@ -184,14 +204,14 @@ export default function StateDataTab({ setFilter, selectedState }) {
                     <Radio
                       sx={{
                         "& .MuiSvgIcon-root": {
-                          fontSize: 28,
+                          fontSize: 20,
                         },
                       }}
                       disabled={!heatMapEnabled}
                     />
                   }
                   label={
-                    <span style={{ fontSize: "1.3rem" }}>
+                    <span style={{ fontSize: "1.0rem" }}>
                       Asian
                     </span>
                   }
@@ -202,14 +222,14 @@ export default function StateDataTab({ setFilter, selectedState }) {
                     <Radio
                       sx={{
                         "& .MuiSvgIcon-root": {
-                          fontSize: 28,
+                          fontSize: 20,
                         },
                       }}
                       disabled={!heatMapEnabled}
                     />
                   }
                   label={
-                    <span style={{ fontSize: "1.3rem" }}>
+                    <span style={{ fontSize: "1.0rem" }}>
                       Hispanic
                     </span>
                   }
@@ -220,14 +240,14 @@ export default function StateDataTab({ setFilter, selectedState }) {
                     <Radio
                       sx={{
                         "& .MuiSvgIcon-root": {
-                          fontSize: 28,
+                          fontSize: 20,
                         },
                       }}
                       disabled={!heatMapEnabled}
                     />
                   }
                   label={
-                    <span style={{ fontSize: "1.3rem"}}>
+                    <span style={{ fontSize: "1.0rem"}}>
                       Native American
                     </span>
                   }
@@ -238,14 +258,14 @@ export default function StateDataTab({ setFilter, selectedState }) {
                     <Radio
                       sx={{
                         "& .MuiSvgIcon-root": {
-                          fontSize: 28,
+                          fontSize: 20,
                         },
                       }}
                       disabled={!heatMapEnabled}
                     />
                   }
                   label={
-                    <span style={{ fontSize: "1.3rem" }}>
+                    <span style={{ fontSize: "1.0rem" }}>
                       Pacific Islanders
                     </span>
                   }
@@ -256,14 +276,14 @@ export default function StateDataTab({ setFilter, selectedState }) {
                     <Radio
                       sx={{
                         "& .MuiSvgIcon-root": {
-                          fontSize: 28,
+                          fontSize: 20,
                         },
                       }}
                       disabled={!heatMapEnabled}
                     />
                   }
                   label={
-                    <span style={{ fontSize: "1.3rem" }}>
+                    <span style={{ fontSize: "1.0rem" }}>
                       Other Race
                     </span>
                   }
