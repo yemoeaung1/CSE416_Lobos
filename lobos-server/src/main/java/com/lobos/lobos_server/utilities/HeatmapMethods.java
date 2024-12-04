@@ -7,8 +7,8 @@ import java.util.Map;
 import com.lobos.lobos_server.enum_classes.FiltersEnum;
 
 public class HeatmapMethods {
-    public static Map<String, Object> handleBins(List<String> filters){
-        FiltersEnum filter = FiltersEnum.valueOf(filters.get(0));
+    public static Map<String, Object> handleBins(List<String> filters, Object info){
+        FiltersEnum filter = FiltersEnum.fromValue(filters.get(0));
         switch(filter){
             case DEMOGRAPHIC: return handleDemoBins(filters.get(1)); 
             case ECONOMIC: return handleEcoBins();
@@ -31,7 +31,7 @@ public class HeatmapMethods {
     private static Map<String, Object> handleEcoBins(){
         Map<String, Object> colorMapping = new HashMap<>();
 
-        colorMapping.put("Color", "#ffffff");
+        colorMapping.put("Color", "#0000ff");
         colorMapping.put("Opacity", 0.5);
 
         return colorMapping;

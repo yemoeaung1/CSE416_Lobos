@@ -1,9 +1,9 @@
 package com.lobos.lobos_server.enum_classes;
 
 public enum StateViewEnum {
-    STATE("state"),
-    DISTRICT("district"),
-    PRECINCT("precinct");
+    STATE("State"),
+    DISTRICT("District"),
+    PRECINCT("Precinct");
 
     private String str;
 

@@ -42,6 +42,7 @@ function App() {
                 selectedArea={selectedArea}
                 selectedState={selectedState}
                 setMapView={setMapView}
+                setHeatmapOpts={setHeatmapOpts}
                 setHighlightedDistrict={setHighlightedDistrict}
             />
             <StateMapContainer

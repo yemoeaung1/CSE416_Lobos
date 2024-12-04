@@ -17,4 +17,13 @@ public enum FiltersEnum {
     public String toString() {
         return this.str;
     }
+    
+    public static FiltersEnum fromValue(String value) {
+        for (FiltersEnum filter : FiltersEnum.values()) {
+            if (filter.str.equals(value)) {
+                return filter;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant with value: " + value);
+    }
 }
