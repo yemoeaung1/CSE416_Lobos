@@ -13,7 +13,6 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
     const [selectedRace, setSelectedRace] = useState("non-hispanic");
     // Fetch precinct data whenever the selected state changes
     useEffect(() => {
-        console.log("ANAL", selectedState);
         if (selectedState === States.NONE) {
             return; // Do not proceed until a state is selected
         }

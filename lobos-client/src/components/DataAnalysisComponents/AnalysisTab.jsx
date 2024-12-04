@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { MapViewOptions } from "../../enums";
 
-export default function AnalysisTab({ selectedState }) {
+export default function AnalysisTab({ selectedState, setMapView }) {
     const [selectedChart, setSelectedChart] = useState("precinct-analysis");
     const [selectedFilter, setSelectedFilter] = useState("income");
 
