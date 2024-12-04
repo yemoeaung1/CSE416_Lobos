@@ -1,17 +1,14 @@
 package com.lobos.lobos_server.model;
 
-import java.util.Map;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "state-info")
-public class StateInfo {
+@Document(collection = "precinct-info")
+public class PrecinctInfo {
     @Id
     private String id;
     private String state;
-    private Map<String, Object> data;
-    private Map<String, Object> tableSettings;
+    private PrecinctData[] precincts;
 
     public String getId() {
         return id;
@@ -29,19 +26,11 @@ public class StateInfo {
         this.state = state;
     }
 
-    public Map<String, Object> getData() {
-        return data;
+    public PrecinctData[] getPrecincts() {
+        return precincts;
     }
 
-    public void setData(Map<String, Object> data) {
-        this.data = data;
-    }
-
-    public Map<String, Object> getTableSettings() {
-        return tableSettings;
-    }
-
-    public void setTableSettings(Map<String, Object> tableSettings) {
-        this.tableSettings = tableSettings;
+    public void setPrecincts(PrecinctData[] precincts) {
+        this.precincts = precincts;
     }
 }
