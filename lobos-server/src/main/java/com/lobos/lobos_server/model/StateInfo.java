@@ -44,8 +44,4 @@ public class StateInfo {
     public void setTableSettings(Map<String, Object> tableSettings) {
         this.tableSettings = tableSettings;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/test-cody
