@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import BarGraph from "../GraphPlotComponents/BarGraph";
 import axios from "axios";
+import { DataFilters } from "../../enums";
 
 function formatNumberWithCommas(number) {
   return number.toLocaleString();
@@ -19,6 +20,7 @@ export default function StateDataTab({ selectedState }) {
   const [heatMapEnabled, setHeatMapEnabled] = useState(false);
   const [selectedRace, setSelectedRace] = useState("All");
   const [stateInfo, setStateInfo] = useState(null);
+  const [dataSetType, setDataSetType] = useState(DataFilters.DEMOGRAPHIC)
   
   useEffect(() => {
       axios.get(`http://localhost:8080/api/state-info`, {
@@ -55,7 +57,7 @@ export default function StateDataTab({ selectedState }) {
           {graphType === "bar" && (
             <button
               className={
-                dataSetType === "party"
+                dataSetType === DataFilters.ECO_POLITICAL
                   ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
                   : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
               }
@@ -70,7 +72,7 @@ export default function StateDataTab({ selectedState }) {
 
           <button
             className={
-              dataSetType === "race"
+              dataSetType === DataFilters.DEMOGRAPHIC
                 ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
                 : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
             }
@@ -84,7 +86,7 @@ export default function StateDataTab({ selectedState }) {
 
           <button
             className={
-              dataSetType === "income"
+              dataSetType === DataFilters.ECONOMIC
                 ? "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
                 : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
             }
@@ -99,7 +101,7 @@ export default function StateDataTab({ selectedState }) {
 
           <button
             className={
-              dataSetType === "region"
+              dataSetType === DataFilters.REGION_TYPE
                 ? "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
                 : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
             }
