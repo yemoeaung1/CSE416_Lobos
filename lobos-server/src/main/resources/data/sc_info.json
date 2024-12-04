@@ -10,31 +10,31 @@
     "Median age": 40,
     "Source": "2022: ACS 5-Year Estimates",
     "Congressional Districts": {
-      "District 1": {
+      "Congressional District 1": {
         "Representative": "Nancy Mace",
         "Party": "Republican"
       },
-      "District 2": {
+      "Congressional District 2": {
         "Representative": "Joe Wilson",
         "Party": "Republican"
       },
-      "District 3": {
+      "Congressional District 3": {
         "Representative": "Jeff Duncan",
         "Party": "Republican"
       },
-      "District 4": {
+      "Congressional District 4": {
         "Representative": "William Timmons",
         "Party": "Republican"
       },
-      "District 5": {
+      "Congressional District 5": {
         "Representative": "Ralph Norman",
         "Party": "Republican"
       },
-      "District 6": {
+      "Congressional District 6": {
         "Representative": "James “Jim” Clyburn",
         "Party": "Democratic"
       },
-      "District 7": {
+      "Congressional District 7": {
         "Representative": "Russell Fry",
         "Party": "Republican"
       }

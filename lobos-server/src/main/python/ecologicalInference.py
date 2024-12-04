@@ -8,6 +8,8 @@ from pyei.goodmans_er import GoodmansERBayes # type: ignore
 from pyei.r_by_c import RowByColumnEI # type: ignore
 from pyei.io_utils import from_netcdf, to_netcdf # type: ignore
 
+import matplotlib.pyplot as plt
+
 # Example 2x2 data
 # santa_clara_data = Datasets.Santa_Clara.to_dataframe()
 
@@ -82,6 +84,7 @@ from pyei.io_utils import from_netcdf, to_netcdf # type: ignore
 # # ei_rbyc.plot()
 
 santa_clara_data = Datasets.Santa_Clara.to_dataframe()
+print(santa_clara_data)
 
 group_fraction_2by2 = np.array(santa_clara_data["pct_e_asian_vote"])
 votes_fraction_2by2 = np.array(santa_clara_data["pct_for_hardy2"])
@@ -99,16 +102,40 @@ ei_2by2 = TwoByTwoEI(model_name="king99_pareto_modification", pareto_scale=15, p
 ei_2by2.fit(group_fraction_2by2, 
        votes_fraction_2by2, 
        precinct_pops, 
-       demographic_group_name=demographic_group_name_2by2, 
-       candidate_name=candidate_name_2by2, 
-       precinct_names=precinct_names, 
-       draws=1200, # optional
-       tune=3000, # optional
-       target_accept=.99# optional
+       demographic_group_name = demographic_group_name_2by2, 
+       candidate_name = candidate_name_2by2, 
 )
 
 # Generate a simple report to summarize the results
 print(ei_2by2.summary())
+ei_2by2.plot() #set show_threshold to false to just view the kde
+plt.savefig("plot2.png")
+# ei_rbyc = RowByColumnEI(model_name='multinomial-dirichlet-modified', pareto_shape=100, pareto_scale=100)
+# ei_rbyc.plot_kdes(plot_by="candidate") # or, plot_by="group"
 
-ei_rbyc = RowByColumnEI(model_name='multinomial-dirichlet-modified', pareto_shape=100, pareto_scale=100)
-ei_2by2.plot()
+# santa_clara_data = Datasets.Santa_Clara.to_dataframe() # This line same as 2x2 example
+
+# group_fractions_rbyc = np.array(santa_clara_data[['pct_ind_vote', 'pct_e_asian_vote', 'pct_non_asian_vote']]).T
+# votes_fractions_rbyc = np.array(santa_clara_data[['pct_for_hardy2', 'pct_for_kolstad2', 'pct_for_nadeem2']]).T
+# precinct_names = santa_clara_data['precinct'] # This line same as 2x2 example
+
+# candidate_names_rbyc = ["Hardy", "Kolstad", "Nadeem"]
+# demographic_group_names_rbyc = ["ind", "e_asian", "non_asian"]
+# precinct_pops = np.array(santa_clara_data['total2']) # This line same as 2x2 example
+
+# ei_rbyc = RowByColumnEI(model_name='multinomial-dirichlet-modified', pareto_shape=100, pareto_scale=100)
+
+# # Fit the model
+# ei_rbyc.fit(group_fractions_rbyc, 
+#        votes_fractions_rbyc, 
+#        precinct_pops, 
+#        demographic_group_names=demographic_group_names_rbyc, 
+#        candidate_names=candidate_names_rbyc, 
+#        precinct_names=precinct_names, 
+# )
+
+# # Generate a simple report to summarize the results
+# print(ei_rbyc.summary())
+# # ei_rbyc.plot_kdes(plot_by="candidate") # or, plot_by="group"
+# plt.savefig("plot2.png")
+
