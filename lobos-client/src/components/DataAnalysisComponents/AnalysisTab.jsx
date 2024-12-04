@@ -1,4 +1,7 @@
-export default function AnalysisTab() {
+import React, { useState } from "react";
+import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter";
+
+export default function AnalysisTab({ selectedState }) {
     const [selectedChart, setSelectedChart] = useState("precinct-analysis");
 
     // {graphType === "box" && <BoxPlotGraph />}
@@ -31,9 +34,15 @@ export default function AnalysisTab() {
             </div>
             {/* Chart Display */}
             <div className="h-3/4 w-full">
-                {selectedChart === "precinct-analysis" && <IncomeVotingScatter />}
-                {selectedChart === "ecological-inference"}{" "}
-                {/* Replace with the other chart component */}
+                {selectedChart === "precinct-analysis" && (
+                    <IncomeVotingScatter selectedState={selectedState} />
+                )}
+                {selectedChart === "ecological-inference" && (
+                    <div>
+                        {/* Replace with the other chart component */}
+                        Ecological Inference Chart Component (to be added here)
+                    </div>
+                )}
             </div>
         </div>
     );
