@@ -6,7 +6,7 @@ const States = Object.freeze({
 
 const DataTabOptions = Object.freeze({
     SUMMARY: "summary",
-    FILTERS: "filters",
+    STATE_DATA: "state_data",
     ANALYSIS: "analysis",
     ENSEMBLE: "ensemble"
 })

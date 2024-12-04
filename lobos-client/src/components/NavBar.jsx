@@ -5,6 +5,7 @@ export default function NavBar({ setMapView, hoveredArea, setHoveredArea, setSel
     return (
         <div className="navbar">
             <NavLogo 
+                setMapView={setMapView}
                 setHoveredArea={setHoveredArea}
                 setSelectedArea={setSelectedArea}
             />
@@ -16,7 +17,7 @@ export default function NavBar({ setMapView, hoveredArea, setHoveredArea, setSel
     )
 }
 
-function NavLogo({ setHoveredArea, setSelectedArea }) {
+function NavLogo({ setMapView, setHoveredArea, setSelectedArea }) {
     const clearSelection = () => {
         setMapView(MapViewOptions.STATE);
         setHoveredArea(States.NONE);
