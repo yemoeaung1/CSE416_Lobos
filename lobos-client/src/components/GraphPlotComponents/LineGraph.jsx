@@ -157,7 +157,7 @@ const LineGraph = ({dataSetType}) =>{
              onClick={() => updateChart("age")}> Age </button>
           </div> */}
           <div className="flex-1 flex justify-center items-center">
-            <canvas ref={chartRef} className="w-full h-full" height={65}></canvas>
+            <canvas ref={chartRef} className="w-full h-full"></canvas>
           </div>
         </div>
       

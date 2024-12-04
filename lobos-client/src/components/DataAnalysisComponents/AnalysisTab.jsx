@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter.jsx"
 
 export default function AnalysisTab() {
     const [selectedChart, setSelectedChart] = useState("precinct-analysis");

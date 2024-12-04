@@ -37,12 +37,16 @@ public class GraphService {
 
         switch (filter.toLowerCase()) {
             case "race":
-                System.out.println("Populating the Race");
                 populateRaceData(graph, stateInfo);
                 break;
             case "income":
-                System.out.println("Populating the Income");
                 populateIncomeData(graph, stateInfo);
+                break;
+            case "region":
+                populateRegionData(graph, stateInfo);
+                break;
+            case "party":
+                populatePartyData(graph, stateInfo);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid filter: " + filter);
@@ -61,7 +65,6 @@ public class GraphService {
         List<Double> data = new ArrayList<>();
         List<DataSet> dataSets = new ArrayList<>();
 
-        System.out.println("About to grab the Race data");
          if (stateInfo.getData().containsKey("Race")) {
         Map<String, Object> raceData = (Map<String, Object>) stateInfo.getData().get("Race");
 
@@ -104,7 +107,6 @@ public class GraphService {
 
         if (stateInfo.getData().containsKey("Household Income")) {
         Map<String, Object> incomeData = (Map<String, Object>) stateInfo.getData().get("Household Income");
-        System.out.println(incomeData);
 
         // Loop through each income bracket
         for (String incomeBracket : incomeData.keySet()) {
@@ -118,7 +120,7 @@ public class GraphService {
 
         DataSet incomeDataSet = new DataSet();
         incomeDataSet.setLabel("Income Bracket");
-        incomeDataSet.setData(data); // Set the data for each income bracket
+        incomeDataSet.setData(data);
         incomeDataSet.setBackgroundColor("rgba(0, 255, 0, 0.5)");
         incomeDataSet.setBorderColor("black");
         incomeDataSet.setBorderWidth(1);
@@ -128,6 +130,76 @@ public class GraphService {
         graph.setLabels(labels);
         graph.setDataSets(dataSets);
     }
+
+    //Populate the Graph with RegionData
+    private void populateRegionData(Graph graph, StateInfo stateInfo) {
+        graph.setTitle("Population Distribution by Region");
+        graph.setXLabel("Race");
+        graph.setYLabel("Population");
+
+        List<String> labels = new ArrayList<>();
+        List<Double> data = new ArrayList<>();
+        List<DataSet> dataSets = new ArrayList<>();
+
+        if (stateInfo.getData().containsKey("Region Type Distribution")) {
+        Map<String, Object> regionData = (Map<String, Object>) stateInfo.getData().get("Region Type Distribution");
+
+        for (String regionType : regionData.keySet()) {
+            Object populationObj = regionData.get(regionType);
+
+            if (populationObj != null) {
+                labels.add(regionType);
+                data.add(Double.parseDouble(populationObj.toString()));
+            }
+        }
+    }
+
+    // Create dataset
+    DataSet regionDataSet = new DataSet();
+    regionDataSet.setLabel("Population by Region");
+    regionDataSet.setData(data);
+    regionDataSet.setBackgroundColor("rgba(0, 0, 255, 0.5)");
+    regionDataSet.setBorderColor("black");
+    regionDataSet.setBorderWidth(1);
+
+    dataSets.add(regionDataSet);
+
+    graph.setLabels(labels);
+    graph.setDataSets(dataSets);
+    }
+
+    // Populate the Graph with Party Data
+    private void populatePartyData(Graph graph, StateInfo stateInfo) {
+    graph.setTitle("Political Party Distribution");
+    graph.setXLabel("Political Party");
+    graph.setYLabel("Population");
+
+    List<String> labels = List.of("Democratic", "Republican");
+    List<Double> data = new ArrayList<>();
+    List<DataSet> dataSets = new ArrayList<>();
+
+    if (stateInfo.getData().containsKey("Democratic") && stateInfo.getData().containsKey("Republican")) {
+        Object democraticPopulation = stateInfo.getData().get("Democratic");
+        Object republicanPopulation = stateInfo.getData().get("Republican");
+
+        // Add population data
+        data.add(Double.parseDouble(democraticPopulation.toString())); // Democratic
+        data.add(Double.parseDouble(republicanPopulation.toString())); // Republican
+    }
+
+    // Create dataset
+    DataSet partyDataSet = new DataSet();
+    partyDataSet.setLabel("Population by Political Party");
+    partyDataSet.setData(data);
+    partyDataSet.setBackgroundColor("rgba(255, 99, 132, 0.5)");
+    partyDataSet.setBorderColor("black");
+    partyDataSet.setBorderWidth(1);
+
+    dataSets.add(partyDataSet);
+
+    graph.setLabels(labels);
+    graph.setDataSets(dataSets);
+}
 
     // //The color for the races
     // private String getColorForRace(String race) {
@@ -148,8 +220,6 @@ public class GraphService {
     private String formatIncomeLabel(String incomeBracket) {
     //Removes the '$' and ',' characters
     String cleaned = incomeBracket.replace("$", "").replace(",", "");
-
-    // Split the string into ranges (e.g., "15000 to 24999")
     if (cleaned.contains(" to ")) {
         String[] range = cleaned.split(" to ");
         if (range.length == 2) {
@@ -173,15 +243,14 @@ public class GraphService {
             return "$" + convertToKFormat(base) + "+";
         } catch (NumberFormatException e) {
             System.err.println("Error parsing income range: " + incomeBracket);
-            return incomeBracket; // Return original if parsing fails
+            return incomeBracket;
         }
     }
-
     return incomeBracket;
-}
+    }
 
-private String convertToKFormat(String value) {
-    int number = Integer.parseInt(value);
-    return (number / 1000) + "k";
-}
+    private String convertToKFormat(String value) {
+        int number = Integer.parseInt(value);
+        return (number / 1000) + "k";
+    }
 }

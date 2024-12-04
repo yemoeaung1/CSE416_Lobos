@@ -30,75 +30,25 @@
   pointer-events: none;
 }
 
-.navbar {
-  height: 10vh;
-  background-color: #bb0000;
-}
-
 .layer-switch > * {
   pointer-events: auto;
 }
 
-.legend {
-  position: absolute;
-  z-index: 999;
-  right: 20px;
-  bottom: 80px;
-  padding: 10px 10px;
-  box-shadow: 0 0 5px 0 rgba(184, 140, 140, 0.3);
-  font-size: 12px;
-  letter-spacing: 2px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 5px;
-  width: 20%;
-  background-color: white;
+.averia-serif{
+  font-family: "Averia Serif Libre", serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.legend > div {
-  color: black;
-  position: relative;
-  display: flex;
-  height: 20px;
-  /* padding: 0 10px; */
+.montserrat{
+  font-family: 'Montserrat', sans-serif;
 }
 
-.table-container {
-  width: 100%;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
+.merriweather{
+  font-family: "Merriweather", serif;
 }
 
-.congress-table {
-  width: 90%;
-  border-collapse: collapse;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+.lato{
+  font-family: "Lato", sans-serif;
+  font-weight: 500;
+  font-style: normal;
 }
-
-.congress-table th,
-.congress-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border: 1px solid #ddd;
-}
-
-.congress-table th {
-  background-color: #000000;
-  color: white;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.congress-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.congress-table tr:hover {
-  /* background-color: #bbb9b9; */
-  cursor: pointer;
-}
-
-/* .congress-table td {
-  color: #333;
-} */
