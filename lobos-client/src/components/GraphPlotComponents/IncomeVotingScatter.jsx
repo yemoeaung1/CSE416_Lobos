@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import regression from "regression";
 import axios from "axios";
+import { States } from "../../enums";
 
 const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
     const chartRef = useRef(null);
@@ -12,7 +13,8 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
     const [selectedRace, setSelectedRace] = useState("non-hispanic");
     // Fetch precinct data whenever the selected state changes
     useEffect(() => {
-        if (!selectedState) {
+        console.log("ANAL", selectedState);
+        if (selectedState === States.NONE) {
             return; // Do not proceed until a state is selected
         }
 
@@ -285,7 +287,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
         };
     }, [loading, error, precinctData, selectedFilter, selectedIncomeLevel]);
 
-    if (!selectedState) {
+    if (selectedState === States.NONE) {
         return <div>Please select a state to see the voting trends.</div>;
     }
 
@@ -299,13 +301,13 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
 
     if (selectedFilter === "income") {
         return (
-            <div className="border-2 rounded-xl border-black h-full w-full">
+            <>
                 <div className="flex items-center mb-4">
                     {/* Dropdown for Income Filter */}
                     <select
                         value={selectedIncomeLevel}
                         onChange={(e) => setSelectedIncomeLevel(e.target.value)}
-                        className="text-xl font-semibold border-2 border-black rounded-xl p-2 mr-4"
+                        className="border-2 border-black rounded-md p-2"
                     >
                         <option value="all">All Incomes</option>
                         <option value="low">Low Income (Below $50,000)</option>
@@ -317,21 +319,17 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                         </option>
                     </select>
                 </div>
-                <canvas ref={chartRef} className="w-full h-full"></canvas>
-            </div>
+                <div className="border-2 rounded-xl border-black h-full w-full">
+                    <canvas ref={chartRef} className="w-full h-full"></canvas>
+                </div>
+            </>
         );
     } else {
         return (
-            <div className="border-2 rounded-xl border-black h-full w-full">
+            <>
                 {/* Render race dropdown if selected filter is race */}
                 {selectedFilter === "race" && (
                     <div className="mb-4">
-                        <label
-                            htmlFor="raceFilter"
-                            className="font-semibold mr-2"
-                        >
-                            Select Race:
-                        </label>
                         <select
                             id="raceFilter"
                             value={selectedRace}
@@ -345,8 +343,10 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                         </select>
                     </div>
                 )}
-                <canvas ref={chartRef} className="w-full h-full"></canvas>
-            </div>
+                <div className="border-2 rounded-xl border-black h-full w-full">
+                    <canvas ref={chartRef} className="w-full h-full"></canvas>
+                </div>
+            </>
         );
     }
 };

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import com.lobos.lobos_server.model.PrecinctData;
 import com.lobos.lobos_server.model.PrecinctInfo;
 import com.lobos.lobos_server.model.StateInfo;
-import com.lobos.lobos_server.model.StateMap;
 import com.lobos.lobos_server.model.StateMapConfig;
 import com.lobos.lobos_server.service.PrecinctService;
 import com.lobos.lobos_server.service.StateService;
@@ -71,7 +70,7 @@ public class StateController {
         return ResponseEntity.ok(data);
     }
 
-    @Cacheable(value = "lobosCache", key = "STATE-INFO: #state")
+    @Cacheable(value = "lobosCache", key = "'STATE-INFO:' + #state")
     private Map<String, Object> fetchStateInfo(String state){
         StateInfo stateInfo = stateService.getStateInfo(state);
 
@@ -83,10 +82,11 @@ public class StateController {
         return data;
     }
 
-    @Cacheable(value = "lobosCache", key = "STATE-MAP: #state + #view")
     private Map<String, Object> fetchStateMap(String state, String view, List<String> heatmapOpts){
-        StateMap stateMap = stateService.getStateMap(state, view);
         StateMapConfig stateMapConfig = stateService.getStateMapConfig(state);
+        GeoJSON stateGeoJSON = fetchStateGeoJSON(state, view);
+        if(heatmapOpts != null && !heatmapOpts.isEmpty())
+            appendHeatmapOpts(stateGeoJSON, state, heatmapOpts);
 
         Map<String, Object> data = new HashMap<>();
         Map<String, Object> properties = new HashMap<>();
@@ -98,9 +98,17 @@ public class StateController {
         properties.put("MAX_ZOOM", stateMapConfig.getMaxZoom());
 
         data.put("properties", properties);
+        data.put("geoJSON", stateGeoJSON);
 
-        // Temporary Code => Fetching Precinct Level GeoJSON Locally:
-        if(view.equals(StateViewEnum.PRECINCT.toString())){
+        return data;
+    }
+
+    @Cacheable(value = "lobosCache", key = "'STATE-GEOJSON:' + #state + ':' + #view")
+    private GeoJSON fetchStateGeoJSON(String state, String view){
+        if(!view.equals(StateViewEnum.PRECINCT.toString()))
+            return stateService.getStateMap(state, view).getGeoJSON();
+        else {
+            // Temporary Code => Fetching Precinct Level GeoJSON Locally:
             GeoJSON geoJSONLocal = null;
             try {
                 if(state.equals("South Carolina")){
@@ -112,22 +120,12 @@ public class StateController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
-            if(heatmapOpts != null && !heatmapOpts.isEmpty())
-                appendHeatmapOpts(geoJSONLocal, state, heatmapOpts);
-            
-            data.put("geoJSON", geoJSONLocal);
-        } else {
-            if(heatmapOpts != null && !heatmapOpts.isEmpty())
-                appendHeatmapOpts(stateMap.getGeoJSON(), state, heatmapOpts);
-                
-            data.put("geoJSON", stateMap.getGeoJSON());
-        }
 
-        return data;
+            return geoJSONLocal;
+        }
     }
 
-    @Cacheable(value = "lobosCache", key = "PRECINCT-INFO-MAP: #state")
+    @Cacheable(value = "lobosCache", key = "'PRECINCT-INFO-MAP:' + #state")
     private Map<String, PrecinctData> fetchPrecinctInfoMap(String state){
         PrecinctInfo precinctInfo = precinctService.getPrecinctInfo(state);
         Map<String, PrecinctData> precinctInfoMap = new HashMap<>();
