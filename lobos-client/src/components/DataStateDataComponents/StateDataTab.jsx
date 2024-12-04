@@ -15,28 +15,38 @@ function formatNumberWithCommas(number) {
   return number.toLocaleString();
 }
 
-export default function StateDataTab({ selectedState }) {
+export default function StateDataTab({ setHeatmapOpts, selectedState }) {
   const [graphType, setGraphType] = useState("bar");
   const [heatMapEnabled, setHeatMapEnabled] = useState(false);
   const [selectedRace, setSelectedRace] = useState("All");
   const [stateInfo, setStateInfo] = useState(null);
-  const [dataSetType, setDataSetType] = useState(DataFilters.DEMOGRAPHIC)
-  
+  const [dataSetType, setDataSetType] = useState(DataFilters.ECO_POLITICAL)
+
   useEffect(() => {
-      axios.get(`http://localhost:8080/api/state-info`, {
-        params: {
-          state: selectedState
-        }
-      })
-        .then(response => {
-          console.log(response.data)
-          setStateInfo(response.data)
-        })
-        .catch(error => {
-          console.error("Error Retrieving Info:", error);
-        });
+    if (heatMapEnabled) {
+      console.log("HEATMAP TOGGLED");
+      if (dataSetType === DataFilters.DEMOGRAPHIC)
+        setHeatmapOpts([DataFilters.DEMOGRAPHIC, selectedRace]);
+      else
+        setHeatmapOpts(dataSetType);
     }
-  , [selectedState]);
+  }, [heatMapEnabled]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:8080/api/state-info`, {
+      params: {
+        state: selectedState
+      }
+    })
+      .then(response => {
+        console.log(response.data)
+        setStateInfo(response.data)
+      })
+      .catch(error => {
+        console.error("Error Retrieving Info:", error);
+      });
+  }
+    , [selectedState]);
 
   //Enables the Heat Map
   const handleHeatMapChange = (event) => {
@@ -53,7 +63,7 @@ export default function StateDataTab({ selectedState }) {
     <div className="flex flex-col h-full">
       <div className="mb-4 flex justify-between">
         {/*Buttons on the top right corner*/}
-        <div className="flex ">
+        <div className="flex items-center">
           {graphType === "bar" && (
             <button
               className={
@@ -114,10 +124,10 @@ export default function StateDataTab({ selectedState }) {
             Region Type{" "}
           </button>
 
-        <div className="text-2xl font-bold text-center font-roboto ml-24 mt-2">
-          Total Population:
-          <span className="text-2xl font-normal"> {stateInfo ? formatNumberWithCommas(stateInfo.data["Total Population"]) : "Loading..."} </span>
-        </div>
+          <div className="text-2xl font-bold text-center font-roboto ml-24 mt-2">
+            Total Population:
+            <span className="text-2xl font-normal"> {stateInfo ? formatNumberWithCommas(stateInfo.data["Total Population"]) : "Loading..."} </span>
+          </div>
         </div>
 
       </div>
@@ -175,7 +185,7 @@ export default function StateDataTab({ selectedState }) {
                     />
                   }
                   label={
-                    <span style={{ fontSize: "1.0rem"}}>
+                    <span style={{ fontSize: "1.0rem" }}>
                       White
                     </span>
                   }
@@ -247,7 +257,7 @@ export default function StateDataTab({ selectedState }) {
                     />
                   }
                   label={
-                    <span style={{ fontSize: "1.0rem"}}>
+                    <span style={{ fontSize: "1.0rem" }}>
                       Native American
                     </span>
                   }
