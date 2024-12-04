@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +17,7 @@ import com.lobos.lobos_server.repository.StateInfoRepository;
 import com.lobos.lobos_server.repository.StateMapConfigRepository;
 import com.lobos.lobos_server.repository.StateMapRepository;
 import com.lobos.lobos_server.repository.PrecinctInfoRepository;
+import com.lobos.lobos_server.model.PrecinctData;
 import com.lobos.lobos_server.model.PrecinctInfo;
 
 @Service
@@ -54,25 +54,25 @@ public class StateService {
     }
 
     public List<Map<String, Object>> getPrecinctDataByState(String state) {
-        Optional<PrecinctInfo> precinctInfo = precinctInfoRepository.findFirstByState(state);
+        PrecinctInfo precinctInfo = precinctInfoRepository.findFirstByState(state);
 
-        if (precinctInfo.isPresent()) {
-            List<Map<String, Object>> precincts = precinctInfo.get().getPrecincts();
+        if (precinctInfo != null) {
+            PrecinctData[] precincts = precinctInfo.getPrecincts();
 
-            if (precincts == null || precincts.isEmpty()) {
+            if (precincts == null || precincts.length == 0) {
                 System.out.println("No precinct data found for state: " + state);
                 return Collections.emptyList();
             } else {
                 List<Map<String, Object>> filteredPrecinctData = new ArrayList<>();
 
                 // Extract necessary fields from each precinct
-                for (Map<String, Object> precinct : precincts) {
+                for (PrecinctData precinct : precincts) {
                     Map<String, Object> filteredData = new HashMap<>();
-                    filteredData.put("median_income", precinct.get("median_income"));
+                    filteredData.put("median_income", precinct.getMedianIncome());
 
                     // Calculate Democratic and Republican vote percentages
-                    int demVotes = (int) precinct.getOrDefault("2020_PRES_D", 0);
-                    int repVotes = (int) precinct.getOrDefault("2020_PRES_R", 0);
+                    int demVotes = precinct.getPresD();
+                    int repVotes = precinct.getPresR();
                     int totalVotes = demVotes + repVotes;
 
                     if (totalVotes > 0) {

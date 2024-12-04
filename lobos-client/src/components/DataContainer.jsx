@@ -121,7 +121,7 @@ function DataComponent({ isOpen, dataTab, selectedState, setMapView, setHeatmapO
   return (
     <div className="data-component open">
       {dataTab === DataTabOptions.SUMMARY && <SummaryTab selectedState={selectedState} setMapView={setMapView} setHighlightedDistrict={setHighlightedDistrict}/>}
-      {dataTab === DataTabOptions.STATE_DATA && <StateDataTab setFilter={setFilter}/>}
+      {dataTab === DataTabOptions.STATE_DATA && <StateDataTab/>}
       {dataTab === DataTabOptions.ANALYSIS && <AnalysisTab />}
       {dataTab === DataTabOptions.ENSEMBLE && <EnsembleTab setMapView={setMapView} setHeatmapOpts={setHeatmapOpts} />}
     </div>

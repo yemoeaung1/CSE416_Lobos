@@ -17,7 +17,6 @@ import com.lobos.lobos_server.service.StateService;
 import com.lobos.lobos_server.utilities.ColorMapping;
 import com.lobos.lobos_server.utilities.GeoJSON;
 import com.lobos.lobos_server.utilities.HeatmapMethods;
-import com.lobos.lobos_server.model.PrecinctInfo;
 
 import java.util.HashMap;
 import java.util.List;
