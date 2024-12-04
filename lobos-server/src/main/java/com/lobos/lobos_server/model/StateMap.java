@@ -1,8 +1,9 @@
 package com.lobos.lobos_server.model;
-import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.lobos.lobos_server.utilities.GeoJSON;
 
 @Document(collection = "state-map")
 public class StateMap {
@@ -10,7 +11,7 @@ public class StateMap {
     private String id;
     private String state;
     private String view;
-    private Map<String, Object> geoJSON;
+    private GeoJSON geoJSON;
 
     public String getId() {
         return id;
@@ -36,11 +37,11 @@ public class StateMap {
         this.view = view;
     }
 
-    public Map<String, Object> getGeoJSON() {
+    public GeoJSON getGeoJSON() {
         return geoJSON;
     }
 
-    public void setGeoJSON(Map<String, Object> geoJSON) {
+    public void setGeoJSON(GeoJSON geoJSON) {
         this.geoJSON = geoJSON;
     }
 }

@@ -1,6 +1,6 @@
 import StatesMap from "./MapComponents/StatesMap";
 
-export default function StateMapContainer({ mapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, isOpen, filter, setIsOpen, highlightedDistrict }) {
+export default function StateMapContainer({ mapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, isOpen, setIsOpen, heatmapOpts, highlightedDistrict }) {
     return (
         <div className="flex items-center justify-center" style={{ width: isOpen ? "40%" : "100%" }}>
             <div className="wrapper" style={{ width: "98%" }}>
@@ -11,8 +11,8 @@ export default function StateMapContainer({ mapView, selectedState, setHoveredAr
                     selectedArea={selectedArea}
                     mapView={mapView}
                     isOpen={isOpen}
-                    filter={filter}
                     setIsOpen={setIsOpen}
+                    heatmapOpts={heatmapOpts}
                     highlightedDistrict={highlightedDistrict}
                 />
             </div>
