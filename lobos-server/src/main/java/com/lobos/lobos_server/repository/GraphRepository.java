@@ -7,5 +7,8 @@ import com.lobos.lobos_server.model.Graph;
 
 @Repository
 public interface GraphRepository extends MongoRepository<Graph, String>{
-    Graph findByGraphType(String filter);
+        // Graph getGraphForState(String state, String filter);
+        // Graph findByState(String state); // Assuming "state" exists in your Graph model
+
+        // Graph findByGraphType(String graphType); // Existing method
 }

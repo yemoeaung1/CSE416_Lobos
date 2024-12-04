@@ -12,7 +12,6 @@ import com.lobos.lobos_server.service.StateService;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -48,7 +47,7 @@ public class StateController {
         data.put("properties", properties);
         data.put("geoJSON", stateMap.getGeoJSON());
 
-        System.out.println(data);
+        // System.out.println(data);
 
         return ResponseEntity.ok(data);
     }

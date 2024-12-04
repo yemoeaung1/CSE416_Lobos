@@ -1,18 +1,18 @@
 package com.lobos.lobos_server.model;
 
+import java.util.Map;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "stateInfo")
+@Document(collection = "state-info")
 public class StateInfo {
     @Id
     private String id;
     private String state;
-    private String location;
-    private String stat;
-    private Details details;
+    private Map<String, Object> data;
+    private Map<String, Object> tableSettings;
 
-    // Getters and Setters for StateInfo fields
     public String getId() {
         return id;
     }
@@ -29,59 +29,19 @@ public class StateInfo {
         this.state = state;
     }
 
-    public String getLocation() {
-        return location;
+    public Map<String, Object> getData() {
+        return data;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setData(Map<String, Object> data) {
+        this.data = data;
     }
 
-    public String getStat() {
-        return stat;
+    public Map<String, Object> getTableSettings() {
+        return tableSettings;
     }
 
-    public void setStat(String stat) {
-        this.stat = stat;
-    }
-
-    public Details getDetails() {
-        return details;
-    }
-
-    public void setDetails(Details details) {
-        this.details = details;
-    }
-
-    // Nested class Details with getters and setters
-    public static class Details {
-        private int total;
-        private int male;
-        private int female;
-
-        // Getters and Setters for Details fields
-        public int getTotal() {
-            return total;
-        }
-
-        public void setTotal(int total) {
-            this.total = total;
-        }
-
-        public int getMale() {
-            return male;
-        }
-
-        public void setMale(int male) {
-            this.male = male;
-        }
-
-        public int getFemale() {
-            return female;
-        }
-
-        public void setFemale(int female) {
-            this.female = female;
-        }
+    public void setTableSettings(Map<String, Object> tableSettings) {
+        this.tableSettings = tableSettings;
     }
 }

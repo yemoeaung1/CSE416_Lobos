@@ -106,7 +106,7 @@ function DataComponent({ isOpen, dataTab, selectedArea, selectedState, setFilter
   return (
     <div className="data-component open">
       {dataTab === DataTabOptions.SUMMARY && <SummaryTab selectedArea={selectedArea} selectedState={selectedState}/>}
-      {dataTab === DataTabOptions.FILTERS && <FiltersTab setFilter={setFilter}/>}
+      {dataTab === DataTabOptions.FILTERS && <FiltersTab setFilter={setFilter} selectedState={selectedState}/>}
       {dataTab === DataTabOptions.ANALYSIS && <AnalysisTab />}
       {dataTab === DataTabOptions.ENSEMBLE && <EnsembleTab />}
     </div>

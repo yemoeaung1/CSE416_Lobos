@@ -9,7 +9,7 @@ import java.util.List;
 @Document
 public class DataSet {
     private String label; // Name of the data set (e.g., "Democrat", "Republican")
-    private List<Integer> data; // Data values for the corresponding labels
+    private List<Double> data; // Data values for the corresponding labels
     private String backgroundColor; // Background color of the bar
     private String borderColor; // Border color of the bar
     private int borderWidth; // Border width of the bar
@@ -24,11 +24,11 @@ public class DataSet {
     }
     
     //Getters and Setters for Data
-    public List<Integer> getData() {
+    public List<Double> getData() {
         return data;
     }
 
-    public void setData(List<Integer> data) {
+    public void setData(List<Double> data) {
         this.data = data;
     }
 

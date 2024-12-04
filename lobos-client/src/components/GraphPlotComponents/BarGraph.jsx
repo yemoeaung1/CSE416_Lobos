@@ -2,41 +2,51 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from 'chart.js/auto';
 import axios from 'axios';
 
-const BarGraph = ({ dataSetType }) =>{
+const BarGraph = ({ dataSetType, selectedState }) =>{
     const chartRef = useRef(null);
     const [graphData, setGraphData] = useState(null);
 
     useEffect(() => {
       const fetchGraphData = async () => {
         try {
-          const response = await axios.get(`http://localhost:8000/api/graph/bar?filter=${dataSetType}`);
-          setGraphData(response.data);
+          console.log(dataSetType)
+          const response = await axios.get(`http://localhost:8080/api/bar?state=${selectedState}&filter=${dataSetType}`);
+          const { labels, dataSets, title, xlabel, ylabel } = response.data;
+          console.log(response.data)
+          console.log(xlabel)
+          
+          setGraphData({
+            labels,
+            datasets: dataSets.map((dataSet) => ({
+              label: dataSet.label,
+              data: dataSet.data,
+              backgroundColor: dataSet.backgroundColor,
+              borderColor: dataSet.borderColor,
+              borderWidth: dataSet.borderWidth,
+            })),
+            title: title,
+            xTitle: xlabel,
+            yTitle: ylabel
+          });
         } 
         catch (error) {
           console.error("Error fetching graph data:", error);
         }
       };
       fetchGraphData();
-    }, [dataSetType]);
+    }, [dataSetType, selectedState]);
 
     useEffect(() => {
         if (!graphData) return;
 
-        const ctx = chartRef.current.getContext("2d");
 
-        const { labels, datasets, title, xLabel, yLabel } = graphData;
+        const ctx = chartRef.current.getContext("2d");
 
         const BarChart = new Chart(ctx, {
             type: "bar",
             data: {
-                labels: labels,
-                datasets: datasets.map((dataset) => ({
-                  label: dataset.label,
-                  data: dataset.data,
-                  backgroundColor: dataset.backgroundColor,
-                  borderColor: dataset.borderColor,
-                  borderWidth: dataset.borderWidth
-                }))
+                labels: graphData.labels,
+                datasets: graphData.datasets
               },
               options: {
                 responsive: true,
@@ -44,7 +54,7 @@ const BarGraph = ({ dataSetType }) =>{
                   x:{
                     title:{
                       display: true,
-                      text: xLabel,
+                      text: graphData.xTitle,
                       font: {
                         size: 20,
                       },
@@ -60,7 +70,7 @@ const BarGraph = ({ dataSetType }) =>{
                     beginAtZero: true,
                     title: {
                       display: true,
-                      text: yLabel,
+                      text: graphData.yTitle,
                       font: {
                         size: 20,
                       },
@@ -75,7 +85,7 @@ const BarGraph = ({ dataSetType }) =>{
                 },
                 plugins:{
                   legend: {
-                    display: yLabel === "Political Party", 
+                    display: "Political Party", 
                     position: 'top',
                     labels:{
                       font:{
@@ -85,7 +95,7 @@ const BarGraph = ({ dataSetType }) =>{
                   },
                   title: {
                     display: true,
-                    text: title,
+                    text: graphData.title,
                     font: {
                       size: 28,
                       weight: 'bold',
@@ -97,12 +107,10 @@ const BarGraph = ({ dataSetType }) =>{
               },
         })
 
-        setChartInstance(BarChart);
-
         return () => {
             BarChart.destroy()
         }
-    }, [dataSetType])
+    }, [graphData])
 
     return (
         <div className= " border-2 border-gray-800 rounded-xl shadow-xl">
