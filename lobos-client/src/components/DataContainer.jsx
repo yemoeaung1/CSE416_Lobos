@@ -10,11 +10,11 @@ import {
 } from "react-icons/bs";
 import { DataTabOptions, States } from "../enums";
 import SummaryTab from "./DataSummaryComponents/SummaryTab";
-import FiltersTab from "./DataFiltersComponents/FiltersTab";
+import StateDataTab from "./DataStateDataComponents/StateDataTab";
 import AnalysisTab from "./DataAnalysisComponents/AnalysisTab";
 import EnsembleTab from "./DataEnsembleComponents/EnsembleTab";
 
-export default function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, setFilter }) {
+export default function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, setMapView }) {
   const [dataTab, setDataTab] = useState(DataTabOptions.SUMMARY);
 
   return (
@@ -36,7 +36,7 @@ export default function DataContainer({ isOpen, setIsOpen, selectedArea, selecte
           dataTab={dataTab}
           selectedArea={selectedArea}
           selectedState={selectedState}
-          setFilter={setFilter}
+          setMapView={setMapView}
         />
       </div>
 
@@ -70,11 +70,11 @@ function DataTabs({ isOpen, dataTab, setDataTab }) {
       </div>
 
       <div
-        className={`toolbar-item ${dataTab === DataTabOptions.FILTERS ? "tool-selected" : ""}`}
-        onClick={() => setDataTab(DataTabOptions.FILTERS)}
+        className={`toolbar-item ${dataTab === DataTabOptions.STATE_DATA ? "tool-selected" : ""}`}
+        onClick={() => setDataTab(DataTabOptions.STATE_DATA)}
       >
         <BsFillBarChartFill className="toolbar-icon" />
-        <span className="toolbar-label">Filters</span>
+        <span className="toolbar-label">State Data</span>
       </div>
 
       <div
@@ -96,7 +96,7 @@ function DataTabs({ isOpen, dataTab, setDataTab }) {
   );
 }
 
-function DataComponent({ isOpen, dataTab, selectedArea, selectedState, setFilter }) {
+function DataComponent({ isOpen, dataTab, selectedArea, selectedState, setMapView }) {
   if (!isOpen) {
     return (
       <div className="data-component" />
@@ -105,8 +105,8 @@ function DataComponent({ isOpen, dataTab, selectedArea, selectedState, setFilter
 
   return (
     <div className="data-component open">
-      {dataTab === DataTabOptions.SUMMARY && <SummaryTab selectedArea={selectedArea} selectedState={selectedState}/>}
-      {dataTab === DataTabOptions.FILTERS && <FiltersTab setFilter={setFilter}/>}
+      {dataTab === DataTabOptions.SUMMARY && <SummaryTab selectedState={selectedState} setMapView={setMapView}/>}
+      {dataTab === DataTabOptions.STATE_DATA && <StateDataTab setFilter={setFilter}/>}
       {dataTab === DataTabOptions.ANALYSIS && <AnalysisTab />}
       {dataTab === DataTabOptions.ENSEMBLE && <EnsembleTab />}
     </div>
