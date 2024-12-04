@@ -23,7 +23,7 @@ function StatesMap({
                 params: {
                     state: selectedState,
                     view: mapView,
-                    heatmapOpts,
+                    heatmapOpts
                 },
             })
             .then((response) => {
@@ -32,7 +32,7 @@ function StatesMap({
             .catch((error) => {
                 console.error("Error Retrieving Map:", error);
             });
-    }, [selectedState, mapView]);
+    }, [selectedState, mapView, heatmapOpts]);
 
     if (!mapData) {
         return (
@@ -165,7 +165,7 @@ function MapController({ isOpen, mapData, highlightedDistrict }) {
         map.flyTo(mapData.properties.CENTER, mapData.properties.CURRENT_ZOOM, {
             animate: false,
         }).setMaxBounds(mapData.properties.MAX_BOUNDS);
-    }, [isOpen, mapData, map]);
+    }, [isOpen, mapData]);
 
     return null;
 }

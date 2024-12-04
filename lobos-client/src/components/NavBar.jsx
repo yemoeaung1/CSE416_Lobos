@@ -1,13 +1,14 @@
 import { GiWolfHead } from "react-icons/gi";
 import { MapViewOptions, States } from "../enums";
 
-export default function NavBar({ setMapView, hoveredArea, setHoveredArea, setSelectedArea, selectedState }) {
+export default function NavBar({ setMapView, hoveredArea, setHoveredArea, setSelectedArea, selectedState, setHeatmapOpts }) {
     return (
         <div className="navbar">
             <NavLogo 
                 setMapView={setMapView}
                 setHoveredArea={setHoveredArea}
                 setSelectedArea={setSelectedArea}
+                setHeatmapOpts={setHeatmapOpts}
             />
             <NavTitle
                 hoveredArea={hoveredArea}
@@ -17,11 +18,12 @@ export default function NavBar({ setMapView, hoveredArea, setHoveredArea, setSel
     )
 }
 
-function NavLogo({ setMapView, setHoveredArea, setSelectedArea }) {
+function NavLogo({ setMapView, setHoveredArea, setSelectedArea, setHeatmapOpts }) {
     const clearSelection = () => {
         setMapView(MapViewOptions.STATE);
         setHoveredArea(States.NONE);
         setSelectedArea(States.NONE);
+        setHeatmapOpts();
     }
 
     return (

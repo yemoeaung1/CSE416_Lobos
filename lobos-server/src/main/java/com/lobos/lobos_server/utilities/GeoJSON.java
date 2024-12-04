@@ -1,12 +1,5 @@
 package com.lobos.lobos_server.utilities;
 
-<<<<<<< HEAD
-import java.util.List;
-import java.util.Map;
-
-public class GeoJSON {
-    private String type;
-=======
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,7 +14,6 @@ public class GeoJSON {
     private String type;
     private String name;
     private Object crs;
->>>>>>> 6464916494d359df2d75fe099a682e666b410758
     private List<Feature> features;
 
     public String getType() {
@@ -32,8 +24,6 @@ public class GeoJSON {
         this.type = type;
     }
 
-<<<<<<< HEAD
-=======
     public String getName() {
         return name;
     }
@@ -50,7 +40,6 @@ public class GeoJSON {
         this.crs = crs;
     }
 
->>>>>>> 6464916494d359df2d75fe099a682e666b410758
     public List<Feature> getFeatures() {
         return features;
     }
@@ -59,8 +48,6 @@ public class GeoJSON {
         this.features = features;
     }
 
-<<<<<<< HEAD
-=======
     public static GeoJSON parseGeoJsonAsMap(String filename) throws IOException {
         ClassPathResource resource = new ClassPathResource("data/" + filename);
 
@@ -76,7 +63,6 @@ public class GeoJSON {
         return objectMapper.readValue(geoJsonString, GeoJSON.class);
     }
 
->>>>>>> 6464916494d359df2d75fe099a682e666b410758
     public static class Feature {
         private String type;
         private Map<String, Object> properties;

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import NavBar from "./components/NavBar";
 import DataContainer from "./components/DataContainer";
 import StateMapContainer from "./components/StateMapContainer";
-import { MapViewOptions, States } from "./enums";
+import { DataTabOptions, MapViewOptions, States } from "./enums";
 
 function App() {
     const [isOpen, setIsOpen] = useState(false);
@@ -15,11 +15,14 @@ function App() {
     const [selectedArea, setSelectedArea] = useState(States.NONE);
     const [selectedState, setSelectedState] = useState(States.NONE);
 
+    const [dataTab, setDataTab] = useState(DataTabOptions.SUMMARY);
     const [highlightedDistrict, setHighlightedDistrict] = useState(0);
 
     useEffect(() => {
-        if (selectedState !== selectedArea && Object.values(States).includes(selectedArea))
+        if (selectedState !== selectedArea && Object.values(States).includes(selectedArea)){
             setSelectedState(selectedArea);
+            setDataTab(DataTabOptions.SUMMARY);
+        }
 
         if (selectedArea !== States.NONE && !isOpen)
             setIsOpen(true);
@@ -35,6 +38,8 @@ function App() {
                 setHoveredArea={setHoveredArea}
                 setSelectedArea={setSelectedArea}
                 selectedState={selectedState}
+                setDataTab={setDataTab}
+                setHeatmapOpts={setHeatmapOpts}
             />
             <DataContainer
                 isOpen={isOpen}
@@ -43,6 +48,8 @@ function App() {
                 selectedState={selectedState}
                 setMapView={setMapView}
                 setHeatmapOpts={setHeatmapOpts}
+                dataTab={dataTab}
+                setDataTab={setDataTab}
                 setHighlightedDistrict={setHighlightedDistrict}
             />
             <StateMapContainer

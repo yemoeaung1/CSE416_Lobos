@@ -5,18 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.lobos.lobos_server.enum_classes.FiltersEnum;
-<<<<<<< HEAD
-
-public class HeatmapMethods {
-    public static Map<String, Object> handleBins(List<String> filters){
-        FiltersEnum filter = FiltersEnum.valueOf(filters.get(0));
-        switch(filter){
-            case DEMOGRAPHIC: return handleDemoBins(filters.get(1)); 
-            case ECONOMIC: return handleEcoBins();
-            case REGION_TYPE: return handleRegionBins();
-            case POVERTY_LEVEL: return handlePovertyBins();
-            case ECO_DEMOGRAPHIC: return handleEcoDemoBins();
-=======
 import com.lobos.lobos_server.enum_classes.RegionTypeEnum;
 import com.lobos.lobos_server.model.PrecinctData;
 
@@ -28,7 +16,7 @@ public class HeatmapMethods {
     public static Map<String, ColorMapping> ecoBins;
     public static Map<String, ColorMapping> povertyBins;
     public static Map<String, ColorMapping> regionBins;
-    public static Map<String, ColorMapping> ecoDemoBins;
+    public static Map<String, ColorMapping> ecoPolBins;
 
     static {
         demoBins = new HashMap<>();
@@ -61,25 +49,25 @@ public class HeatmapMethods {
         regionBins.put("Suburban", new ColorMapping("hsl(190 35% 50%)", 0.8));
         regionBins.put("Rural", new ColorMapping("hsl(40 50% 75%)", 0.8));
 
-        ecoDemoBins = new HashMap<>();
-        ecoDemoBins.put("R-$0K-$15K", new ColorMapping("hsl(20 40% 85%)", 0.6));
-        ecoDemoBins.put("R-$15K-$25K", new ColorMapping("hsl(20 50% 75%)", 0.6));
-        ecoDemoBins.put("R-$25K-$35K", new ColorMapping("hsl(20 60% 65%)", 0.6));
-        ecoDemoBins.put("R-$35K-$50K", new ColorMapping("hsl(20 70% 60%)", 0.7));
-        ecoDemoBins.put("R-$50K-$75K", new ColorMapping("hsl(10 70% 50%)", 0.7));
-        ecoDemoBins.put("R-$75K-$100K", new ColorMapping("hsl(10 80% 45%)", 0.8));
-        ecoDemoBins.put("R-$100K-$150K", new ColorMapping("hsl(10 80% 35%)", 0.8));
-        ecoDemoBins.put("R-$150K-$200K", new ColorMapping("hsl(0 90% 30%)", 0.9));
-        ecoDemoBins.put("R-$200K+", new ColorMapping("hsl(0 90% 20%)", 1));
-        ecoDemoBins.put("D-$0K-$15K", new ColorMapping("hsl(230 40% 85%)", 0.6));
-        ecoDemoBins.put("D-$15K-$25K", new ColorMapping("hsl(230 50% 75%)", 0.6));
-        ecoDemoBins.put("D-$25K-$35K", new ColorMapping("hsl(230 60% 65%)", 0.6));
-        ecoDemoBins.put("D-$35K-$50K", new ColorMapping("hsl(230 70% 60%)", 0.7));
-        ecoDemoBins.put("D-$50K-$75K", new ColorMapping("hsl(240 70% 50%)", 0.7));
-        ecoDemoBins.put("D-$75K-$100K", new ColorMapping("hsl(240 80% 45%)", 0.8));
-        ecoDemoBins.put("D-$100K-$150K", new ColorMapping("hsl(240 80% 35%)", 0.8));
-        ecoDemoBins.put("D-$150K-$200K", new ColorMapping("hsl(250 90% 30%)", 0.9));
-        ecoDemoBins.put("D-$200K+", new ColorMapping("hsl(250 90% 20%)", 1));
+        ecoPolBins = new HashMap<>();
+        ecoPolBins.put("R-$0K-$15K", new ColorMapping("hsl(20 40% 85%)", 0.6));
+        ecoPolBins.put("R-$15K-$25K", new ColorMapping("hsl(20 50% 75%)", 0.6));
+        ecoPolBins.put("R-$25K-$35K", new ColorMapping("hsl(20 60% 65%)", 0.6));
+        ecoPolBins.put("R-$35K-$50K", new ColorMapping("hsl(20 70% 60%)", 0.7));
+        ecoPolBins.put("R-$50K-$75K", new ColorMapping("hsl(10 70% 50%)", 0.7));
+        ecoPolBins.put("R-$75K-$100K", new ColorMapping("hsl(10 80% 45%)", 0.8));
+        ecoPolBins.put("R-$100K-$150K", new ColorMapping("hsl(10 80% 35%)", 0.8));
+        ecoPolBins.put("R-$150K-$200K", new ColorMapping("hsl(0 90% 30%)", 0.9));
+        ecoPolBins.put("R-$200K+", new ColorMapping("hsl(0 90% 20%)", 1));
+        ecoPolBins.put("D-$0K-$15K", new ColorMapping("hsl(230 40% 85%)", 0.6));
+        ecoPolBins.put("D-$15K-$25K", new ColorMapping("hsl(230 50% 75%)", 0.6));
+        ecoPolBins.put("D-$25K-$35K", new ColorMapping("hsl(230 60% 65%)", 0.6));
+        ecoPolBins.put("D-$35K-$50K", new ColorMapping("hsl(230 70% 60%)", 0.7));
+        ecoPolBins.put("D-$50K-$75K", new ColorMapping("hsl(240 70% 50%)", 0.7));
+        ecoPolBins.put("D-$75K-$100K", new ColorMapping("hsl(240 80% 45%)", 0.8));
+        ecoPolBins.put("D-$100K-$150K", new ColorMapping("hsl(240 80% 35%)", 0.8));
+        ecoPolBins.put("D-$150K-$200K", new ColorMapping("hsl(250 90% 30%)", 0.9));
+        ecoPolBins.put("D-$200K+", new ColorMapping("hsl(250 90% 20%)", 1));
     }
 
     public static Map<String, ColorMapping> getBins(List<String> filters){
@@ -89,57 +77,11 @@ public class HeatmapMethods {
             case ECONOMIC: return ecoBins;
             case REGION_TYPE: return regionBins;
             case POVERTY_LEVEL: return povertyBins;
-            case ECO_DEMOGRAPHIC: return ecoDemoBins;
->>>>>>> 6464916494d359df2d75fe099a682e666b410758
+            case ECO_POLITICAL: return ecoPolBins;
             default: return null;
         }
     }
 
-<<<<<<< HEAD
-    private static Map<String, Object> handleDemoBins(String filter){
-        Map<String, Object> colorMapping = new HashMap<>();
-
-        colorMapping.put("Color", "#ffffff");
-        colorMapping.put("Opacity", 0.5);
-
-        return colorMapping;
-    }
-
-    private static Map<String, Object> handleEcoBins(){
-        Map<String, Object> colorMapping = new HashMap<>();
-
-        colorMapping.put("Color", "#ffffff");
-        colorMapping.put("Opacity", 0.5);
-
-        return colorMapping;
-    }
-
-    private static Map<String, Object> handleRegionBins(){
-        Map<String, Object> colorMapping = new HashMap<>();
-
-        colorMapping.put("Color", "#ffffff");
-        colorMapping.put("Opacity", 0.5);
-
-        return colorMapping;
-    }
-
-    private static Map<String, Object> handlePovertyBins(){
-        Map<String, Object> colorMapping = new HashMap<>();
-
-        colorMapping.put("Color", "#ffffff");
-        colorMapping.put("Opacity", 0.5);
-
-        return colorMapping;
-    }
-
-    private static Map<String, Object> handleEcoDemoBins(){
-        Map<String, Object> colorMapping = new HashMap<>();
-
-        colorMapping.put("Color", "#ffffff");
-        colorMapping.put("Opacity", 0.5);
-
-        return colorMapping;
-=======
     public static ColorMapping handleBins(List<String> filters, PrecinctData info){
         FiltersEnum filter = FiltersEnum.fromValue(filters.get(0));
         switch(filter){
@@ -147,7 +89,7 @@ public class HeatmapMethods {
             case ECONOMIC: return handleEcoBins(info);
             case REGION_TYPE: return handleRegionBins(info);
             case POVERTY_LEVEL: return handlePovertyBins(info);
-            case ECO_DEMOGRAPHIC: return handleEcoDemoBins(info);
+            case ECO_POLITICAL: return handleEcoPolBins(info);
             default: return null;
         }
     }
@@ -213,28 +155,30 @@ public class HeatmapMethods {
             return povertyBins.get("0%-5%");        
     }
 
-    private static ColorMapping handleEcoDemoBins(PrecinctData info){
+    private static ColorMapping handleEcoPolBins(PrecinctData info){
         char key = info.getMajorityParty().charAt(0);
         int income = info.getMedianIncome();
 
+        System.out.println("MAP: " + key);
+        System.out.println(ecoPolBins);
+
         if(income >= 200000)
-            return ecoDemoBins.get(key + "-$200K+");
+            return ecoPolBins.get(key + "-$200K+");
         else if(income >= 150000)
-            return ecoDemoBins.get(key + "-$150K-$200K");
+            return ecoPolBins.get(key + "-$150K-$200K");
         else if(income >= 100000)
-            return ecoDemoBins.get(key + "-$100K-$150K");
+            return ecoPolBins.get(key + "-$100K-$150K");
         else if(income >= 75000)
-            return ecoDemoBins.get(key + "-$75K-$100K");
+            return ecoPolBins.get(key + "-$75K-$100K");
         else if(income >= 50000)
-            return ecoDemoBins.get(key + "-$50K-$75K");
+            return ecoPolBins.get(key + "-$50K-$75K");
         else if(income >= 35000)
-            return ecoDemoBins.get(key + "-$35K-$50K");
+            return ecoPolBins.get(key + "-$35K-$50K");
         else if(income >= 25000)
-            return ecoDemoBins.get(key + "-$25K-$35K");
+            return ecoPolBins.get(key + "-$25K-$35K");
         else if(income >= 15000)
-            return ecoDemoBins.get(key + "-$15K-$25K");
+            return ecoPolBins.get(key + "-$15K-$25K");
         else
-            return ecoDemoBins.get(key + "-$0K-$15K");
->>>>>>> 6464916494d359df2d75fe099a682e666b410758
+            return ecoPolBins.get(key + "-$0K-$15K");
     }
 }
