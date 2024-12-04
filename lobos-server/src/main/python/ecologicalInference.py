@@ -12,7 +12,7 @@ from pyei.io_utils import from_netcdf, to_netcdf # type: ignore
 import matplotlib.pyplot as plt
 
 # File path for the JSON file
-DATA_FILE = './resources/precinct-info.json'
+DATA_FILE = './resources/south-carolina-precinct-info.json'
 
 def load_precinct_data(file_path):
     """
