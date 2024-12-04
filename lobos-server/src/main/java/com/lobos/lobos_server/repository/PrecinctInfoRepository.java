@@ -1,9 +1,11 @@
 package com.lobos.lobos_server.repository;
 
-import com.lobos.lobos_server.model.PrecinctInfo;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
-public interface PrecinctInfoRepository extends MongoRepository<PrecinctInfo, String> {
-    Optional<PrecinctInfo> findFirstByState(String state);
+import com.lobos.lobos_server.model.PrecinctInfo;
+
+@Repository
+public interface PrecinctInfoRepository extends MongoRepository<PrecinctInfo, String>{
+    PrecinctInfo findFirstByState(String state);
 }

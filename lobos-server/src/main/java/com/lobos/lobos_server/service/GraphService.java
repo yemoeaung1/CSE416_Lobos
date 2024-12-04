@@ -1,16 +1,13 @@
 package com.lobos.lobos_server.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lobos.lobos_server.model.Graph;
 import com.lobos.lobos_server.model.DataSet;
-import com.lobos.lobos_server.repository.GraphRepository;
 
 import com.lobos.lobos_server.model.StateInfo;
 import com.lobos.lobos_server.repository.StateInfoRepository;
 
-import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

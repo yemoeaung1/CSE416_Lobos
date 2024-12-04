@@ -46,12 +46,12 @@ function StatesMap({
         let originalColor;
         let darkerColor;
 
-        const defaultStyle = {
-            fillColor: feature.properties.fillColor || "#ffffff",
-            fillOpacity: feature.properties.fillOpacity || 0.5,
-            color: feature.properties.color || "black",
-            weight: feature.properties.weight || 2,
-        };
+    const defaultStyle = {
+      fillColor: feature.properties.fillColor || "#ffffff",
+      fillOpacity: feature.properties.fillOpacity || 0.5,
+      color: feature.properties.color || "black",
+      weight: feature.properties.weight || 1,
+    };
 
         layer.setStyle(defaultStyle);
 
@@ -126,12 +126,12 @@ function MapController({ isOpen, mapData, highlightedDistrict }) {
             if (layer && layer.feature && layer.feature.properties) {
                 const feature = layer.feature;
 
-                const defaultStyle = {
-                    fillColor: feature.properties.fillColor || "#ffffff",
-                    fillOpacity: feature.properties.fillOpacity || 0.5,
-                    color: feature.properties.color || "black",
-                    weight: feature.properties.weight || 2,
-                };
+        const defaultStyle = {
+          fillColor: feature.properties.fillColor || "#ffffff",
+          fillOpacity: feature.properties.fillOpacity || 0.5,
+          color: feature.properties.color || "black",
+          weight: feature.properties.weight || 1,
+        };
 
                 if (
                     highlightedDistrict !== oldHighlightedDistrict.current &&

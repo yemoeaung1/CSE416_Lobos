@@ -14,14 +14,8 @@ import StateDataTab from "./DataStateDataComponents/StateDataTab";
 import AnalysisTab from "./DataAnalysisComponents/AnalysisTab";
 import EnsembleTab from "./DataEnsembleComponents/EnsembleTab";
 
-export default function DataContainer({
-    isOpen,
-    setIsOpen,
-    selectedArea,
-    selectedState,
-    setMapView,
-}) {
-    const [dataTab, setDataTab] = useState(DataTabOptions.SUMMARY);
+export default function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, setMapView, setHeatmapOpts, setHighlightedDistrict }) {
+  const [dataTab, setDataTab] = useState(DataTabOptions.SUMMARY);
 
     return (
         <div className="data-container">
@@ -31,22 +25,25 @@ export default function DataContainer({
                 selectedArea={selectedArea}
             />
 
-            <div>
-                <DataTabs
-                    isOpen={isOpen}
-                    dataTab={dataTab}
-                    setDataTab={setDataTab}
-                />
-                <DataComponent
-                    isOpen={isOpen}
-                    dataTab={dataTab}
-                    selectedArea={selectedArea}
-                    selectedState={selectedState}
-                    setMapView={setMapView}
-                />
-            </div>
-        </div>
-    );
+      <div>
+        <DataTabs
+          isOpen={isOpen}
+          dataTab={dataTab}
+          setDataTab={setDataTab}
+        />
+        <DataComponent
+          isOpen={isOpen}
+          dataTab={dataTab}
+          selectedArea={selectedArea}
+          selectedState={selectedState}
+          setMapView={setMapView}
+          setHeatmapOpts={setHeatmapOpts}
+          setHighlightedDistrict={setHighlightedDistrict}
+        />
+      </div>
+
+    </div>
+  );
 }
 
 function DataOpenButton({ isOpen, setIsOpen, selectedArea }) {
@@ -114,32 +111,19 @@ function DataTabs({ isOpen, dataTab, setDataTab }) {
     );
 }
 
-function DataComponent({
-    isOpen,
-    dataTab,
-    selectedArea,
-    selectedState,
-    setMapView,
-}) {
-    if (!isOpen) {
-        return <div className="data-component" />;
-    }
-
+function DataComponent({ isOpen, dataTab, selectedState, setMapView, setHeatmapOpts, setHighlightedDistrict }) {
+  if (!isOpen) {
     return (
-        <div className="data-component open">
-            {dataTab === DataTabOptions.SUMMARY && (
-                <SummaryTab
-                    selectedState={selectedState}
-                    setMapView={setMapView}
-                />
-            )}
-            {dataTab === DataTabOptions.STATE_DATA && (
-                <StateDataTab selectedState={selectedState} />
-            )}
-            {dataTab === DataTabOptions.ANALYSIS && (
-                <AnalysisTab selectedState={selectedState} />
-            )}
-            {dataTab === DataTabOptions.ENSEMBLE && <EnsembleTab />}
-        </div>
+      <div className="data-component" />
     );
+  }
+
+  return (
+    <div className="data-component open">
+      {dataTab === DataTabOptions.SUMMARY && <SummaryTab selectedState={selectedState} setMapView={setMapView} setHighlightedDistrict={setHighlightedDistrict}/>}
+      {dataTab === DataTabOptions.STATE_DATA && <StateDataTab/>}
+      {dataTab === DataTabOptions.ANALYSIS && <AnalysisTab />}
+      {dataTab === DataTabOptions.ENSEMBLE && <EnsembleTab setMapView={setMapView} setHeatmapOpts={setHeatmapOpts} />}
+    </div>
+  );
 }

@@ -1,6 +1,5 @@
 package com.lobos.lobos_server;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lobos.lobos_server.enum_classes.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,13 +7,16 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.lobos.lobos_server.model.PrecinctData;
+import com.lobos.lobos_server.model.PrecinctInfo;
 import com.lobos.lobos_server.model.StateInfo;
 import com.lobos.lobos_server.model.StateMap;
 import com.lobos.lobos_server.model.StateMapConfig;
+import com.lobos.lobos_server.service.PrecinctService;
 import com.lobos.lobos_server.service.StateService;
+import com.lobos.lobos_server.utilities.ColorMapping;
 import com.lobos.lobos_server.utilities.GeoJSON;
 import com.lobos.lobos_server.utilities.HeatmapMethods;
-import com.lobos.lobos_server.model.PrecinctInfo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,10 +27,12 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:5173")
 public class StateController {
     private final StateService stateService;
+    private final PrecinctService precinctService;
 
     @Autowired
-    public StateController(StateService stateService) {
+    public StateController(StateService stateService, PrecinctService precinctService) {
         this.stateService = stateService;
+        this.precinctService = precinctService;
     }
     @GetMapping("/precinct-data")
     public List<Map<String, Object>> getPrecinctData(@RequestParam String state) {
@@ -84,9 +88,6 @@ public class StateController {
         StateMap stateMap = stateService.getStateMap(state, view);
         StateMapConfig stateMapConfig = stateService.getStateMapConfig(state);
 
-        if(heatmapOpts != null && !heatmapOpts.isEmpty())
-            appendHeatmapOpts(stateMap.getGeoJSON(), heatmapOpts);
-
         Map<String, Object> data = new HashMap<>();
         Map<String, Object> properties = new HashMap<>();
 
@@ -97,31 +98,64 @@ public class StateController {
         properties.put("MAX_ZOOM", stateMapConfig.getMaxZoom());
 
         data.put("properties", properties);
-        data.put("geoJSON", stateMap.getGeoJSON());
+
+        // Temporary Code => Fetching Precinct Level GeoJSON Locally:
+        if(view.equals(StateViewEnum.PRECINCT.toString())){
+            GeoJSON geoJSONLocal = null;
+            try {
+                if(state.equals("South Carolina")){
+                    geoJSONLocal = GeoJSON.parseGeoJsonAsMap("sc_vtd_boundary.geojson");
+                }
+                else if(state.equals("Utah")){
+                    geoJSONLocal = GeoJSON.parseGeoJsonAsMap("ut_vtd_boundary.geojson");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            if(heatmapOpts != null && !heatmapOpts.isEmpty())
+                appendHeatmapOpts(geoJSONLocal, state, heatmapOpts);
+            
+            data.put("geoJSON", geoJSONLocal);
+        } else {
+            if(heatmapOpts != null && !heatmapOpts.isEmpty())
+                appendHeatmapOpts(stateMap.getGeoJSON(), state, heatmapOpts);
+                
+            data.put("geoJSON", stateMap.getGeoJSON());
+        }
 
         return data;
     }
 
-    private void appendHeatmapOpts(Map<String, Object> geoJSONMap, List<String> heatmapOpts){
-        if(heatmapOpts != null && !heatmapOpts.isEmpty()){
-            // Fetch Precinct Info from DB
-            // Change Precinct Info to HashMap 
-            // Add Legend
-            try{
-                ObjectMapper mapper = new ObjectMapper();
-                String geoJSONString = mapper.writeValueAsString(geoJSONMap);
-                GeoJSON geoJSON = mapper.readValue(geoJSONString, GeoJSON.class);
+    @Cacheable(value = "lobosCache", key = "PRECINCT-INFO-MAP: #state")
+    private Map<String, PrecinctData> fetchPrecinctInfoMap(String state){
+        PrecinctInfo precinctInfo = precinctService.getPrecinctInfo(state);
+        Map<String, PrecinctData> precinctInfoMap = new HashMap<>();
+        for(PrecinctData obj: precinctInfo.getPrecincts()){
+            precinctInfoMap.put((String) obj.getGEOID(), obj);
+        }
 
-                for (GeoJSON.Feature feature : geoJSON.getFeatures()) {
-                    Map<String, Object> colorMapping = HeatmapMethods.handleBins(heatmapOpts);
+        return precinctInfoMap;
+    }
 
-                    Map<String, Object> properties = feature.getProperties();
-                    properties.put("fillColor", colorMapping.get("Color"));
-                    properties.put("fillOpacity", colorMapping.get("Opacity"));
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+    private void appendHeatmapOpts(GeoJSON geoJSON, String state, List<String> heatmapOpts){
+        try{
+            Map<String, PrecinctData> precinctInfoMap = fetchPrecinctInfoMap(state);
+
+            // Loop through all features in GeoJSON
+            for (GeoJSON.Feature feature : geoJSON.getFeatures()) {
+                String key = "";
+                if(feature.getProperties().get("GEOID20") instanceof String)
+                    key = (String) feature.getProperties().get("GEOID20");
+
+                PrecinctData info = precinctInfoMap.get(key);
+                ColorMapping colorMapping = HeatmapMethods.handleBins(heatmapOpts, info);
+
+                feature.getProperties().put("fillColor", colorMapping.getColor());
+                feature.getProperties().put("fillOpacity", colorMapping.getOpacity());
+            } 
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

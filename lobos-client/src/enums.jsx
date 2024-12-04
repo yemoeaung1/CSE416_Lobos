@@ -17,4 +17,13 @@ const MapViewOptions = Object.freeze({
     PRECINCT: "Precinct"
 })
 
-export { States, DataTabOptions, MapViewOptions }
+const DataFilters = Object.freeze({
+    DEMOGRAPHIC: "Demographic",
+    ECONOMIC: "Economic",
+    REGION_TYPE: "Region Type",
+    POVERTY_LEVEL: "Poverty Level",
+    ECO_DEMOGRAPHIC: "Economic/Demographic",
+    ECO_POLITICAL: "Economic/Political"
+})
+
+export { States, DataTabOptions, MapViewOptions, DataFilters }
