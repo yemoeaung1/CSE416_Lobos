@@ -91,14 +91,14 @@ def perform_2x2_ei(dataframe):
     
     # Fit the model with the data
     ei_2by2.fit(
-       group_fraction=group_fractions,
-       votes_fraction=votes_fraction,
-       precinct_pops=total_population,
+       group_fraction=group_fractions.astype(np.float32),
+       votes_fraction=votes_fraction.astype(np.float32),
+       precinct_pops=total_population.astype(np.float32),
        demographic_group_name = "Hispanic",
        candidate_name= "Republican",
        draws=500,  # Reduce the number of posterior draws
        tune=1000,  # Lower the tuning iterations
-       target_accept=0.95  # Adjust target acceptance rate
+       target_accept=0.95 # Adjust target acceptance rate
     )
 
     return ei_2by2
@@ -112,15 +112,14 @@ def main():
 
     # 2.Then Preprocess the precinct data
     df = preprocess_data(precinct_data)
-    print(df.head())
-
+    df = df.sample(n=500, random_state=42)  # Analyze 500 precincts
 
     # 3.Perform twobytwo EI
     ei = perform_2x2_ei(df)
 
 #     # 4.Plot the Results and save the image
     ei.plot()
-    plt.savefig("plot3.png")
+    plt.savefig("plot4.png")
 #     print(ei.summary())
 # santa_clara_data = Datasets.Santa_Clara.to_dataframe()
 
