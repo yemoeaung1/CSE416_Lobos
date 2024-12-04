@@ -17,11 +17,11 @@ import com.lobos.lobos_server.service.StateService;
 import com.lobos.lobos_server.utilities.ColorMapping;
 import com.lobos.lobos_server.utilities.GeoJSON;
 import com.lobos.lobos_server.utilities.HeatmapMethods;
+import com.lobos.lobos_server.model.PrecinctInfo;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 @RestController
 @RequestMapping("/api")
@@ -35,6 +35,21 @@ public class StateController {
         this.stateService = stateService;
         this.precinctService = precinctService;
     }
+    @GetMapping("/precinct-data")
+    public List<Map<String, Object>> getPrecinctData(@RequestParam String state) {
+        return stateService.getPrecinctDataByState(state);
+    }
+    /* @GetMapping("/precinct-data")
+    public ResponseEntity<Map<String, Object>> getPrecinctData(
+            @RequestParam(required = true) String state) {
+
+        List<Map<String,Object>> precinctDataList = stateService.getPrecinctDataByState(state);
+        Map<String, Object> response = new HashMap<>();
+        response.put("state", state);
+        response.put("precinctData", precinctDataList);
+
+        return ResponseEntity.ok(response);
+    } */
 
     @GetMapping("/state-map")
     public ResponseEntity<Map<String, Object>> getStateMap(

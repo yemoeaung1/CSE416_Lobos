@@ -38,47 +38,7 @@ const LineGraph = ({dataSetType}) =>{
             type: "line",
             data: {
                 labels: labels,
-                datasets: data
-                //[
-                //   {
-                //     label: "Republican",
-                //     data: [3000, 4943, 5920, 4134, 4234], 
-                //     backgroundColor: "rgba(255, 0, 0, 0.5)",
-                //     borderColor: "rgba(255, 0, 0, 1)",
-                //     borderWidth: 1,
-                //     fill: {
-                //         target: 'origin',
-                //         above: 'rgba(255, 0, 0, 0.2)',
-                //     },
-                //     tension: 0.5
-
-                //   },
-                //   {
-                //     label: "Democrat",
-                //     data: [3000, 894, 590, 4234, 4234], 
-                //     backgroundColor: "rgba(0, 0, 255, 0.5)",
-                //     borderColor: "rgba(0, 0, 255, 1)",
-                //     borderWidth: 1,
-                //     tension: 0.5,
-                //     fill: {
-                //         target: 'origin',
-                //         above: 'rgba(0, 0, 255, 0.2)',
-                //     },
-
-                //   },
-                //   {
-                //     label: "Independent",
-                //     data: [30, 89, 59, 42, 44], 
-                //     backgroundColor: "rgba(0, 255, 0, 0.5)",
-                //     borderColor: "rgba(0, 255, 0, 1)",
-                //     borderWidth: 1,
-                //     tension: 0.5,
-                //     fill: {
-                //         target: 'origin',
-                //         above: 'rgba(0, 255, 0, 0.2)',
-                //     }
-                //   },
-                // ],
+                datasets: data 
               },
               options: {
                 responsive: true,
@@ -197,7 +157,7 @@ const LineGraph = ({dataSetType}) =>{
              onClick={() => updateChart("age")}> Age </button>
           </div> */}
           <div className="flex-1 flex justify-center items-center">
-            <canvas ref={chartRef} className="w-full h-full"></canvas>
+            <canvas ref={chartRef} className="w-full h-full" height={65}></canvas>
           </div>
         </div>
       
