@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { MapViewOptions } from "../../enums";
+import { DataFilters, MapViewOptions } from "../../enums";
 
 export default function EnsembleTab({ setMapView, setHeatmapOpts }) {
     useEffect(() => {
-      setHeatmapOpts("Economic");
+      setHeatmapOpts(DataFilters.POVERTY_LEVEL);
       setMapView(MapViewOptions.PRECINCT);
     }, [])
 

@@ -10,12 +10,14 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.lobos.lobos_server.model.PrecinctData;
 import com.lobos.lobos_server.model.PrecinctInfo;
 import com.lobos.lobos_server.model.StateInfo;
 import com.lobos.lobos_server.model.StateMap;
 import com.lobos.lobos_server.model.StateMapConfig;
 import com.lobos.lobos_server.service.PrecinctService;
 import com.lobos.lobos_server.service.StateService;
+import com.lobos.lobos_server.utilities.ColorMapping;
 import com.lobos.lobos_server.utilities.GeoJSON;
 import com.lobos.lobos_server.utilities.HeatmapMethods;
 
@@ -118,16 +120,20 @@ public class StateController {
         return data;
     }
 
+    @Cacheable(value = "lobosCache", key = "PRECINCT-INFO-MAP: #state")
+    private Map<String, PrecinctData> fetchPrecinctInfoMap(String state){
+        PrecinctInfo precinctInfo = precinctService.getPrecinctInfo(state);
+        Map<String, PrecinctData> precinctInfoMap = new HashMap<>();
+        for(PrecinctData obj: precinctInfo.getPrecincts()){
+            precinctInfoMap.put((String) obj.getGEOID(), obj);
+        }
+
+        return precinctInfoMap;
+    }
+
     private void appendHeatmapOpts(GeoJSON geoJSON, String state, List<String> heatmapOpts){
         try{
-            // Fetch precinct info and convert into HashMap
-            PrecinctInfo precinctInfo = precinctService.getPrecinctInfo(state);
-            Map<String, Object> precinctInfoMap = new HashMap<>();
-            for(Map<String, Object> obj: precinctInfo.getPrecincts()){
-                if(obj.get("GEOID20") != null && obj.get("GEOID20") instanceof String){
-                    precinctInfoMap.put((String) obj.get("GEOID20"), obj);
-                }
-            }
+            Map<String, PrecinctData> precinctInfoMap = fetchPrecinctInfoMap(state);
 
             // Loop through all features in GeoJSON
             for (GeoJSON.Feature feature : geoJSON.getFeatures()) {
@@ -135,11 +141,11 @@ public class StateController {
                 if(feature.getProperties().get("GEOID20") instanceof String)
                     key = (String) feature.getProperties().get("GEOID20");
 
-                Object info = precinctInfoMap.get(key);
-                Map<String, Object> colorMapping = HeatmapMethods.handleBins(heatmapOpts, info);
+                PrecinctData info = precinctInfoMap.get(key);
+                ColorMapping colorMapping = HeatmapMethods.handleBins(heatmapOpts, info);
 
-                feature.getProperties().put("fillColor", colorMapping.get("Color"));
-                feature.getProperties().put("fillOpacity", colorMapping.get("Opacity"));
+                feature.getProperties().put("fillColor", colorMapping.getColor());
+                feature.getProperties().put("fillOpacity", colorMapping.getOpacity());
             } 
         } catch (Exception e){
             e.printStackTrace();
