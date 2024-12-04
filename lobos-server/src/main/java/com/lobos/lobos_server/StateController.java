@@ -1,12 +1,9 @@
 package com.lobos.lobos_server;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lobos.lobos_server.enum_classes.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +18,6 @@ import com.lobos.lobos_server.utilities.ColorMapping;
 import com.lobos.lobos_server.utilities.GeoJSON;
 import com.lobos.lobos_server.utilities.HeatmapMethods;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -3,7 +3,7 @@ import { DataFilters, MapViewOptions } from "../../enums";
 
 export default function EnsembleTab({ setMapView, setHeatmapOpts }) {
     useEffect(() => {
-      setHeatmapOpts(DataFilters.POVERTY_LEVEL);
+      setHeatmapOpts(DataFilters.ECO_DEMOGRAPHIC);
       setMapView(MapViewOptions.PRECINCT);
     }, [])
 

@@ -17,7 +17,7 @@ public class PrecinctData {
     private int other;
     private int two_or_more;
     private int median_income;
-    private double percent_households_living_below_poverty_line;
+    private double percent_households_living_below_poverty_level;
     private String name;
     @Field("land_area(m2)")
     private long land_area;
@@ -86,8 +86,8 @@ public class PrecinctData {
         return median_income;
     }
 
-    public double getPercentHouseholdsLivingBelowPovertyLine(){
-        return percent_households_living_below_poverty_line;
+    public double getPercentHouseholdsLivingBelowPovertyLevel(){
+        return percent_households_living_below_poverty_level;
     }
     
     public String getName(){
