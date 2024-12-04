@@ -134,7 +134,7 @@ function DataComponent({
                 />
             )}
             {dataTab === DataTabOptions.STATE_DATA && (
-                <StateDataTab setFilter={setFilter} />
+                <StateDataTab selectedState={selectedState} />
             )}
             {dataTab === DataTabOptions.ANALYSIS && (
                 <AnalysisTab selectedState={selectedState} />

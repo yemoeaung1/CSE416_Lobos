@@ -10,7 +10,7 @@ import {
 
 import BarGraph from "../GraphPlotComponents/BarGraph";
 
-export default function StateDataTab({ setFilter, selectedState }) {
+export default function StateDataTab({ selectedState }) {
     const [graphType, setGraphType] = useState("bar");
     const [dataSetType, setDataSetType] = useState("race");
     const [heatMapEnabled, setHeatMapEnabled] = useState(false);

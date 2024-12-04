@@ -20,16 +20,13 @@ const IncomeVotingScatter = ({ selectedState }) => {
             setError(null);
 
             try {
-                console.log(selectedState);
                 // Use selectedState in the API call to fetch the relevant data
                 const response = await axios.get(
                     `http://localhost:8080/api/precinct-data?state=${selectedState}`
                 );
-                console.log("Fetched Precinct Data:", response.data);
                 setPrecinctData(response.data);
                 setLoading(false);
             } catch (err) {
-                console.error("Error fetching data:", err);
                 setError("Failed to fetch data");
                 setLoading(false);
             }
