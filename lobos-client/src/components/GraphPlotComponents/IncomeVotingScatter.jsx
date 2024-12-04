@@ -3,12 +3,13 @@ import Chart from "chart.js/auto";
 import regression from "regression";
 import axios from "axios";
 
-const IncomeVotingScatter = ({ selectedState }) => {
+const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
     const chartRef = useRef(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [precinctData, setPrecinctData] = useState([]);
-
+    const [selectedIncomeLevel, setSelectedIncomeLevel] = useState("all");
+    const [selectedRace, setSelectedRace] = useState("non-hispanic");
     // Fetch precinct data whenever the selected state changes
     useEffect(() => {
         if (!selectedState) {
@@ -40,16 +41,52 @@ const IncomeVotingScatter = ({ selectedState }) => {
             return; // Do not proceed if data is still loading, if there's an error, or if there's no data
         }
 
-        // Prepare the data for Democrat and Republican voters
-        const democratData = precinctData.map((precinct) => ({
-            x: precinct.median_income,
-            y: precinct.democrat_percentage,
-        }));
+        // Filter data based on selected income level
+        const filteredData = precinctData.filter((precinct) => {
+            if (selectedIncomeLevel === "low") {
+                return precinct.median_income < 50000;
+            } else if (selectedIncomeLevel === "medium") {
+                return (
+                    precinct.median_income >= 50000 &&
+                    precinct.median_income <= 100000
+                );
+            } else if (selectedIncomeLevel === "high") {
+                return precinct.median_income > 100000;
+            }
+            return true; // For "all", return all data
+        });
 
-        const republicanData = precinctData.map((precinct) => ({
-            x: precinct.median_income,
-            y: precinct.republican_percentage,
-        }));
+        // Prepare the data for Democrat and Republican voters
+        let democratData = [];
+        let republicanData = [];
+
+        if (selectedFilter === "income") {
+            democratData = filteredData.map((precinct) => ({
+                x: precinct.median_income,
+                y: precinct.democrat_percentage,
+            }));
+
+            republicanData = filteredData.map((precinct) => ({
+                x: precinct.median_income,
+                y: precinct.republican_percentage,
+            }));
+        } else if (selectedFilter === "race") {
+            // Placeholder for future implementation of race data
+            democratData = [];
+            republicanData = [];
+        }
+
+        // Calculate min and max x-values from the filtered data to adapt to income range
+        const allXValues = [...democratData, ...republicanData].map(
+            (point) => point.x
+        );
+        const minX = Math.min(...allXValues);
+        let maxX = Math.max(...allXValues);
+
+        // Limit the maxX to 175,000 when "all" incomes are selected
+        if (selectedIncomeLevel === "all") {
+            maxX = Math.min(maxX, 175000);
+        }
 
         // Scaling factor for x-values (optional)
         const scalingFactor = 10000;
@@ -91,14 +128,7 @@ const IncomeVotingScatter = ({ selectedState }) => {
             { order: 2 }
         );
 
-        // Compute min and max x-values from the original data
-        const allXValues = [...democratData, ...republicanData].map(
-            (point) => point.x
-        );
-        const minX = Math.min(...allXValues);
-        const maxX = 200000; // Set max X value to 200,000 for consistent scaling
-
-        // Define a step size for generating 100 points
+        // Define a step size for generating regression points
         const stepSize = (maxX - minX) / 100;
 
         // Generate regression line data using original x-values
@@ -156,6 +186,15 @@ const IncomeVotingScatter = ({ selectedState }) => {
             ],
         };
 
+        const getChartTitle = () => {
+            if (selectedFilter === "income") {
+                return "Voting Trends by Income";
+            } else if (selectedFilter === "race") {
+                return "Voting Trends by Race";
+            } else {
+                return "Voting Trends";
+            }
+        };
         const scatterOptions = {
             responsive: true,
             maintainAspectRatio: false,
@@ -172,7 +211,8 @@ const IncomeVotingScatter = ({ selectedState }) => {
                             color: "#000000",
                         },
                     },
-                    max: 200000, // Set the x-axis maximum to 200,000
+                    min: minX, // Set the x-axis minimum dynamically
+                    max: maxX, // Set the x-axis maximum dynamically (or 150,000 for "all")
                     ticks: {
                         callback: function (value) {
                             return value.toLocaleString(); // Display original x-values
@@ -207,7 +247,7 @@ const IncomeVotingScatter = ({ selectedState }) => {
                 },
                 title: {
                     display: true,
-                    text: "Voting Trends by Income",
+                    text: getChartTitle(),
                     font: {
                         size: 30,
                         weight: "bold",
@@ -243,7 +283,7 @@ const IncomeVotingScatter = ({ selectedState }) => {
         return () => {
             scatterChart.destroy();
         };
-    }, [loading, error, precinctData]);
+    }, [loading, error, precinctData, selectedFilter, selectedIncomeLevel]);
 
     if (!selectedState) {
         return <div>Please select a state to see the voting trends.</div>;
@@ -257,11 +297,58 @@ const IncomeVotingScatter = ({ selectedState }) => {
         return <div>Error: {error}</div>;
     }
 
-    return (
-        <div className="border-2 rounded-xl border-black h-full w-full">
-            <canvas ref={chartRef} className="w-full h-full"></canvas>
-        </div>
-    );
+    if (selectedFilter === "income") {
+        return (
+            <div className="border-2 rounded-xl border-black h-full w-full">
+                <div className="flex items-center mb-4">
+                    {/* Dropdown for Income Filter */}
+                    <select
+                        value={selectedIncomeLevel}
+                        onChange={(e) => setSelectedIncomeLevel(e.target.value)}
+                        className="text-xl font-semibold border-2 border-black rounded-xl p-2 mr-4"
+                    >
+                        <option value="all">All Incomes</option>
+                        <option value="low">Low Income (Below $50,000)</option>
+                        <option value="medium">
+                            Medium Income ($50,000 - $100,000)
+                        </option>
+                        <option value="high">
+                            High Income (Above $100,000)
+                        </option>
+                    </select>
+                </div>
+                <canvas ref={chartRef} className="w-full h-full"></canvas>
+            </div>
+        );
+    } else {
+        return (
+            <div className="border-2 rounded-xl border-black h-full w-full">
+                {/* Render race dropdown if selected filter is race */}
+                {selectedFilter === "race" && (
+                    <div className="mb-4">
+                        <label
+                            htmlFor="raceFilter"
+                            className="font-semibold mr-2"
+                        >
+                            Select Race:
+                        </label>
+                        <select
+                            id="raceFilter"
+                            value={selectedRace}
+                            onChange={(e) => setSelectedRace(e.target.value)}
+                            className="border-2 border-black rounded-md p-2"
+                        >
+                            <option value="hispanic">Hispanic</option>
+                            <option value="non-hispanic">Non-Hispanic</option>
+                            <option value="white">White</option>
+                            <option value="black">Black</option>
+                        </select>
+                    </div>
+                )}
+                <canvas ref={chartRef} className="w-full h-full"></canvas>
+            </div>
+        );
+    }
 };
 
 export default IncomeVotingScatter;
