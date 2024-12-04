@@ -10,6 +10,10 @@ import { States } from "../../enums";
 
 function StatesMap ({ selectedState, setHoveredArea, selectedArea, setSelectedArea, mapView, setIsOpen, isOpen, heatmapOpts, highlightedDistrict }) {
   const [mapData, setMapData] = useState(null);
+<<<<<<< HEAD
+=======
+  console.log(selectedState)
+>>>>>>> origin/test-cody
 
   useEffect(() => {
     axios.get(`http://localhost:8080/api/state-map`, {

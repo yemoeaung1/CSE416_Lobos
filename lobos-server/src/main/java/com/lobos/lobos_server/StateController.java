@@ -19,7 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/test-cody
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
