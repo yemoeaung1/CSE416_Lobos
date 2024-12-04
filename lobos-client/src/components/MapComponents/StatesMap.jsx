@@ -4,7 +4,7 @@ import {
   useMap
 } from "react-leaflet";
 import axios from 'axios';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Color from "color";
 import { States } from "../../enums";
 
@@ -50,20 +50,22 @@ function StatesMap ({ selectedState, setHoveredArea, selectedArea, setSelectedAr
 
     layer.on({
       mouseover: (e) => {
+        setHoveredArea(feature.properties.NAME);
+
         originalColor = e.target.options.fillColor;
         if (originalColor == "#ffffff")
           return;
 
         darkerColor = Color(originalColor).darken(0.5).hex();
         e.target.setStyle({ fillColor: darkerColor });
-        setHoveredArea(feature.properties.NAME);
       },
       mouseout: (e) => {
+        setHoveredArea(States.NONE);
+        
         if (originalColor == "#ffffff")
           return;
 
         e.target.setStyle({ fillColor: originalColor });
-        setHoveredArea(States.NONE);
       },
       click: (e) => {
         if (originalColor == "#ffffff")
@@ -95,6 +97,7 @@ function StatesMap ({ selectedState, setHoveredArea, selectedArea, setSelectedAr
           isOpen={isOpen}
           selectedArea={selectedArea}
           mapData={mapData}
+          highlightedDistrict={highlightedDistrict}
         />
 
         <GeoJSON key={JSON.stringify(mapData.geoJSON)} data={mapData.geoJSON} onEachFeature={onEachFeature} zIndex={1} />
@@ -103,8 +106,41 @@ function StatesMap ({ selectedState, setHoveredArea, selectedArea, setSelectedAr
   );
 };
 
-function MapController({ isOpen, mapData }) {
+function MapController({ isOpen, mapData, highlightedDistrict }) {
+  const oldHighlightedDistrict = useRef(highlightedDistrict);
+
   const map = useMap();
+
+  useEffect(() => {
+    if (!map) return;
+
+    map.eachLayer((layer) => {
+      if (layer && layer.feature && layer.feature.properties) {
+        const feature = layer.feature;
+
+        const defaultStyle = {
+          fillColor: feature.properties.fillColor || "#ffffff",
+          fillOpacity: feature.properties.fillOpacity || 0.5,
+          color: feature.properties.color || "black",
+          weight: feature.properties.weight || 2,
+        };
+
+        if(highlightedDistrict !== oldHighlightedDistrict.current && feature.properties.NAME === oldHighlightedDistrict.current){
+          layer.setStyle(defaultStyle);
+        }
+        else if (feature.properties.NAME === highlightedDistrict) {
+          layer.setStyle({
+            color: "black",
+            weight: 5,
+            fillColor: "#4CAF50",
+            fillOpacity: 0.7,
+          });
+        }
+      }
+    });
+
+    oldHighlightedDistrict.current = highlightedDistrict;
+  }, [highlightedDistrict]);
 
   useEffect(() => {
     map.invalidateSize();

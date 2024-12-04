@@ -14,7 +14,7 @@ import StateDataTab from "./DataStateDataComponents/StateDataTab";
 import AnalysisTab from "./DataAnalysisComponents/AnalysisTab";
 import EnsembleTab from "./DataEnsembleComponents/EnsembleTab";
 
-export default function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, setMapView }) {
+export default function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, setMapView, setHighlightedDistrict }) {
   const [dataTab, setDataTab] = useState(DataTabOptions.SUMMARY);
 
   return (
@@ -37,6 +37,7 @@ export default function DataContainer({ isOpen, setIsOpen, selectedArea, selecte
           selectedArea={selectedArea}
           selectedState={selectedState}
           setMapView={setMapView}
+          setHighlightedDistrict={setHighlightedDistrict}
         />
       </div>
 
@@ -96,7 +97,7 @@ function DataTabs({ isOpen, dataTab, setDataTab }) {
   );
 }
 
-function DataComponent({ isOpen, dataTab, selectedArea, selectedState, setMapView }) {
+function DataComponent({ isOpen, dataTab, selectedState, setMapView, setHighlightedDistrict }) {
   if (!isOpen) {
     return (
       <div className="data-component" />
@@ -105,7 +106,7 @@ function DataComponent({ isOpen, dataTab, selectedArea, selectedState, setMapVie
 
   return (
     <div className="data-component open">
-      {dataTab === DataTabOptions.SUMMARY && <SummaryTab selectedState={selectedState} setMapView={setMapView}/>}
+      {dataTab === DataTabOptions.SUMMARY && <SummaryTab selectedState={selectedState} setMapView={setMapView} setHighlightedDistrict={setHighlightedDistrict}/>}
       {dataTab === DataTabOptions.STATE_DATA && <StateDataTab setFilter={setFilter}/>}
       {dataTab === DataTabOptions.ANALYSIS && <AnalysisTab />}
       {dataTab === DataTabOptions.ENSEMBLE && <EnsembleTab />}
