@@ -1,11 +1,10 @@
-import { useEffect } from "react";
-import { DataFilters, MapViewOptions } from "../../enums";
+import BoxPlotGraph from "./EnsembleBoxPlot";
 
-export default function EnsembleTab({ setMapView, setHeatmapOpts }) {
-
-  useEffect(() => {
-    setMapView(MapViewOptions.PRECINCT);
-  }, [])
-
-  return (<></>);
+export default function EnsembleTab() {
+    
+      return (
+        <div>
+          <BoxPlotGraph dataSetType={"hispanic"} />
+        </div>
+      );
 }
