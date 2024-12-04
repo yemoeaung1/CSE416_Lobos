@@ -5,18 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.lobos.lobos_server.enum_classes.FiltersEnum;
-<<<<<<< HEAD
-
-public class HeatmapMethods {
-    public static Map<String, Object> handleBins(List<String> filters){
-        FiltersEnum filter = FiltersEnum.valueOf(filters.get(0));
-        switch(filter){
-            case DEMOGRAPHIC: return handleDemoBins(filters.get(1)); 
-            case ECONOMIC: return handleEcoBins();
-            case REGION_TYPE: return handleRegionBins();
-            case POVERTY_LEVEL: return handlePovertyBins();
-            case ECO_DEMOGRAPHIC: return handleEcoDemoBins();
-=======
 import com.lobos.lobos_server.enum_classes.RegionTypeEnum;
 import com.lobos.lobos_server.model.PrecinctData;
 
@@ -90,56 +78,10 @@ public class HeatmapMethods {
             case REGION_TYPE: return regionBins;
             case POVERTY_LEVEL: return povertyBins;
             case ECO_DEMOGRAPHIC: return ecoDemoBins;
->>>>>>> 6464916494d359df2d75fe099a682e666b410758
             default: return null;
         }
     }
 
-<<<<<<< HEAD
-    private static Map<String, Object> handleDemoBins(String filter){
-        Map<String, Object> colorMapping = new HashMap<>();
-
-        colorMapping.put("Color", "#ffffff");
-        colorMapping.put("Opacity", 0.5);
-
-        return colorMapping;
-    }
-
-    private static Map<String, Object> handleEcoBins(){
-        Map<String, Object> colorMapping = new HashMap<>();
-
-        colorMapping.put("Color", "#ffffff");
-        colorMapping.put("Opacity", 0.5);
-
-        return colorMapping;
-    }
-
-    private static Map<String, Object> handleRegionBins(){
-        Map<String, Object> colorMapping = new HashMap<>();
-
-        colorMapping.put("Color", "#ffffff");
-        colorMapping.put("Opacity", 0.5);
-
-        return colorMapping;
-    }
-
-    private static Map<String, Object> handlePovertyBins(){
-        Map<String, Object> colorMapping = new HashMap<>();
-
-        colorMapping.put("Color", "#ffffff");
-        colorMapping.put("Opacity", 0.5);
-
-        return colorMapping;
-    }
-
-    private static Map<String, Object> handleEcoDemoBins(){
-        Map<String, Object> colorMapping = new HashMap<>();
-
-        colorMapping.put("Color", "#ffffff");
-        colorMapping.put("Opacity", 0.5);
-
-        return colorMapping;
-=======
     public static ColorMapping handleBins(List<String> filters, PrecinctData info){
         FiltersEnum filter = FiltersEnum.fromValue(filters.get(0));
         switch(filter){
@@ -235,6 +177,5 @@ public class HeatmapMethods {
             return ecoDemoBins.get(key + "-$15K-$25K");
         else
             return ecoDemoBins.get(key + "-$0K-$15K");
->>>>>>> 6464916494d359df2d75fe099a682e666b410758
     }
 }
