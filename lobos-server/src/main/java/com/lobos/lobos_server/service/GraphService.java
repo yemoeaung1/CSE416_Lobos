@@ -3,6 +3,7 @@ package com.lobos.lobos_server.service;
 import org.springframework.stereotype.Service;
 
 import com.lobos.lobos_server.model.Graph;
+import com.lobos.lobos_server.enum_classes.FiltersEnum;
 import com.lobos.lobos_server.model.DataSet;
 
 import com.lobos.lobos_server.model.StateInfo;
@@ -32,17 +33,19 @@ public class GraphService {
         Graph graph = new Graph();
         graph.setGraphType("Bar");
 
-        switch (filter.toLowerCase()) {
-            case "race":
+        FiltersEnum enumFilter = FiltersEnum.fromValue(filter);
+
+        switch (enumFilter) {
+            case DEMOGRAPHIC:
                 populateRaceData(graph, stateInfo);
                 break;
-            case "income":
+            case ECONOMIC:
                 populateIncomeData(graph, stateInfo);
                 break;
-            case "region":
+            case REGION_TYPE:
                 populateRegionData(graph, stateInfo);
                 break;
-            case "party":
+            case ECO_POLITICAL:
                 populatePartyData(graph, stateInfo);
                 break;
             default:
@@ -62,8 +65,8 @@ public class GraphService {
         List<Double> data = new ArrayList<>();
         List<DataSet> dataSets = new ArrayList<>();
 
-         if (stateInfo.getData().containsKey("Race")) {
-        Map<String, Object> raceData = (Map<String, Object>) stateInfo.getData().get("Race");
+        if (stateInfo.getData().containsKey("Race")) {
+        Map<    String, Object> raceData = (Map<String, Object>) stateInfo.getData().get("Race");
 
         for (String race : raceData.keySet()) {
             Map<String, Object> raceDetails = (Map<String, Object>) raceData.get(race);
@@ -103,16 +106,16 @@ public class GraphService {
         List<DataSet> dataSets = new ArrayList<>();
 
         if (stateInfo.getData().containsKey("Household Income")) {
-        Map<String, Object> incomeData = (Map<String, Object>) stateInfo.getData().get("Household Income");
+            Map<String, Object> incomeData = (Map<String, Object>) stateInfo.getData().get("Household Income");
 
-        // Loop through each income bracket
-        for (String incomeBracket : incomeData.keySet()) {
-            Map<String, Object> incomeDetails = (Map<String, Object>) incomeData.get(incomeBracket);
+            // Loop through each income bracket
+            for (String incomeBracket : incomeData.keySet()) {
+                Map<String, Object> incomeDetails = (Map<String, Object>) incomeData.get(incomeBracket);
 
-            // Add the bracket and percentage to labels and data
-            labels.add(formatIncomeLabel(incomeBracket));
-            data.add(Double.parseDouble(incomeDetails.get("Percentage").toString())); // Assuming Percentage is stored as Double
-        }
+                // Add the bracket and percentage to labels and data
+                labels.add(formatIncomeLabel(incomeBracket));
+                data.add(Double.parseDouble(incomeDetails.get("Percentage").toString())); // Assuming Percentage is stored as Double
+            }
         }
 
         DataSet incomeDataSet = new DataSet();

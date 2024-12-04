@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -9,17 +9,27 @@ import {
 } from "@mui/material";
 
 import BarGraph from "../GraphPlotComponents/BarGraph";
+import { DataFilters } from "../../enums";
 
-export default function StateDataTab({ setFilter, selectedState }) {
+export default function StateDataTab({ setHeatmapOpts, selectedState }) {
   const [graphType, setGraphType] = useState("bar");
-  const [dataSetType, setDataSetType] = useState("race");
   const [heatMapEnabled, setHeatMapEnabled] = useState(false);
+  const [dataSetType, setDataSetType] = useState(DataFilters.ECO_POLITICAL);
   const [selectedRace, setSelectedRace] = useState("All"); // Default race selection
+
+  useEffect(() => {
+    if(heatMapEnabled){
+      console.log("HEATMAP TOGGLED");
+      if(dataSetType === DataFilters.DEMOGRAPHIC)
+        setHeatmapOpts([DataFilters.DEMOGRAPHIC, selectedRace]);
+      else
+        setHeatmapOpts(dataSetType);
+    }
+  }, [heatMapEnabled]);
 
   //Enables the Heat Map
   const handleHeatMapChange = (event) => {
-    setHeatMapEnabled(event.target.checked);
-    console.log("HeatMap Enabled:", event.target.checked);
+    setHeatMapEnabled(!heatMapEnabled);
   };
 
   // Handles Race Selection Change
@@ -36,12 +46,12 @@ export default function StateDataTab({ setFilter, selectedState }) {
           {graphType === "bar" && (
             <button
               className={
-                dataSetType === "party"
+                dataSetType === DataFilters.ECO_POLITICAL
                   ? "text-2xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
                   : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
               }
               onClick={() => {
-                setDataSetType("party");
+                setDataSetType(DataFilters.ECO_POLITICAL);
                 // setFilter("republican");
               }}
             >
@@ -51,12 +61,12 @@ export default function StateDataTab({ setFilter, selectedState }) {
 
           <button
             className={
-              dataSetType === "race"
+              dataSetType === DataFilters.DEMOGRAPHIC
                 ? "text-2xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
                 : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
             }
             onClick={() => {
-              setDataSetType("race");
+              setDataSetType(DataFilters.DEMOGRAPHIC);
               // setFilter("race");
             }}
           >
@@ -65,12 +75,12 @@ export default function StateDataTab({ setFilter, selectedState }) {
 
           <button
             className={
-              dataSetType === "income"
+              dataSetType === DataFilters.ECONOMIC
                 ? "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
                 : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
             }
             onClick={() => {
-              setDataSetType("income");
+              setDataSetType(DataFilters.ECONOMIC);
               // setFilter("income");
             }}
           >
@@ -80,12 +90,12 @@ export default function StateDataTab({ setFilter, selectedState }) {
 
           <button
             className={
-              dataSetType === "region"
+              dataSetType === DataFilters.REGION_TYPE
                 ? "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
                 : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
             }
             onClick={() => {
-              setDataSetType("region");
+              setDataSetType(DataFilters.REGION_TYPE);
               // setFilter("region");
             }}
           >
@@ -132,7 +142,7 @@ export default function StateDataTab({ setFilter, selectedState }) {
 
         <div className="mt-8">
           {/* Race Selection (Radio Group) */}
-          {dataSetType === "race" && (
+          {dataSetType === DataFilters.DEMOGRAPHIC && (
             <div className="flex flex-col items-center">
               <RadioGroup
                 row
