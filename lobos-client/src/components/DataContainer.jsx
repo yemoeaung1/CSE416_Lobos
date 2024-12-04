@@ -14,9 +14,7 @@ import StateDataTab from "./DataStateDataComponents/StateDataTab";
 import AnalysisTab from "./DataAnalysisComponents/AnalysisTab";
 import EnsembleTab from "./DataEnsembleComponents/EnsembleTab";
 
-export default function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, setMapView, setHeatmapOpts, setHighlightedDistrict }) {
-  const [dataTab, setDataTab] = useState(DataTabOptions.SUMMARY);
-
+export default function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, setMapView, setHeatmapOpts, dataTab, setDataTab, setHighlightedDistrict }) {
     return (
         <div className="data-container">
             <DataOpenButton
@@ -25,25 +23,25 @@ export default function DataContainer({ isOpen, setIsOpen, selectedArea, selecte
                 selectedArea={selectedArea}
             />
 
-      <div>
-        <DataTabs
-          isOpen={isOpen}
-          dataTab={dataTab}
-          setDataTab={setDataTab}
-        />
-        <DataComponent
-          isOpen={isOpen}
-          dataTab={dataTab}
-          selectedArea={selectedArea}
-          selectedState={selectedState}
-          setMapView={setMapView}
-          setHeatmapOpts={setHeatmapOpts}
-          setHighlightedDistrict={setHighlightedDistrict}
-        />
-      </div>
+            <div>
+                <DataTabs
+                    isOpen={isOpen}
+                    dataTab={dataTab}
+                    setDataTab={setDataTab}
+                />
+                <DataComponent
+                    isOpen={isOpen}
+                    dataTab={dataTab}
+                    selectedArea={selectedArea}
+                    selectedState={selectedState}
+                    setMapView={setMapView}
+                    setHeatmapOpts={setHeatmapOpts}
+                    setHighlightedDistrict={setHighlightedDistrict}
+                />
+            </div>
 
-    </div>
-  );
+        </div>
+    );
 }
 
 function DataOpenButton({ isOpen, setIsOpen, selectedArea }) {
@@ -69,9 +67,8 @@ function DataTabs({ isOpen, dataTab, setDataTab }) {
     return (
         <div className={`data-toolbar ${isOpen ? "open" : ""}`}>
             <div
-                className={`toolbar-item ${
-                    dataTab === DataTabOptions.SUMMARY ? "tool-selected" : ""
-                }`}
+                className={`toolbar-item ${dataTab === DataTabOptions.SUMMARY ? "tool-selected" : ""
+                    }`}
                 onClick={() => setDataTab(DataTabOptions.SUMMARY)}
             >
                 <BsInfoCircle className="toolbar-icon" />
@@ -79,9 +76,8 @@ function DataTabs({ isOpen, dataTab, setDataTab }) {
             </div>
 
             <div
-                className={`toolbar-item ${
-                    dataTab === DataTabOptions.STATE_DATA ? "tool-selected" : ""
-                }`}
+                className={`toolbar-item ${dataTab === DataTabOptions.STATE_DATA ? "tool-selected" : ""
+                    }`}
                 onClick={() => setDataTab(DataTabOptions.STATE_DATA)}
             >
                 <BsFillBarChartFill className="toolbar-icon" />
@@ -89,9 +85,8 @@ function DataTabs({ isOpen, dataTab, setDataTab }) {
             </div>
 
             <div
-                className={`toolbar-item ${
-                    dataTab === DataTabOptions.ANALYSIS ? "tool-selected" : ""
-                }`}
+                className={`toolbar-item ${dataTab === DataTabOptions.ANALYSIS ? "tool-selected" : ""
+                    }`}
                 onClick={() => setDataTab(DataTabOptions.ANALYSIS)}
             >
                 <BsGraphUp className="toolbar-icon" />
@@ -99,9 +94,8 @@ function DataTabs({ isOpen, dataTab, setDataTab }) {
             </div>
 
             <div
-                className={`toolbar-item ${
-                    dataTab === DataTabOptions.ENSEMBLE ? "tool-selected" : ""
-                }`}
+                className={`toolbar-item ${dataTab === DataTabOptions.ENSEMBLE ? "tool-selected" : ""
+                    }`}
                 onClick={() => setDataTab(DataTabOptions.ENSEMBLE)}
             >
                 <BsMap className="toolbar-icon" />
@@ -112,11 +106,11 @@ function DataTabs({ isOpen, dataTab, setDataTab }) {
 }
 
 function DataComponent({ isOpen, dataTab, selectedState, setMapView, setHeatmapOpts, setHighlightedDistrict }) {
-  if (!isOpen) {
-    return (
-      <div className="data-component" />
-    );
-  }
+    if (!isOpen) {
+        return (
+            <div className="data-component" />
+        );
+    }
 
   return (
     <div className="data-component open">
