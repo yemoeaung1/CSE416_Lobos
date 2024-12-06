@@ -120,36 +120,6 @@ def main():
 #     # 4.Plot the Results and save the image
     ei.plot()
     plt.savefig("plot4.png")
-#     print(ei.summary())
-# santa_clara_data = Datasets.Santa_Clara.to_dataframe()
-
-# group_fraction_2by2 = np.array(santa_clara_data["pct_e_asian_vote"])
-# votes_fraction_2by2 = np.array(santa_clara_data["pct_for_hardy2"])
-# precinct_pops = np.array(santa_clara_data["total2"])
-
-# # print(santa_clara_data["pct_e_asian_vote"])
-# # print(group_fraction_2by2)
-# print(santa_clara_data)
-
-# demographic_group_name_2by2 = "e_asian"
-# candidate_name_2by2 = "Hardy"
-# precinct_names = santa_clara_data['precinct']
-
-# santa_clara_data.head()
-
-# ei_2by2 = TwoByTwoEI(model_name="king99_pareto_modification", pareto_scale=15, pareto_shape=2)
-
-# # Fit the model
-# ei_2by2.fit(
-#        group_fraction_2by2, 
-#        votes_fraction_2by2, 
-#        precinct_pops, 
-#        demographic_group_name = demographic_group_name_2by2, 
-#        candidate_name = candidate_name_2by2, 
-# )
-
-# # Generate a simple report to summarize the results
-# print(ei_2by2.summary())
 
 if __name__ == "__main__":
     main()

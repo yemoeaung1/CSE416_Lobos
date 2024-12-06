@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter";
 import { FormControlLabel, Checkbox } from "@mui/material";
+import LineGraph from "../GraphPlotComponents/LineGraph";
 
 export default function AnalysisTab({ selectedState }) {
     const [selectedChart, setSelectedChart] = useState("precinct-analysis");
@@ -77,7 +78,8 @@ export default function AnalysisTab({ selectedState }) {
                     >
                         Race
                     </button>
-                    <button
+                    {selectedChart === "precinct-analysis" && (
+                        <button
                         className={
                             selectedFilter === "incomeRace"
                                 ? "text-2xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
@@ -85,35 +87,23 @@ export default function AnalysisTab({ selectedState }) {
                         }
                         onClick={() => setSelectedFilter("incomeRace")}
                     >
-                        ..
+                        Race Income
                     </button>
-                </div>
+                    )}
+                    
 
-                {/* HeatMap Checkbox */}
-                <div>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={heatMapEnabled}
-                                onChange={() =>
-                                    setHeatMapEnabled(!heatMapEnabled)
-                                }
-                                sx={{
-                                    "&.Mui-checked": {
-                                        color: "#42a5f5",
-                                    },
-                                    "& .MuiSvgIcon-root": {
-                                        fontSize: 28,
-                                    },
-                                }}
-                            />
+                    {selectedChart === "ecological-inference" && (
+                        <button
+                        className={
+                            selectedFilter === "incomeRace"
+                                ? "text-2xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                                : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
                         }
-                        label={
-                            <span className="text-2xl font-semibold">
-                                Enable HeatMap
-                            </span>
-                        }
-                    />
+                        onClick={() => setSelectedFilter("incomeRace")}
+                    >
+                        Region
+                    </button>
+                    )}
                 </div>
             </div>
 
