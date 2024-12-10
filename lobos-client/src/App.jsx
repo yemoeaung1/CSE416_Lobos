@@ -6,8 +6,6 @@ import StateMapContainer from "./components/StateMapContainer";
 import { DataTabOptions, MapViewOptions, States } from "./enums";
 
 function App() {
-    const [isOpen, setIsOpen] = useState(false);
-
     const [mapView, setMapView] = useState(MapViewOptions.STATE);
     const [heatmapOpts, setHeatmapOpts] = useState(null);
 
@@ -19,15 +17,12 @@ function App() {
     const [highlightedDistrict, setHighlightedDistrict] = useState(0);
 
     useEffect(() => {
+        console.log("AREA CHANGE", selectedArea);
+
         if (selectedState !== selectedArea && Object.values(States).includes(selectedArea)){
             setSelectedState(selectedArea);
             setDataTab(DataTabOptions.SUMMARY);
         }
-
-        if (selectedArea !== States.NONE && !isOpen)
-            setIsOpen(true);
-        else if (selectedArea === States.NONE && isOpen)
-            setIsOpen(false);
     }, [selectedArea]);
 
     return (
@@ -42,8 +37,6 @@ function App() {
                 setHeatmapOpts={setHeatmapOpts}
             />
             <DataContainer
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
                 selectedArea={selectedArea}
                 selectedState={selectedState}
                 setMapView={setMapView}
@@ -58,8 +51,6 @@ function App() {
                 setHoveredArea={setHoveredArea}
                 setSelectedArea={setSelectedArea}
                 selectedArea={selectedArea}
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
                 heatmapOpts={heatmapOpts}
                 highlightedDistrict={highlightedDistrict}
             />

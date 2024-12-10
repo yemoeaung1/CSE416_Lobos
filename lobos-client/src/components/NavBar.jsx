@@ -39,8 +39,8 @@ function NavLogo({ setMapView, setHoveredArea, setSelectedArea, setHeatmapOpts }
 function NavTitle({ hoveredArea, selectedState }) {
     return (
         <div className="navbar-title flex flex-col items-center justify-center">
-            <span className="text-4xl text-white averia-serif">{(selectedState !== States.NONE) ? selectedState : "[Select A State]"}</span>
-            <span className="text-base text-white averia-serif">{`Hovering: ${(hoveredArea !== States.NONE) ? hoveredArea : "...    "}`}</span>
+            <span className="text-4xl text-white averia-serif-title">{(selectedState !== States.NONE) ? selectedState : "[Select A State]"}</span>
+            <span className="text-base text-white averia-serif-title">{`Hovering: ${(hoveredArea !== States.NONE) ? hoveredArea : "...    "}`}</span>
         </div>
     )
 }

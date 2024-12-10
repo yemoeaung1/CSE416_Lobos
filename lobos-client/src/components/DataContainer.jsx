@@ -14,58 +14,29 @@ import StateDataTab from "./DataStateDataComponents/StateDataTab";
 import AnalysisTab from "./DataAnalysisComponents/AnalysisTab";
 import EnsembleTab from "./DataEnsembleComponents/EnsembleTab";
 
-export default function DataContainer({ isOpen, setIsOpen, selectedArea, selectedState, setMapView, setHeatmapOpts, dataTab, setDataTab, setHighlightedDistrict }) {
+export default function DataContainer({ selectedArea, selectedState, setMapView, setHeatmapOpts, dataTab, setDataTab, setHighlightedDistrict }) {
     return (
         <div className="data-container">
-            <DataOpenButton
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-                selectedArea={selectedArea}
+            <DataTabs
+                selectedState={selectedState}
+                dataTab={dataTab}
+                setDataTab={setDataTab}
             />
-
-            <div>
-                <DataTabs
-                    isOpen={isOpen}
-                    dataTab={dataTab}
-                    setDataTab={setDataTab}
-                />
-                <DataComponent
-                    isOpen={isOpen}
-                    dataTab={dataTab}
-                    selectedArea={selectedArea}
-                    selectedState={selectedState}
-                    setMapView={setMapView}
-                    setHeatmapOpts={setHeatmapOpts}
-                    setHighlightedDistrict={setHighlightedDistrict}
-                />
-            </div>
-
+            <DataComponent
+                dataTab={dataTab}
+                selectedArea={selectedArea}
+                selectedState={selectedState}
+                setMapView={setMapView}
+                setHeatmapOpts={setHeatmapOpts}
+                setHighlightedDistrict={setHighlightedDistrict}
+            />
         </div>
     );
 }
 
-function DataOpenButton({ isOpen, setIsOpen, selectedArea }) {
-    const toggleOpen = () => {
-        setIsOpen(!isOpen);
-    };
-
+function DataTabs({ selectedState, dataTab, setDataTab }) {
     return (
-        <>
-            {(selectedArea !== States.NONE || isOpen) && (
-                <div
-                    className={`data-open-button ${isOpen ? "open" : ""}`}
-                    onClick={() => toggleOpen()}
-                >
-                    {isOpen ? <BsArrowBarRight /> : <BsArrowBarLeft />}
-                </div>
-            )}
-        </>
-    );
-}
-
-function DataTabs({ isOpen, dataTab, setDataTab }) {
-    return (
-        <div className={`data-toolbar ${isOpen ? "open" : ""}`}>
+        <div className={`data-toolbar ${(selectedState != States.NONE) ? "open" : ""}`}>
             <div
                 className={`toolbar-item ${dataTab === DataTabOptions.SUMMARY ? "tool-selected" : ""
                     }`}
@@ -105,8 +76,8 @@ function DataTabs({ isOpen, dataTab, setDataTab }) {
     );
 }
 
-function DataComponent({ isOpen, dataTab, selectedState, setMapView, setHeatmapOpts, setHighlightedDistrict }) {
-    if (!isOpen) {
+function DataComponent({ dataTab, selectedState, setMapView, setHeatmapOpts, setHighlightedDistrict }) {
+    if (selectedState == States.NONE) {
         return (
             <div className="data-component" />
         );

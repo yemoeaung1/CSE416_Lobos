@@ -10,8 +10,6 @@ function StatesMap({
     selectedArea,
     setSelectedArea,
     mapView,
-    setIsOpen,
-    isOpen,
     heatmapOpts,
     highlightedDistrict,
 }) {
@@ -36,7 +34,7 @@ function StatesMap({
 
     if (!mapData) {
         return (
-            <div className="flex items-center justify-center averia-serif text-5xl">
+            <div className="flex items-center justify-center averia-serif-title text-5xl">
                 Loading Map
             </div>
         );
@@ -75,9 +73,7 @@ function StatesMap({
             click: (e) => {
                 if (!feature.properties.ACTIVE) return;
 
-                if (selectedArea == feature.properties.NAME && !isOpen) {
-                    setIsOpen(true);
-                } else {
+                if (selectedArea != feature.properties.NAME) {
                     setSelectedArea(feature.properties.NAME);
                 }
             },
@@ -97,7 +93,6 @@ function StatesMap({
                 maxZoom={mapData.properties.MAX_ZOOM}
             >
                 <MapController
-                    isOpen={isOpen}
                     selectedArea={selectedArea}
                     mapData={mapData}
                     highlightedDistrict={highlightedDistrict}
@@ -114,7 +109,7 @@ function StatesMap({
     );
 }
 
-function MapController({ isOpen, mapData, highlightedDistrict }) {
+function MapController({ mapData, highlightedDistrict }) {
     const oldHighlightedDistrict = useRef(highlightedDistrict);
 
     const map = useMap();
@@ -154,18 +149,14 @@ function MapController({ isOpen, mapData, highlightedDistrict }) {
 
     useEffect(() => {
         map.invalidateSize();
-    }, [isOpen]);
 
-    useEffect(() => {
         map.options.minZoom = mapData.properties.MIN_ZOOM;
         map.options.maxZoom = mapData.properties.MAX_ZOOM;
-    }, [mapData]);
 
-    useEffect(() => {
         map.flyTo(mapData.properties.CENTER, mapData.properties.CURRENT_ZOOM, {
             animate: false,
         }).setMaxBounds(mapData.properties.MAX_BOUNDS);
-    }, [isOpen, mapData]);
+    }, [mapData]);
 
     return null;
 }
