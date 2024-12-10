@@ -84,7 +84,7 @@ public class StateController {
 
     private Map<String, Object> fetchStateMap(String state, String view, List<String> heatmapOpts){
         StateMapConfig stateMapConfig = stateService.getStateMapConfig(state);
-        GeoJSON stateGeoJSON = fetchStateGeoJSON(state, view);
+        GeoJSON stateGeoJSON = stateService.getStateMap(state, view).getGeoJSON();
         if(heatmapOpts != null && !heatmapOpts.isEmpty())
             appendHeatmapOpts(stateGeoJSON, state, heatmapOpts);
 
@@ -101,28 +101,6 @@ public class StateController {
         data.put("geoJSON", stateGeoJSON);
 
         return data;
-    }
-
-    @Cacheable(value = "lobosCache", key = "'STATE-GEOJSON:' + #state + ':' + #view")
-    private GeoJSON fetchStateGeoJSON(String state, String view){
-        if(!view.equals(StateViewEnum.PRECINCT.toString()))
-            return stateService.getStateMap(state, view).getGeoJSON();
-        else {
-            // Temporary Code => Fetching Precinct Level GeoJSON Locally:
-            GeoJSON geoJSONLocal = null;
-            try {
-                if(state.equals("South Carolina")){
-                    geoJSONLocal = GeoJSON.parseGeoJsonAsMap("sc_vtd_boundary.geojson");
-                }
-                else if(state.equals("Utah")){
-                    geoJSONLocal = GeoJSON.parseGeoJsonAsMap("ut_vtd_boundary.geojson");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return geoJSONLocal;
-        }
     }
 
     @Cacheable(value = "lobosCache", key = "'PRECINCT-INFO-MAP:' + #state")
@@ -149,8 +127,8 @@ public class StateController {
                 PrecinctData info = precinctInfoMap.get(key);
                 ColorMapping colorMapping = HeatmapMethods.handleBins(heatmapOpts, info);
 
-                feature.getProperties().put("fillColor", colorMapping.getColor());
-                feature.getProperties().put("fillOpacity", colorMapping.getOpacity());
+                feature.getProperties().put("FCOLOR", colorMapping.getColor());
+                feature.getProperties().put("FOPACITY", colorMapping.getOpacity());
             } 
         } catch (Exception e){
             e.printStackTrace();

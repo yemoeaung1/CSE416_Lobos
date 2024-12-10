@@ -43,15 +43,20 @@ function StatesMap({
     }
 
     const onEachFeature = (feature, layer) => {
-        let originalColor;
+        let originalColor = '#FFFFFF';
         let darkerColor;
 
-    const defaultStyle = {
-      fillColor: feature.properties.fillColor || "#ffffff",
-      fillOpacity: feature.properties.fillOpacity || 0.5,
-      color: feature.properties.color || "black",
-      weight: feature.properties.weight || 1,
-    };
+        if (feature.properties.ACTIVE)
+            originalColor = '#F02525'; // RED
+        else if (feature.properties.FCOLOR)
+            originalColor = feature.properties.FCOLOR;
+
+        const defaultStyle = {
+            fillColor: originalColor,
+            fillOpacity: feature.properties.FOPACITY || 0.75,
+            color: feature.properties.COLOR || "#000000",
+            weight: 1,
+        };
 
         layer.setStyle(defaultStyle);
 
@@ -59,21 +64,16 @@ function StatesMap({
             mouseover: (e) => {
                 setHoveredArea(feature.properties.NAME);
 
-                originalColor = e.target.options.fillColor;
-                if (originalColor == "#ffffff") return;
-
-                darkerColor = Color(originalColor).darken(0.5).hex();
-                e.target.setStyle({ fillColor: darkerColor });
+                darkerColor = Color(originalColor).darken(0.25).hex();
+                e.target.setStyle({ fillColor: darkerColor, weight: 3 });
             },
             mouseout: (e) => {
                 setHoveredArea(States.NONE);
 
-                if (originalColor == "#ffffff") return;
-
-                e.target.setStyle({ fillColor: originalColor });
+                e.target.setStyle({ fillColor: originalColor, weight: 1 });
             },
             click: (e) => {
-                if (originalColor == "#ffffff") return;
+                if (!feature.properties.ACTIVE) return;
 
                 if (selectedArea == feature.properties.NAME && !isOpen) {
                     setIsOpen(true);
@@ -126,12 +126,12 @@ function MapController({ isOpen, mapData, highlightedDistrict }) {
             if (layer && layer.feature && layer.feature.properties) {
                 const feature = layer.feature;
 
-        const defaultStyle = {
-          fillColor: feature.properties.fillColor || "#ffffff",
-          fillOpacity: feature.properties.fillOpacity || 0.5,
-          color: feature.properties.color || "black",
-          weight: feature.properties.weight || 1,
-        };
+                const defaultStyle = {
+                    fillColor: feature.properties.FCOLOR || "#ffffff",
+                    fillOpacity: feature.properties.FOPACITY || 0.5,
+                    color: feature.properties.color || "black",
+                    weight: feature.properties.weight || 1,
+                };
 
                 if (
                     highlightedDistrict !== oldHighlightedDistrict.current &&
