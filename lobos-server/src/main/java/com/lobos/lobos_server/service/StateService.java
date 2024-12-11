@@ -85,9 +85,27 @@ public class StateService {
                         filteredData.put("republican_percentage", 0.0);
                     }
 
+                    // Calculate and add race percentages
+                    int totalPopulation = precinct.getTotalPopulation();
+                    if (totalPopulation > 0) {
+                        filteredData.put("hispanic_percentage",
+                            ((double) precinct.getHispanic() / totalPopulation) * 100);
+                        filteredData.put("non_hispanic_percentage",
+                            ((double) precinct.getNonHispanic() / totalPopulation) * 100);
+                        filteredData.put("white_percentage",
+                            ((double) precinct.getWhite() / totalPopulation) * 100);
+                        filteredData.put("black_percentage",
+                            ((double) precinct.getBlack() / totalPopulation) * 100);
+                    } else {
+                        filteredData.put("hispanic_percentage", 0.0);
+                        filteredData.put("non_hispanic_percentage", 0.0);
+                        filteredData.put("white_percentage", 0.0);
+                        filteredData.put("black_percentage", 0.0);
+                    }
                     filteredPrecinctData.add(filteredData);
                 }
-
+                // Log the filtered data
+                // System.out.println("Filtered data for state: " + state + ": " + filteredPrecinctData);
                 System.out.println("Filtered data for state: " + state + " is ready.");
                 return filteredPrecinctData;
             }

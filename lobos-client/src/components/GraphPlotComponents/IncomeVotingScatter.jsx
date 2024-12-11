@@ -10,7 +10,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
     const [error, setError] = useState(null);
     const [precinctData, setPrecinctData] = useState([]);
     const [selectedIncomeLevel, setSelectedIncomeLevel] = useState("all");
-    const [selectedRace, setSelectedRace] = useState("non-hispanic");
+    const [selectedRace, setSelectedRace] = useState("white");
     // Fetch precinct data whenever the selected state changes
     useEffect(() => {
         if (selectedState === States.NONE) {
@@ -72,9 +72,15 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                 y: precinct.republican_percentage,
             }));
         } else if (selectedFilter === "race") {
-            // Placeholder for future implementation of race data
-            democratData = [];
-            republicanData = [];
+            democratData = precinctData.map((precinct) => ({
+                x: precinct[`${selectedRace}_percentage`],
+                y: precinct.democrat_percentage,
+            }));
+
+            republicanData = precinctData.map((precinct) => ({
+                x: precinct[`${selectedRace}_percentage`],
+                y: precinct.republican_percentage,
+            }));
         }
 
         // Calculate min and max x-values from the filtered data to adapt to income range
@@ -186,7 +192,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                 },
             ],
         };
-
+        console.log("Chart Data for Race:", chartData); // Add this here to inspect final chart data
         const getChartTitle = () => {
             if (selectedFilter === "income") {
                 return "Voting Trends by Income";
@@ -205,18 +211,20 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                     position: "bottom",
                     title: {
                         display: true,
-                        text: "Annual Income Range ($)",
+                        text: getXAxisTitle(),
                         font: {
                             size: 18,
                             weight: "bold",
                             color: "#000000",
                         },
                     },
-                    min: minX, // Set the x-axis minimum dynamically
-                    max: maxX, // Set the x-axis maximum dynamically (or 150,000 for "all")
+                    min: selectedFilter === "race" ? 0 : minX, // Set to 0 for race
+                    max: selectedFilter === "race" ? 100 : maxX, // Set to 100 for race
                     ticks: {
                         callback: function (value) {
-                            return value.toLocaleString(); // Display original x-values
+                            return `${value.toLocaleString()}${
+                                selectedFilter === "race" ? "%" : ""
+                            }`;
                         },
                         font: { size: 14 },
                     },
@@ -284,7 +292,29 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
         return () => {
             scatterChart.destroy();
         };
-    }, [loading, error, precinctData, selectedFilter, selectedIncomeLevel]);
+    }, [
+        loading,
+        error,
+        precinctData,
+        selectedFilter,
+        selectedIncomeLevel,
+        selectedRace,
+    ]);
+
+    const getFormattedRaceName = (race) => {
+        if (race === "white") return "White";
+        if (race === "black") return "Black";
+        if (race === "hispanic") return "Hispanic";
+        if (race === "non-hispanic") return "Non-Hispanic";
+        return "Unknown Race";
+    };
+
+    const getXAxisTitle = () => {
+        if (selectedFilter === "income") return "Annual Income Range ($)";
+        if (selectedFilter === "race")
+            return `${getFormattedRaceName(selectedRace)} Percentage`;
+        return "X-Axis";
+    };
 
     if (selectedState === States.NONE) {
         return <div>Please select a state to see the voting trends.</div>;
@@ -323,7 +353,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                 </div>
             </>
         );
-    } else {
+    } else if (selectedFilter === "race") {
         return (
             <>
                 {/* Render race dropdown if selected filter is race */}
@@ -335,10 +365,10 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                             onChange={(e) => setSelectedRace(e.target.value)}
                             className="border-2 border-black rounded-md p-2"
                         >
-                            <option value="hispanic">Hispanic</option>
-                            <option value="non-hispanic">Non-Hispanic</option>
                             <option value="white">White</option>
                             <option value="black">Black</option>
+                            <option value="hispanic">Hispanic</option>
+                            <option value="non-hispanic">Non-Hispanic</option>
                         </select>
                     </div>
                 )}
@@ -347,6 +377,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                 </div>
             </>
         );
+    } else {
     }
 };
 
