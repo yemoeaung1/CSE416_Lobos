@@ -134,7 +134,7 @@ export default function StateDataTab({ setHeatmapOpts, selectedState, setMapView
 
           <div className="text-2xl font-bold text-center font-roboto ml-24 mt-2">
             Total Population:
-            <span className="text-2xl font-normal"> {stateInfo ? formatNumberWithCommas(stateInfo.data["Total Population"]) : "Loading..."} </span>
+            <span className="text-2xl font-normal"> {stateInfo ? formatNumberWithCommas(stateInfo.stateData["Total Population"]) : "Loading..."} </span>
           </div>
         </div>
 

@@ -10,8 +10,8 @@ public class StateInfo {
     @Id
     private String id;
     private String state;
-    private Map<String, Object> data;
-    private Map<String, Object> tableSettings;
+    private Map<String, Object> stateData;
+    private Map<String, Object> districtData;
 
     public String getId() {
         return id;
@@ -29,19 +29,19 @@ public class StateInfo {
         this.state = state;
     }
 
-    public Map<String, Object> getData() {
-        return data;
+    public Map<String, Object> getStateData() {
+        return stateData;
     }
 
-    public void setData(Map<String, Object> data) {
-        this.data = data;
+    public void setStateData(Map<String, Object> stateData) {
+        this.stateData = stateData;
     }
 
-    public Map<String, Object> getTableSettings() {
-        return tableSettings;
+    public Map<String, Object> getDistrictData() {
+        return districtData;
     }
 
-    public void setTableSettings(Map<String, Object> tableSettings) {
-        this.tableSettings = tableSettings;
+    public void setDistrictData(Map<String, Object> districtData) {
+        this.districtData = districtData;
     }
 }

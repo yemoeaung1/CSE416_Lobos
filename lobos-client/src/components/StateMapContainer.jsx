@@ -2,9 +2,9 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { MapContainer, GeoJSON, useMap } from "react-leaflet";
 import Color from "color";
-import { States } from "../enums";
+import { MapViewOptions, PoliColors, States } from "../enums";
 
-export default function StateMapContainer({ mapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, heatmapOpts, highlightedDistrict }) {
+export default function StateMapContainer({ mapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, heatmapOpts, districtYear, highlightedDistrict }) {
     return (
         <div className="wrapper" style={{ width: (selectedState !== States.NONE) ? "40%" : "100%" }}>
             <StatesMap
@@ -14,6 +14,7 @@ export default function StateMapContainer({ mapView, selectedState, setHoveredAr
                 selectedArea={selectedArea}
                 mapView={mapView}
                 heatmapOpts={heatmapOpts}
+                districtYear={districtYear}
                 highlightedDistrict={highlightedDistrict}
             />
         </div>
@@ -27,16 +28,21 @@ function StatesMap({
     setSelectedArea,
     mapView,
     heatmapOpts,
+    districtYear,
     highlightedDistrict,
 }) {
     const [mapData, setMapData] = useState(null);
 
     useEffect(() => {
+        let mapViewOpt = mapView;
+        if(mapView == MapViewOptions.DISTRICT && districtYear != '2020')
+            mapViewOpt = mapView + districtYear;
+
         axios
             .get(`http://localhost:8080/api/state-map`, {
                 params: {
                     state: selectedState,
-                    view: mapView,
+                    view: mapViewOpt,
                     heatmapOpts
                 },
             })
@@ -46,7 +52,7 @@ function StatesMap({
             .catch((error) => {
                 console.error("Error Retrieving Map:", error);
             });
-    }, [mapView, heatmapOpts]);
+    }, [districtYear,mapView, heatmapOpts]);
 
     if(!mapData)
         return;
@@ -54,8 +60,10 @@ function StatesMap({
     const onEachFeature = (feature, layer) => {
         let originalColor;
     
-        if (feature.properties.ACTIVE)
-            originalColor = '#F02525'; // RED
+        if (feature.properties.ACTIVE == 'R')
+            originalColor = PoliColors.REPUBLICAN;
+        else if(feature.properties.ACTIVE == 'D')
+            originalColor = PoliColors.DEMOCRATIC;
         else if (feature.properties.FCOLOR)
             originalColor = feature.properties.FCOLOR;
         else
@@ -90,7 +98,6 @@ function StatesMap({
         <>
             <MapContainer
                 preferCanvas={true}
-                style={{ width: "100%" }}
                 maxBoundsViscosity={1}
                 center={mapData.properties.CENTER}
                 maxBounds={mapData.properties.MAX_BOUNDS}
@@ -134,19 +141,27 @@ function MapController({ mapData, highlightedDistrict }) {
                     weight: 1,
                 };
 
+                let highlightColor;
+                if(highlightedDistrict && highlightedDistrict.party == "Republican")
+                    highlightColor = PoliColors.REPUBLICAN;
+                else if(highlightedDistrict && highlightedDistrict.party == "Democratic")
+                    highlightColor = PoliColors.DEMOCRATIC;
+                else
+                    highlightColor = PoliColors.INDEPENDENT;
+
                 const highlightedStyle = {
-                    fillColor: "#4CAF50",
+                    fillColor: highlightColor,
                     fillOpacity: 0.75,
                     color: "#000000",
                     weight: 5,
                 }
 
                 if (
-                    highlightedDistrict !== oldHighlightedDistrict.current &&
-                    feature.properties.NAME === oldHighlightedDistrict.current
+                    highlightedDistrict.name !== oldHighlightedDistrict.current.name &&
+                    feature.properties.NAME === oldHighlightedDistrict.current.name
                 ) {
                     layer.setStyle(defaultStyle);
-                } else if (feature.properties.NAME === highlightedDistrict) {
+                } else if (feature.properties.NAME === highlightedDistrict.name) {
                     layer.setStyle(highlightedStyle);
                 }
             }

@@ -14,7 +14,7 @@ import StateDataTab from "./DataStateDataComponents/StateDataTab";
 import AnalysisTab from "./DataAnalysisComponents/AnalysisTab";
 import EnsembleTab from "./DataEnsembleComponents/EnsembleTab";
 
-export default function DataContainer({ selectedArea, selectedState, setMapView, setHeatmapOpts, dataTab, setDataTab, setHighlightedDistrict }) {
+export default function DataContainer({ selectedArea, selectedState, setMapView, setHeatmapOpts, dataTab, setDataTab, districtYear, setDistrictYear, setHighlightedDistrict }) {
     return (
         <div className="data-container">
             <DataTabs
@@ -28,6 +28,8 @@ export default function DataContainer({ selectedArea, selectedState, setMapView,
                 selectedState={selectedState}
                 setMapView={setMapView}
                 setHeatmapOpts={setHeatmapOpts}
+                districtYear={districtYear}
+                setDistrictYear={setDistrictYear}
                 setHighlightedDistrict={setHighlightedDistrict}
             />
         </div>
@@ -76,7 +78,7 @@ function DataTabs({ selectedState, dataTab, setDataTab }) {
     );
 }
 
-function DataComponent({ dataTab, selectedState, setMapView, setHeatmapOpts, setHighlightedDistrict }) {
+function DataComponent({ dataTab, selectedState, setMapView, setHeatmapOpts, districtYear, setDistrictYear, setHighlightedDistrict }) {
     if (selectedState == States.NONE) {
         return (
             <div className="data-component" />
@@ -85,7 +87,7 @@ function DataComponent({ dataTab, selectedState, setMapView, setHeatmapOpts, set
 
   return (
     <div className="data-component open">
-      {dataTab === DataTabOptions.SUMMARY && <SummaryTab selectedState={selectedState} setMapView={setMapView} setHighlightedDistrict={setHighlightedDistrict}/>}
+      {dataTab === DataTabOptions.SUMMARY && <SummaryTab selectedState={selectedState} setMapView={setMapView} districtYear={districtYear} setDistrictYear={setDistrictYear} setHighlightedDistrict={setHighlightedDistrict}/>}
       {dataTab === DataTabOptions.STATE_DATA && <StateDataTab selectedState={selectedState} setHeatmapOpts={setHeatmapOpts} setMapView={setMapView}/>}
       {dataTab === DataTabOptions.ANALYSIS && <AnalysisTab selectedState={selectedState} setMapView={setMapView} />}
       {dataTab === DataTabOptions.ENSEMBLE && <EnsembleTab setMapView={setMapView} setHeatmapOpts={setHeatmapOpts} />}

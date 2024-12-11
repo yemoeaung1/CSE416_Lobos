@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import { MapViewOptions, States } from '../../enums';
 
-export default function SummaryTab({ selectedState, setMapView, setHighlightedDistrict }) {
+export default function SummaryTab({ selectedState, setMapView, districtYear, setDistrictYear, setHighlightedDistrict }) {
   const [stateInfo, setStateInfo] = useState(null);
 
   useEffect(() => {
@@ -10,7 +10,7 @@ export default function SummaryTab({ selectedState, setMapView, setHighlightedDi
   }, [])
 
   useEffect(() => {
-    if(selectedState !== States.NONE){
+    if (selectedState !== States.NONE) {
       axios.get(`http://localhost:8080/api/state-info`, {
         params: {
           state: selectedState
@@ -23,103 +23,112 @@ export default function SummaryTab({ selectedState, setMapView, setHighlightedDi
           console.error("Error Retrieving Info:", error);
         });
     }
-  }, [selectedState]);
+  }, []);
 
-  let party = (stateInfo && stateInfo.state === selectedState) ? stateInfo.data["Political Party"] : "Loading";
-  let redistrictingParty = (stateInfo && stateInfo.state === selectedState) ? stateInfo.data["Redistricting Party"] : "Loading";
-  let population = (stateInfo && stateInfo.state === selectedState) ? stateInfo.data["Total Population"] : "Loading";
-  let income = (stateInfo && stateInfo.state === selectedState) ? stateInfo.data["Median Household Income"] : "Loading";
-  let poverty = (stateInfo && stateInfo.state === selectedState) ? stateInfo.data["Poverty Rate"] : "Loading";
+  const isInfoUpdated = (stateInfo && stateInfo.state === selectedState)
+
+  let stateDetails = isInfoUpdated
+    ? {
+      party: stateInfo.stateData["Political Party"],
+      redistrictingParty: stateInfo.stateData["Redistricting Party"],
+      population: stateInfo.stateData["Total Population"],
+      income: stateInfo.stateData["Median Household Income"],
+      poverty: stateInfo.stateData["Poverty Rate"],
+    }
+    : {
+      party: "Loading",
+      redistrictingParty: "Loading",
+      population: "Loading",
+      income: "Loading",
+      poverty: "Loading",
+    }
 
   return (
     <>
+      <div>
+        <div>{`Congressional District Plan (${districtYear})`}</div>
+        <div>{`Change to ${(districtYear == '2020') ? '2022' : '2020'}`}</div>
+        <button onClick={() => { setDistrictYear((districtYear == '2020') ? '2022' : '2020') }}>Click Me</button>
+      </div>
       <div className="flex flex-col items-center justify-center pb-8">
         <span className="font-bold underline merriweather pb-2">Redistricting Party</span>
-        <span className="montserrat">{redistrictingParty}</span>
+        <span className="montserrat">{stateDetails.redistrictingParty}</span>
       </div>
       <div className="data-component-info ">
-        <div className={`data-component-info-stat-box ${party === "Republican" ? "red" : ""} ${party === "Democrat" ? "blue" : ""}`}>
+        <div className={`data-component-info-stat-box`}>
           <span className="font-bold underline merriweather pb-2">Majority Party</span>
-          <span className="montserrat">{`${party}`}</span>
+          <span className="montserrat">{`${stateDetails.party}`}</span>
         </div>
-        <div className={`data-component-info-stat-box ${party === "Republican" ? "red" : ""} ${party === "Democrat" ? "blue" : ""}`}>
+        <div className={`data-component-info-stat-box`}>
           <span className="font-bold underline merriweather pb-2">Population</span>
-          <span className="montserrat">{`${population.toLocaleString()}`}</span>
+          <span className="montserrat">{`${stateDetails.population.toLocaleString()}`}</span>
         </div>
-        <div className={`data-component-info-stat-box ${party === "Republican" ? "red" : ""} ${party === "Democrat" ? "blue" : ""}`}>
+        <div className={`data-component-info-stat-box`}>
           <span className="font-bold underline merriweather pb-2">Median HH Income</span>
-          <span className="montserrat">{`$${income.toLocaleString()}`}</span>
+          <span className="montserrat">{`$${stateDetails.income.toLocaleString()}`}</span>
         </div>
-        <div className={`data-component-info-stat-box ${party === "Republican" ? "red" : ""} ${party === "Democrat" ? "blue" : ""}`}>
+        <div className={`data-component-info-stat-box`}>
           <span className="font-bold underline merriweather pb-2">Poverty Rate</span>
-          <span className="montserrat">{`${poverty}%`}</span>
+          <span className="montserrat">{`${stateDetails.poverty}%`}</span>
         </div>
       </div>
       <div className="flex flex-col items-center justify-center">
-          <RepresentativesData stateInfo={stateInfo} selectedState={selectedState} setHighlightedDistrict={setHighlightedDistrict} />
+        {isInfoUpdated && <RepresentativesData stateInfo={stateInfo} selectedState={selectedState} setHighlightedDistrict={setHighlightedDistrict} />}
       </div>
     </>
   );
 }
 
-function RepresentativesData({ stateInfo, selectedState, setHighlightedDistrict }) {
-  let districts = (stateInfo && stateInfo.state === selectedState) ? stateInfo.table.data : null;
-
-  const handleHover = (name) => {
-    setHighlightedDistrict(name)
-  }; 
-
-  const handleLeave = (rowData) => {
-    setHighlightedDistrict("");
+function RepresentativesData({ stateInfo, setHighlightedDistrict }) {
+  const handleHover = (name, party) => {
+    setHighlightedDistrict({ name: name, party: party })
   };
 
+  const handleLeave = () => {
+    setHighlightedDistrict({ name: "N/A", party: "N/A" });
+  };
 
-  if (districts === null) {
-    return <></>;
-  } else {
-    districts = Object.entries(districts);
+  const districts = Object.entries(stateInfo.districtData);
 
-    return (
-      <div className="table-container">
-        <table className="merriweather congress-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Repr. Name</th>
-              <th>Repr. Party</th>
-              <th>Repr. Race</th>
-              <th>Median HH Income</th>
-              <th>Poverty Rate</th>
-              <th>Region (U)</th>
-              <th>Region (SU)</th>
-              <th>Region (R)</th>
-              <th>Vote Margin</th>
+  return (
+    <div className="table-container">
+      <table className="merriweather congress-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Repr. Name</th>
+            <th>Repr. Party</th>
+            <th>Repr. Race</th>
+            <th>Median HH Income</th>
+            <th>Poverty Rate</th>
+            <th>Region (U)</th>
+            <th>Region (SU)</th>
+            <th>Region (R)</th>
+            <th>Vote Margin</th>
+          </tr>
+        </thead>
+        <tbody>
+          {districts.map(([districtName, details]) => (
+            <tr
+              key={districtName}
+              className={details.Party === 'Democratic' ? 'hover:text-blue-600' : 'hover:text-red-600'}
+              onMouseEnter={() => handleHover(districtName, details["Party"])}
+              onMouseLeave={handleLeave}
+            >
+              <td>{details["Number"]}</td>
+              <td>{details["Representative"]}</td>
+              <td>{details["Party"]}</td>
+              <td>{details["Representative Race"]}</td>
+              <td>{`$${details["Median Household Income"].toLocaleString()}`}</td>
+              <td>{`${details["Poverty Rate"]}%`}</td>
+              <td>{`${details["Region Type Distribution"]["Urban"]}%`}</td>
+              <td>{`${details["Region Type Distribution"]["Suburban"]}%`}</td>
+              <td>{`${details["Region Type Distribution"]["Rural"]}%`}</td>
+              <td>{`${details["Vote Margin"]}%`}</td>
             </tr>
-          </thead>
-          <tbody>
-            {districts.map(([districtName, details]) => (
-              <tr 
-                key={districtName} 
-                className={details.Party === 'Democratic' ? 'hover:text-blue-600' : 'hover:text-red-600'}
-                onMouseEnter={() => handleHover(districtName)}
-                onMouseLeave={handleLeave}
-              >
-                  <td>{details["Number"]}</td>
-                  <td>{details["Representative"]}</td>
-                  <td>{details["Party"]}</td>
-                  <td>{details["Representative Race"]}</td>
-                  <td>{`$${details["Median Household Income"].toLocaleString()}`}</td>
-                  <td>{`${details["Poverty Rate"]}%`}</td>
-                  <td>{`${details["Region Type Distribution"]["Urban"]}%`}</td>
-                  <td>{`${details["Region Type Distribution"]["Suburban"]}%`}</td>
-                  <td>{`${details["Region Type Distribution"]["Rural"]}%`}</td>
-                  <td>{`${details["Vote Margin"]}%`}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-    );
-  }
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 };
