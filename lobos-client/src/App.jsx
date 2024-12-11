@@ -6,28 +6,23 @@ import StateMapContainer from "./components/StateMapContainer";
 import { DataTabOptions, MapViewOptions, States } from "./enums";
 
 function App() {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const [mapView, setMapView] = useState(MapViewOptions.STATE);
-    const [heatmapOpts, setHeatmapOpts] = useState(null);
 
     const [hoveredArea, setHoveredArea] = useState(States.NONE);
     const [selectedArea, setSelectedArea] = useState(States.NONE);
     const [selectedState, setSelectedState] = useState(States.NONE);
 
-    const [dataTab, setDataTab] = useState(DataTabOptions.SUMMARY);
+    const [mapView, setMapView] = useState(MapViewOptions.STATE);
+    const [districtYear, setDistrictYear] = useState('2020');
+    const [heatmapOpts, setHeatmapOpts] = useState(null);
     const [highlightedDistrict, setHighlightedDistrict] = useState(0);
 
+    const [dataTab, setDataTab] = useState(DataTabOptions.SUMMARY);
+
     useEffect(() => {
-        if (selectedState !== selectedArea && Object.values(States).includes(selectedArea)){
+        if (Object.values(States).includes(selectedArea) && selectedState !== selectedArea){
             setSelectedState(selectedArea);
             setDataTab(DataTabOptions.SUMMARY);
         }
-
-        if (selectedArea !== States.NONE && !isOpen)
-            setIsOpen(true);
-        else if (selectedArea === States.NONE && isOpen)
-            setIsOpen(false);
     }, [selectedArea]);
 
     return (
@@ -42,14 +37,14 @@ function App() {
                 setHeatmapOpts={setHeatmapOpts}
             />
             <DataContainer
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
                 selectedArea={selectedArea}
                 selectedState={selectedState}
                 setMapView={setMapView}
                 setHeatmapOpts={setHeatmapOpts}
                 dataTab={dataTab}
                 setDataTab={setDataTab}
+                districtYear={districtYear}
+                setDistrictYear={setDistrictYear}
                 setHighlightedDistrict={setHighlightedDistrict}
             />
             <StateMapContainer
@@ -58,9 +53,8 @@ function App() {
                 setHoveredArea={setHoveredArea}
                 setSelectedArea={setSelectedArea}
                 selectedArea={selectedArea}
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
                 heatmapOpts={heatmapOpts}
+                districtYear={districtYear}
                 highlightedDistrict={highlightedDistrict}
             />
         </div>

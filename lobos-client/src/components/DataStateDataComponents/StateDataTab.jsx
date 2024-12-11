@@ -9,18 +9,26 @@ import {
 } from "@mui/material";
 import BarGraph from "../GraphPlotComponents/BarGraph";
 import axios from "axios";
-import { DataFilters } from "../../enums";
+import { DataFilters, MapViewOptions } from "../../enums";
 
 function formatNumberWithCommas(number) {
   return number.toLocaleString();
 }
 
-export default function StateDataTab({ setHeatmapOpts, selectedState }) {
+export default function StateDataTab({ setHeatmapOpts, selectedState, setMapView }) {
   const [graphType, setGraphType] = useState("bar");
   const [heatMapEnabled, setHeatMapEnabled] = useState(false);
   const [selectedRace, setSelectedRace] = useState("All");
   const [stateInfo, setStateInfo] = useState(null);
   const [dataSetType, setDataSetType] = useState(DataFilters.ECO_POLITICAL)
+
+  useEffect(() => {
+    setMapView(MapViewOptions.PRECINCT);
+  }, []);
+
+  useEffect(() => {
+    setHeatMapEnabled(false);
+  }, [dataSetType]);
 
   useEffect(() => {
     if (heatMapEnabled) {
@@ -126,7 +134,7 @@ export default function StateDataTab({ setHeatmapOpts, selectedState }) {
 
           <div className="text-2xl font-bold text-center font-roboto ml-24 mt-2">
             Total Population:
-            <span className="text-2xl font-normal"> {stateInfo ? formatNumberWithCommas(stateInfo.data["Total Population"]) : "Loading..."} </span>
+            <span className="text-2xl font-normal"> {stateInfo ? formatNumberWithCommas(stateInfo.stateData["Total Population"]) : "Loading..."} </span>
           </div>
         </div>
 

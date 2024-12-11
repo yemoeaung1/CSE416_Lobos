@@ -26,4 +26,10 @@ const DataFilters = Object.freeze({
     ECO_POLITICAL: "Economic/Political"
 })
 
-export { States, DataTabOptions, MapViewOptions, DataFilters }
+const PoliColors = Object.freeze({
+    REPUBLICAN: "#FF0000",
+    DEMOCRATIC: "#0015BC",
+    INDEPENDENT: "#4CAF50",
+})
+
+export { States, DataTabOptions, MapViewOptions, DataFilters, PoliColors }

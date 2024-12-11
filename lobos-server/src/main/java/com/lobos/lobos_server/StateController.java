@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import com.lobos.lobos_server.model.PrecinctData;
 import com.lobos.lobos_server.model.PrecinctInfo;
 import com.lobos.lobos_server.model.StateInfo;
-import com.lobos.lobos_server.model.StateMap;
 import com.lobos.lobos_server.model.StateMapConfig;
 import com.lobos.lobos_server.service.PrecinctService;
 import com.lobos.lobos_server.service.StateService;
@@ -38,24 +37,18 @@ public class StateController {
     public List<Map<String, Object>> getPrecinctData(@RequestParam String state) {
         return stateService.getPrecinctDataByState(state);
     }
-    /* @GetMapping("/precinct-data")
-    public ResponseEntity<Map<String, Object>> getPrecinctData(
-            @RequestParam(required = true) String state) {
-
-        List<Map<String,Object>> precinctDataList = stateService.getPrecinctDataByState(state);
-        Map<String, Object> response = new HashMap<>();
-        response.put("state", state);
-        response.put("precinctData", precinctDataList);
-
-        return ResponseEntity.ok(response);
-    } */
 
     @GetMapping("/state-map")
     public ResponseEntity<Map<String, Object>> getStateMap(
             @RequestParam(required = true) String state,
             @RequestParam(required = true) String view,
             @RequestParam(required = false) List<String> heatmapOpts) {
-                
+        
+        if(state.equals(StatesEnum.NONE.toString()) || view.equals(StateViewEnum.STATE.toString())){
+            state = StatesEnum.NONE.toString();
+            view = StateViewEnum.STATE.toString();
+        }
+
         if(heatmapOpts != null && !heatmapOpts.isEmpty())
             view = StateViewEnum.PRECINCT.toString();
         
@@ -71,22 +64,23 @@ public class StateController {
         return ResponseEntity.ok(data);
     }
 
-    @Cacheable(value = "lobosCache", key = "STATE-INFO: #state")
+    @Cacheable(value = "lobosCache", key = "'STATE-INFO:' + #state")
     private Map<String, Object> fetchStateInfo(String state){
         StateInfo stateInfo = stateService.getStateInfo(state);
 
         Map<String, Object> data = new HashMap<>();
         data.put("state", stateInfo.getState());
-        data.put("data", stateInfo.getData());
-        data.put("table", stateInfo.getTableSettings());
+        data.put("stateData", stateInfo.getStateData());
+        data.put("districtData", stateInfo.getDistrictData());
 
         return data;
     }
 
-    @Cacheable(value = "lobosCache", key = "STATE-MAP: #state + #view")
     private Map<String, Object> fetchStateMap(String state, String view, List<String> heatmapOpts){
-        StateMap stateMap = stateService.getStateMap(state, view);
         StateMapConfig stateMapConfig = stateService.getStateMapConfig(state);
+        GeoJSON stateGeoJSON = fetchGeoJSON(state, view);
+        if(heatmapOpts != null && !heatmapOpts.isEmpty())
+            appendHeatmapOpts(stateGeoJSON, state, heatmapOpts);
 
         Map<String, Object> data = new HashMap<>();
         Map<String, Object> properties = new HashMap<>();
@@ -98,36 +92,18 @@ public class StateController {
         properties.put("MAX_ZOOM", stateMapConfig.getMaxZoom());
 
         data.put("properties", properties);
-
-        // Temporary Code => Fetching Precinct Level GeoJSON Locally:
-        if(view.equals(StateViewEnum.PRECINCT.toString())){
-            GeoJSON geoJSONLocal = null;
-            try {
-                if(state.equals("South Carolina")){
-                    geoJSONLocal = GeoJSON.parseGeoJsonAsMap("sc_vtd_boundary.geojson");
-                }
-                else if(state.equals("Utah")){
-                    geoJSONLocal = GeoJSON.parseGeoJsonAsMap("ut_vtd_boundary.geojson");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            
-            if(heatmapOpts != null && !heatmapOpts.isEmpty())
-                appendHeatmapOpts(geoJSONLocal, state, heatmapOpts);
-            
-            data.put("geoJSON", geoJSONLocal);
-        } else {
-            if(heatmapOpts != null && !heatmapOpts.isEmpty())
-                appendHeatmapOpts(stateMap.getGeoJSON(), state, heatmapOpts);
-                
-            data.put("geoJSON", stateMap.getGeoJSON());
-        }
+        data.put("geoJSON", stateGeoJSON);
 
         return data;
     }
 
-    @Cacheable(value = "lobosCache", key = "PRECINCT-INFO-MAP: #state")
+    @Cacheable(value = "lobosCache", key = "'GEOJSON' + #state + '_' + #view")
+    private GeoJSON fetchGeoJSON(String state, String view){
+        GeoJSON stateGeoJSON = stateService.getStateMap(state, view).getGeoJSON();
+        return stateGeoJSON;
+    }
+
+    @Cacheable(value = "lobosCache", key = "'PRECINCT-INFO-MAP:' + #state")
     private Map<String, PrecinctData> fetchPrecinctInfoMap(String state){
         PrecinctInfo precinctInfo = precinctService.getPrecinctInfo(state);
         Map<String, PrecinctData> precinctInfoMap = new HashMap<>();
@@ -151,8 +127,8 @@ public class StateController {
                 PrecinctData info = precinctInfoMap.get(key);
                 ColorMapping colorMapping = HeatmapMethods.handleBins(heatmapOpts, info);
 
-                feature.getProperties().put("fillColor", colorMapping.getColor());
-                feature.getProperties().put("fillOpacity", colorMapping.getOpacity());
+                feature.getProperties().put("FCOLOR", colorMapping.getColor());
+                feature.getProperties().put("FOPACITY", colorMapping.getOpacity());
             } 
         } catch (Exception e){
             e.printStackTrace();

@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter";
 import { FormControlLabel, Checkbox } from "@mui/material";
-import LineGraph from "../GraphPlotComponents/LineGraph";
+import { MapViewOptions } from "../../enums";
 
-export default function AnalysisTab({ selectedState }) {
+export default function AnalysisTab({ selectedState, setMapView }) {
     const [selectedChart, setSelectedChart] = useState("precinct-analysis");
     const [selectedFilter, setSelectedFilter] = useState("income");
-    const [heatMapEnabled, setHeatMapEnabled] = useState(false);
+
+    useEffect(() => {
+        setMapView(MapViewOptions.PRECINCT);
+    }, [])
 
     // Define styles for tabs
     const tabStyle = {
@@ -14,7 +17,7 @@ export default function AnalysisTab({ selectedState }) {
         paddingBottom: "8px",
         marginRight: "16px",
         fontWeight: "bold",
-        fontSize: "24px", // Bigger font size
+        fontSize: "20px", // Bigger font size
         transition: "color 0.3s ease",
         color: "#6b7280", // Default gray color
         borderBottom: "2px solid transparent",
@@ -30,7 +33,7 @@ export default function AnalysisTab({ selectedState }) {
         <div className="flex flex-col h-full">
             {/* Tab Selector */}
             <nav
-                className="flex justify-end mb-4 mt-5 space-x-4 border-b-2 border-gray-300"
+                className="flex justify-end mb-4 space-x-8 border-b-2 border-gray-300"
                 style={{ borderBottom: "2px solid #e5e7eb" }}
             >
                 <div
@@ -41,7 +44,7 @@ export default function AnalysisTab({ selectedState }) {
                     }
                     onClick={() => setSelectedChart("precinct-analysis")}
                 >
-                    Precinct Analysis
+                    Gingles 2/3
                 </div>
                 <div
                     style={
@@ -55,14 +58,14 @@ export default function AnalysisTab({ selectedState }) {
                 </div>
             </nav>
 
-            {/* Filter Buttons and HeatMap Checkbox */}
-            <div className="flex items-center mt-5">
+            {/* Filter Buttons */}
+            <div className="flex items-center">
                 <div className="flex-grow">
                     <button
                         className={
                             selectedFilter === "income"
-                                ? "text-2xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                                ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                                : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
                         }
                         onClick={() => setSelectedFilter("income")}
                     >
@@ -71,39 +74,23 @@ export default function AnalysisTab({ selectedState }) {
                     <button
                         className={
                             selectedFilter === "race"
-                                ? "text-2xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                                ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                                : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
                         }
                         onClick={() => setSelectedFilter("race")}
                     >
                         Race
                     </button>
-                    {selectedChart === "precinct-analysis" && (
-                        <button
+                    <button
                         className={
                             selectedFilter === "incomeRace"
-                                ? "text-2xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                                ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                                : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
                         }
                         onClick={() => setSelectedFilter("incomeRace")}
                     >
-                        Race Income
+                        ..
                     </button>
-                    )}
-                    
-
-                    {selectedChart === "ecological-inference" && (
-                        <button
-                        className={
-                            selectedFilter === "incomeRace"
-                                ? "text-2xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                : "text-2xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
-                        }
-                        onClick={() => setSelectedFilter("incomeRace")}
-                    >
-                        Region
-                    </button>
-                    )}
                 </div>
             </div>
 
@@ -113,7 +100,6 @@ export default function AnalysisTab({ selectedState }) {
                     <IncomeVotingScatter
                         selectedState={selectedState}
                         selectedFilter={selectedFilter} // Pass the selected filter as a prop
-                        heatMapEnabled={heatMapEnabled} // Pass heatMapEnabled as a prop
                     />
                 )}
                 {selectedChart === "ecological-inference" && (
