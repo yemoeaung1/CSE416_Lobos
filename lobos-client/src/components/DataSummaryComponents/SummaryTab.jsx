@@ -2,11 +2,12 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import { MapViewOptions, States } from '../../enums';
 
-export default function SummaryTab({ selectedState, setMapView, districtYear, setDistrictYear, setHighlightedDistrict }) {
+export default function SummaryTab({ isLoading, selectedState, mapView, setMapView, districtYear, setDistrictYear, setHighlightedDistrict }) {
   const [stateInfo, setStateInfo] = useState(null);
 
   useEffect(() => {
-    setMapView(MapViewOptions.DISTRICT);
+    if(mapView != MapViewOptions.DISTRICT)
+      setMapView(MapViewOptions.DISTRICT);
   }, [])
 
   useEffect(() => {
@@ -48,7 +49,16 @@ export default function SummaryTab({ selectedState, setMapView, districtYear, se
       <div>
         <div>{`Congressional District Plan (${districtYear})`}</div>
         <div>{`Change to ${(districtYear == '2020') ? '2022' : '2020'}`}</div>
-        <button onClick={() => { setDistrictYear((districtYear == '2020') ? '2022' : '2020') }}>Click Me</button>
+        <button 
+          disabled={isLoading}
+          style={{
+            backgroundColor: isLoading ? "gray" : "blue",
+            color: "white",
+            cursor: isLoading ? "not-allowed" : "pointer",
+          }}
+          onClick={() => { setDistrictYear((districtYear == '2020') ? '2022' : '2020') }}>
+            Click Me
+        </button>
       </div>
       <div className="flex flex-col items-center justify-center pb-8">
         <span className="font-bold underline merriweather pb-2">Redistricting Party</span>

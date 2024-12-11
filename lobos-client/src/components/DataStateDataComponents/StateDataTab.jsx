@@ -15,7 +15,7 @@ function formatNumberWithCommas(number) {
   return number.toLocaleString();
 }
 
-export default function StateDataTab({ setHeatmapOpts, selectedState, setMapView }) {
+export default function StateDataTab({ setHeatmapOpts, selectedState, mapView, setMapView }) {
   const [graphType, setGraphType] = useState("bar");
   const [heatMapEnabled, setHeatMapEnabled] = useState(false);
   const [selectedRace, setSelectedRace] = useState("All");
@@ -23,7 +23,8 @@ export default function StateDataTab({ setHeatmapOpts, selectedState, setMapView
   const [dataSetType, setDataSetType] = useState(DataFilters.ECO_POLITICAL)
 
   useEffect(() => {
-    setMapView(MapViewOptions.PRECINCT);
+    if(mapView != MapViewOptions.PRECINCT)
+      setMapView(MapViewOptions.PRECINCT);
   }, []);
 
   useEffect(() => {

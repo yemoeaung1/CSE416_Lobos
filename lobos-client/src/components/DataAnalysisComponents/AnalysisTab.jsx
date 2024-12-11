@@ -3,12 +3,13 @@ import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { MapViewOptions } from "../../enums";
 
-export default function AnalysisTab({ selectedState, setMapView }) {
+export default function AnalysisTab({ selectedState, mapView, setMapView }) {
     const [selectedChart, setSelectedChart] = useState("precinct-analysis");
     const [selectedFilter, setSelectedFilter] = useState("income");
 
     useEffect(() => {
-        setMapView(MapViewOptions.PRECINCT);
+        if(mapView != MapViewOptions.PRECINCT)
+            setMapView(MapViewOptions.PRECINCT);
     }, [])
 
     // Define styles for tabs

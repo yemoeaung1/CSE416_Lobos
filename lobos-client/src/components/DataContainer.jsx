@@ -14,18 +14,21 @@ import StateDataTab from "./DataStateDataComponents/StateDataTab";
 import AnalysisTab from "./DataAnalysisComponents/AnalysisTab";
 import EnsembleTab from "./DataEnsembleComponents/EnsembleTab";
 
-export default function DataContainer({ selectedArea, selectedState, setMapView, setHeatmapOpts, dataTab, setDataTab, districtYear, setDistrictYear, setHighlightedDistrict }) {
+export default function DataContainer({ isLoading, selectedArea, selectedState, mapView, setMapView, setHeatmapOpts, dataTab, setDataTab, districtYear, setDistrictYear, setHighlightedDistrict }) {
     return (
         <div className="data-container">
             <DataTabs
+                isLoading={isLoading}
                 selectedState={selectedState}
                 dataTab={dataTab}
                 setDataTab={setDataTab}
             />
             <DataComponent
                 dataTab={dataTab}
+                isLoading={isLoading}
                 selectedArea={selectedArea}
                 selectedState={selectedState}
+                mapView={mapView}
                 setMapView={setMapView}
                 setHeatmapOpts={setHeatmapOpts}
                 districtYear={districtYear}
@@ -36,13 +39,22 @@ export default function DataContainer({ selectedArea, selectedState, setMapView,
     );
 }
 
-function DataTabs({ selectedState, dataTab, setDataTab }) {
+function DataTabs({ isLoading, selectedState, dataTab, setDataTab }) {
+    const trySetDataTab = (opt) => {
+        if(isLoading){
+            console.log("Loading Failure: Switching Tabs");
+            return;
+        }
+        
+        setDataTab(opt);
+    }
+
     return (
         <div className={`data-toolbar ${(selectedState != States.NONE) ? "open" : ""}`}>
             <div
                 className={`toolbar-item ${dataTab === DataTabOptions.SUMMARY ? "tool-selected" : ""
                     }`}
-                onClick={() => setDataTab(DataTabOptions.SUMMARY)}
+                onClick={() => trySetDataTab(DataTabOptions.SUMMARY)}
             >
                 <BsInfoCircle className="toolbar-icon" />
                 <span className="toolbar-label">Summary</span>
@@ -51,7 +63,7 @@ function DataTabs({ selectedState, dataTab, setDataTab }) {
             <div
                 className={`toolbar-item ${dataTab === DataTabOptions.STATE_DATA ? "tool-selected" : ""
                     }`}
-                onClick={() => setDataTab(DataTabOptions.STATE_DATA)}
+                onClick={() => trySetDataTab(DataTabOptions.STATE_DATA)}
             >
                 <BsFillBarChartFill className="toolbar-icon" />
                 <span className="toolbar-label">State Data</span>
@@ -60,7 +72,7 @@ function DataTabs({ selectedState, dataTab, setDataTab }) {
             <div
                 className={`toolbar-item ${dataTab === DataTabOptions.ANALYSIS ? "tool-selected" : ""
                     }`}
-                onClick={() => setDataTab(DataTabOptions.ANALYSIS)}
+                onClick={() => trySetDataTab(DataTabOptions.ANALYSIS)}
             >
                 <BsGraphUp className="toolbar-icon" />
                 <span className="toolbar-label">Analysis</span>
@@ -69,7 +81,7 @@ function DataTabs({ selectedState, dataTab, setDataTab }) {
             <div
                 className={`toolbar-item ${dataTab === DataTabOptions.ENSEMBLE ? "tool-selected" : ""
                     }`}
-                onClick={() => setDataTab(DataTabOptions.ENSEMBLE)}
+                onClick={() => trySetDataTab(DataTabOptions.ENSEMBLE)}
             >
                 <BsMap className="toolbar-icon" />
                 <span className="toolbar-label">Ensemble</span>
@@ -78,7 +90,7 @@ function DataTabs({ selectedState, dataTab, setDataTab }) {
     );
 }
 
-function DataComponent({ dataTab, selectedState, setMapView, setHeatmapOpts, districtYear, setDistrictYear, setHighlightedDistrict }) {
+function DataComponent({ dataTab, isLoading, selectedState, mapView, setMapView, setHeatmapOpts, districtYear, setDistrictYear, setHighlightedDistrict }) {
     if (selectedState == States.NONE) {
         return (
             <div className="data-component" />
@@ -87,10 +99,10 @@ function DataComponent({ dataTab, selectedState, setMapView, setHeatmapOpts, dis
 
   return (
     <div className="data-component open">
-      {dataTab === DataTabOptions.SUMMARY && <SummaryTab selectedState={selectedState} setMapView={setMapView} districtYear={districtYear} setDistrictYear={setDistrictYear} setHighlightedDistrict={setHighlightedDistrict}/>}
-      {dataTab === DataTabOptions.STATE_DATA && <StateDataTab selectedState={selectedState} setHeatmapOpts={setHeatmapOpts} setMapView={setMapView}/>}
-      {dataTab === DataTabOptions.ANALYSIS && <AnalysisTab selectedState={selectedState} setMapView={setMapView} />}
-      {dataTab === DataTabOptions.ENSEMBLE && <EnsembleTab setMapView={setMapView} setHeatmapOpts={setHeatmapOpts} />}
+      {dataTab === DataTabOptions.SUMMARY && <SummaryTab isLoading={isLoading} selectedState={selectedState} mapView={mapView} setMapView={setMapView} districtYear={districtYear} setDistrictYear={setDistrictYear} setHighlightedDistrict={setHighlightedDistrict}/>}
+      {dataTab === DataTabOptions.STATE_DATA && <StateDataTab selectedState={selectedState} setHeatmapOpts={setHeatmapOpts} mapView={mapView} setMapView={setMapView}/>}
+      {dataTab === DataTabOptions.ANALYSIS && <AnalysisTab selectedState={selectedState} mapView={mapView} setMapView={setMapView} />}
+      {dataTab === DataTabOptions.ENSEMBLE && <EnsembleTab mapView={mapView} setMapView={setMapView} setHeatmapOpts={setHeatmapOpts} />}
     </div>
   );
 }

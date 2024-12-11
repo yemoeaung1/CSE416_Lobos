@@ -1,10 +1,11 @@
 import { GiWolfHead } from "react-icons/gi";
 import { MapViewOptions, States } from "../enums";
 
-export default function NavBar({ setMapView, hoveredArea, setHoveredArea, setSelectedArea, selectedState, setHeatmapOpts }) {
+export default function NavBar({ isLoading, setMapView, hoveredArea, setHoveredArea, setSelectedArea, selectedState, setHeatmapOpts }) {
     return (
         <div className="navbar">
             <NavLogo 
+                isLoading={isLoading}
                 setMapView={setMapView}
                 setHoveredArea={setHoveredArea}
                 setSelectedArea={setSelectedArea}
@@ -18,8 +19,13 @@ export default function NavBar({ setMapView, hoveredArea, setHoveredArea, setSel
     )
 }
 
-function NavLogo({ setMapView, setHoveredArea, setSelectedArea, setHeatmapOpts }) {
+function NavLogo({ isLoading, setMapView, setHoveredArea, setSelectedArea, setHeatmapOpts }) {
     const clearSelection = () => {
+        if(isLoading){
+            console.log("Loading Failure: Resetting Page");
+            return;
+        }
+
         setMapView(MapViewOptions.STATE);
         setHoveredArea(States.NONE);
         setSelectedArea(States.NONE);
@@ -27,11 +33,12 @@ function NavLogo({ setMapView, setHoveredArea, setSelectedArea, setHeatmapOpts }
     }
 
     return (
-        <div className="navbar-home text-white p-4">
-            <div className="flex flex-row items-center justify-center cursor-pointer hover:bg-red-800 pl-2" onClick={() => clearSelection()}>
+        <div className="navbar-home text-white">
+            <span className="flex flex-row items-center justify-center cursor-pointer hover:bg-red-800 p-4" onClick={() => clearSelection()}>
                 <GiWolfHead size={42} />
-                <span className="text-4xl leading-none p-4 averia-serif">Lobos</span>
-            </div>
+                <span className="text-4xl pl-4 averia-serif">Lobos</span>
+            </span>
+            <span className={`loading-circle ${isLoading ? "loading" : 0} ml-4`}/>
         </div>
     );
 }
