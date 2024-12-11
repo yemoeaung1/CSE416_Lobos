@@ -11,6 +11,8 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
     const [precinctData, setPrecinctData] = useState([]);
     const [selectedIncomeLevel, setSelectedIncomeLevel] = useState("all");
     const [selectedRace, setSelectedRace] = useState("white");
+    const [selectedRegion, setSelectedRegion] = useState("all");
+
     // Fetch precinct data whenever the selected state changes
     useEffect(() => {
         if (selectedState === States.NONE) {
@@ -44,17 +46,32 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
 
         // Filter data based on selected income level
         const filteredData = precinctData.filter((precinct) => {
-            if (selectedIncomeLevel === "low") {
-                return precinct.median_income < 50000;
-            } else if (selectedIncomeLevel === "medium") {
-                return (
-                    precinct.median_income >= 50000 &&
-                    precinct.median_income <= 100000
-                );
-            } else if (selectedIncomeLevel === "high") {
-                return precinct.median_income > 100000;
+            // Income and region filtering logic
+            if (
+                selectedIncomeLevel === "low" &&
+                precinct.median_income >= 50000
+            ) {
+                return false;
+            } else if (
+                selectedIncomeLevel === "medium" &&
+                (precinct.median_income < 50000 ||
+                    precinct.median_income > 100000)
+            ) {
+                return false;
+            } else if (
+                selectedIncomeLevel === "high" &&
+                precinct.median_income <= 100000
+            ) {
+                return false;
             }
-            return true; // For "all", return all data
+            // Region type filter
+            if (
+                selectedRegion !== "all" &&
+                precinct.region_type.toLowerCase() !== selectedRegion
+            ) {
+                return false;
+            }
+            return true;
         });
 
         // Prepare the data for Democrat and Republican voters
@@ -76,7 +93,6 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                 x: precinct[`${selectedRace}_percentage`],
                 y: precinct.democrat_percentage,
             }));
-
             republicanData = precinctData.map((precinct) => ({
                 x: precinct[`${selectedRace}_percentage`],
                 y: precinct.republican_percentage,
@@ -157,7 +173,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
         const chartData = {
             datasets: [
                 {
-                    label: "Democrat Voters",
+                    label: "Democratic Voters",
                     data: democratData,
                     backgroundColor: "rgba(0, 0, 255, 0.5)",
                     borderColor: "rgba(0, 0, 255, 1)",
@@ -174,7 +190,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                 },
                 {
                     type: "line",
-                    label: "Democrat Regression Line",
+                    label: "Democratic Regression Line",
                     data: regressionDataDemocrat,
                     borderColor: "rgba(0, 0, 255, 1)",
                     borderWidth: 2,
@@ -202,6 +218,42 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                 return "Voting Trends";
             }
         };
+        const getXAxisRange = () => {
+            if (selectedFilter === "income") {
+                return { min: minX, max: maxX }; // Use the income range
+            }
+            if (selectedFilter === "race") {
+                if (selectedState === "Utah") {
+                    switch (selectedRace) {
+                        case "black":
+                            return { min: 0, max: 25 };
+                        case "asian":
+                            return { min: 0, max: 70 };
+                        case "hispanic":
+                            return { min: 0, max: 80 };
+                        case "non_hispanic":
+                            return { min: 20, max: 100 };
+                        default:
+                            return { min: 0, max: 100 };
+                    }
+                } else if (selectedState === "South Carolina") {
+                    switch (selectedRace) {
+                        case "black":
+                            return { min: 0, max: 100 };
+                        case "asian":
+                            return { min: 0, max: 25 };
+                        case "hispanic":
+                            return { min: 0, max: 60 };
+                        case "non_hispanic":
+                            return { min: 40, max: 100 };
+                        default:
+                            return { min: 0, max: 100 };
+                    }
+                }
+            }
+            return { min: 0, max: 100 }; // Fallback range
+        };
+
         const scatterOptions = {
             responsive: true,
             maintainAspectRatio: false,
@@ -218,8 +270,9 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                             color: "#000000",
                         },
                     },
-                    min: selectedFilter === "race" ? 0 : minX, // Set to 0 for race
-                    max: selectedFilter === "race" ? 100 : maxX, // Set to 100 for race
+                    ...getXAxisRange(),
+                    //min: selectedFilter === "race" ? 0 : minX, // Set to 0 for race
+                    //max: selectedFilter === "race" ? 100 : maxX, // Set to 100 for race
                     ticks: {
                         callback: function (value) {
                             return `${value.toLocaleString()}${
@@ -231,6 +284,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                 },
                 y: {
                     beginAtZero: true,
+                    min: 0,
                     max: 100,
                     title: {
                         display: true,
@@ -298,14 +352,16 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
         precinctData,
         selectedFilter,
         selectedIncomeLevel,
+        selectedRegion,
         selectedRace,
     ]);
 
     const getFormattedRaceName = (race) => {
         if (race === "white") return "White";
         if (race === "black") return "Black";
+        if (race === "asian") return "Asian";
         if (race === "hispanic") return "Hispanic";
-        if (race === "non-hispanic") return "Non-Hispanic";
+        if (race === "non_hispanic") return "Non-Hispanic";
         return "Unknown Race";
     };
 
@@ -331,7 +387,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
     if (selectedFilter === "income") {
         return (
             <>
-                <div className="flex items-center mb-4">
+                <div className="flex items-center mb-4 space-x-4">
                     {/* Dropdown for Income Filter */}
                     <select
                         value={selectedIncomeLevel}
@@ -346,6 +402,17 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                         <option value="high">
                             High Income (Above $100,000)
                         </option>
+                    </select>
+                    {/* Dropdown for Region Type Filter */}
+                    <select
+                        value={selectedRegion}
+                        onChange={(e) => setSelectedRegion(e.target.value)}
+                        className="border-2 border-black rounded-md p-2"
+                    >
+                        <option value="all">All Regions</option>
+                        <option value="rural">Rural</option>
+                        <option value="urban">Urban</option>
+                        <option value="suburban">Suburban</option>
                     </select>
                 </div>
                 <div className="border-2 rounded-xl border-black h-full w-full">
@@ -367,8 +434,9 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                         >
                             <option value="white">White</option>
                             <option value="black">Black</option>
+                            <option value="asian">Asian</option>
                             <option value="hispanic">Hispanic</option>
-                            <option value="non-hispanic">Non-Hispanic</option>
+                            <option value="non_hispanic">Non-Hispanic</option>
                         </select>
                     </div>
                 )}

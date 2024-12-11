@@ -96,12 +96,19 @@ public class StateService {
                             ((double) precinct.getWhite() / totalPopulation) * 100);
                         filteredData.put("black_percentage",
                             ((double) precinct.getBlack() / totalPopulation) * 100);
+                        filteredData.put("asian_percentage",
+                            ((double) precinct.getAsian() / totalPopulation) * 100);
                     } else {
                         filteredData.put("hispanic_percentage", 0.0);
                         filteredData.put("non_hispanic_percentage", 0.0);
                         filteredData.put("white_percentage", 0.0);
                         filteredData.put("black_percentage", 0.0);
+                        filteredData.put("asian_percentage", 0.0);
                     }
+                    // Add region type
+                    String regionType = precinct.getRegionType();
+                    filteredData.put("region_type", regionType != null ? regionType : "Unknown");
+
                     filteredPrecinctData.add(filteredData);
                 }
                 // Log the filtered data

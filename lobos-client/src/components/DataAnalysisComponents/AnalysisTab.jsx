@@ -9,7 +9,7 @@ export default function AnalysisTab({ selectedState, setMapView }) {
 
     useEffect(() => {
         setMapView(MapViewOptions.PRECINCT);
-    }, [])
+    }, []);
 
     // Define styles for tabs
     const tabStyle = {
@@ -79,7 +79,7 @@ export default function AnalysisTab({ selectedState, setMapView }) {
                         }
                         onClick={() => setSelectedFilter("race")}
                     >
-                        Race
+                        Racial/Ethnic
                     </button>
                     <button
                         className={
