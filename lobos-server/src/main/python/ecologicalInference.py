@@ -1,7 +1,7 @@
 import numpy as np
 import pymc as pm # type: ignore
 import json
-import os
+from scipy.stats import norm
 
 import pandas as pd
 from pyei.data import Datasets # type: ignore    
@@ -43,22 +43,35 @@ def preprocess_data(precincts):
     """
     total_population = []
     hispanic_population = []
+    asian_population = []
+    white_population = []
+    black_population = []
     republican_votes = []
     democratic_votes = []
+    precinct_pop = []
 
     # Extract the relevant data for each precinct
     for precinct in precincts:
+        precinct_pop.append(precinct.get("GEOID20"))
         total_population.append(precinct.get("total_population", 0))
         hispanic_population.append(precinct.get("hispanic", 0))
+        asian_population.append(precinct.get("asian", 0)),
+        white_population.append(precinct.get("white", 0)),
+        black_population.append(precinct.get("black", 0)),
         republican_votes.append(precinct.get("2020_PRES_R", 0))
         democratic_votes.append(precinct.get("2020_PRES_D", 0))
 
     # Create a pandas DataFrame
     df = pd.DataFrame({
+        "Precinct": precinct_pop,
         "Total_Population": total_population,
         "Hispanic": hispanic_population,
+        "Asian": asian_population,
+        "White": white_population,
+        "Black": black_population,
         "Republican_Votes": republican_votes,
-        "Democratic_Votes": democratic_votes
+        "Democratic_Votes": democratic_votes,
+
     })
     print(df)
     return df
@@ -68,6 +81,7 @@ def perform_2x2_ei(dataframe):
     Perform a 2x2 ecological inference analysis using pyEI.
     """
     # Ensure the columns are in numpy arrays for pyEI
+    precinct_names = np.array(dataframe["Precinct"])
     total_population = np.array(dataframe["Total_Population"])
     hispanic_population = np.array(dataframe["Hispanic"])
     republican_votes = np.array(dataframe["Republican_Votes"])
@@ -80,25 +94,25 @@ def perform_2x2_ei(dataframe):
     democratic_votes = democratic_votes[valid_indices]
     
     group_fractions = hispanic_population / total_population  # Fraction of Hispanic population
-    votes_fraction = np.column_stack((
-        republican_votes / total_population,
-    ))
-    print(votes_fraction)
+    votes_fraction = np.column_stack((republican_votes / total_population,))
+    print(f"This is the fraction votes: {votes_fraction}")
     group_fractions = np.nan_to_num(group_fractions, nan=0.0, posinf=0.0, neginf=0.0)
     votes_fraction = np.nan_to_num(votes_fraction, nan=0.0, posinf=0.0, neginf=0.0)
+    print(f"This is the group fractions: {group_fractions}")
 
-    ei_2by2 = TwoByTwoEI(model_name="king99_pareto_modification", pareto_scale=15, pareto_shape=2)
+    ei_2by2 = TwoByTwoEI(model_name="king99", lmbda=0.5)
     
     # Fit the model with the data
     ei_2by2.fit(
-       group_fraction=group_fractions.astype(np.float32),
-       votes_fraction=votes_fraction.astype(np.float32),
-       precinct_pops=total_population.astype(np.float32),
-       demographic_group_name = "Hispanic",
+       group_fraction = group_fractions.astype(np.float32),
+       votes_fraction =votes_fraction.astype(np.float32),
+       precinct_pops = total_population.astype(np.float32), #total2
+    #    precinct_names = precinct_names,
+       demographic_group_name = "Hispanic", #demon
        candidate_name= "Republican",
-       draws=500,  # Reduce the number of posterior draws
-       tune=1000,  # Lower the tuning iterations
-       target_accept=0.95 # Adjust target acceptance rate
+        draws=1000,  # Increase for better posterior distribution
+        tune=1500,   # Adjust as necessary
+        target_accept=0.95  # Modify acceptance rate
     )
 
     return ei_2by2
@@ -112,14 +126,35 @@ def main():
 
     # 2.Then Preprocess the precinct data
     df = preprocess_data(precinct_data)
-    df = df.sample(n=500, random_state=42)  # Analyze 500 precincts
+    # df = df.sample(n=100, random_state=42)
+    df = df.head(100)
+    print(df)
 
-    # 3.Perform twobytwo EI
+    # #An example of finding the y-axis
+    # mean_e_asian = 0.803
+    # sd_e_asian = (0.952 - 0.606) / 4
+    # x = np.linspace(0, 1, 100)
+    # print(x)
+    # y_e_asian = norm.pdf(x, loc=mean_e_asian, scale=sd_e_asian)
+    # # print(f"This is the y-axis:{y_e_asian}")
+
+    # mean_non_e_asian = 0.245
+    # sd_non_e_asian = (0.278 - 0.219) / 4
+    # y_non_e_asian = norm.pdf(x, loc=mean_non_e_asian, scale=sd_non_e_asian)
+
+
+    # plt.plot(x, y_e_asian, label="e_asian", color="teal", alpha=0.7)
+    # plt.plot(x, y_non_e_asian, label="non_e_asian", color="orange", alpha=0.7)
+    # plt.savefig("plot6.png")
+
+
+#     # 3.Perform twobytwo EI
     ei = perform_2x2_ei(df)
+    print(ei.summary())
 
-#     # 4.Plot the Results and save the image
+# #     # 4.Plot the Results and save the image
     ei.plot()
-    plt.savefig("plot4.png")
+    plt.savefig("plot6.png")
 
 if __name__ == "__main__":
     main()

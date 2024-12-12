@@ -113,7 +113,7 @@ const BarGraph = ({ dataSetType, selectedState }) => {
     }, [graphData]);
 
     return (
-        <div className=" border-2 border-gray-800 rounded-xl shadow-xl">
+        <div className="border-b border-gray-800">
             <div className="flex-1 flex justify-center items-center">
                 <canvas ref={chartRef} className="w-full h-full"></canvas>
             </div>

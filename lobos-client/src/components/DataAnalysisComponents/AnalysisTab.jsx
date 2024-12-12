@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { MapViewOptions } from "../../enums";
+import LineGraph from "../GraphPlotComponents/LineGraph";
 
 export default function AnalysisTab({ selectedState, setMapView }) {
     const [selectedChart, setSelectedChart] = useState("precinct-analysis");
@@ -106,6 +107,7 @@ export default function AnalysisTab({ selectedState, setMapView }) {
                     <div>
                         {/* Replace with the other chart component */}
                         Ecological Inference Chart Component (to be added here)
+                        <LineGraph dataSetType={"race"}/>
                     </div>
                 )}
             </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Chart from 'chart.js/auto';
 
-const LineGraph = ({dataSetType}) =>{
+export default function LineGraph({dataSetType}){
     const chartRef = useRef(null);
     const [chartInstance, setChartInstance] = useState(null);
 
@@ -9,29 +9,37 @@ const LineGraph = ({dataSetType}) =>{
         const ctx = chartRef.current.getContext("2d");
 
         const dataSets = {
-            race: {
-              labels: ["Asian", "Hispanic", "Black", "White", "American Indian"],
+          race: {
               data: [
-                { label: "Democrat", data: [3000, 894, 590, 4234, 4234], backgroundColor: "rgba(0, 0, 255, 0.5)", borderColor: "rgba(0, 0, 255, 1)", borderWidth: 1, fill: {target: 'origin', above: 'rgba(0, 0, 255, 0.2)'}, tension: 0.5 },
+                  { 
+                      label: "non-asian", 
+                      data: [
+                          { x: 0.2, y: 0.22688238 },
+                          { x: 0.4, y: 25.6 },
+                          { x: 0.6, y: 0.28698157 }
+                      ],
+                      borderColor: "rgba(0, 0, 255, 1)",
+                      borderWidth: 1,
+                      fill: { target: 'origin', above: 'rgba(0, 0, 255, 0.2)' },
+                      tension: 0.5 
+                  },
+                  { 
+                      label: "e_asian", 
+                      data: [
+                          { x: 0.2, y: 0.59887097 },
+                          { x: 0.4, y: 73.3 },
+                          { x: 0.6, y: 0.93365357 }
+                      ],
+                      borderColor: "rgba(0, 255, 0, 1)",
+                      borderWidth: 1,
+                      fill: { target: 'origin', above: 'rgba(0, 255, 0, 0.2)' },
+                      tension: 0.5 
+                  }
               ],
-              title: "Support for Candidates by Racial Group",
-            },
-            income: {
-              labels: ["<25k", "25-50k", "50-75k", "75-100k", ">100k"],
-              data: [
-                { label: "Democrat", data: [1800, 1200, 2800, 3500, 5800], backgroundColor: "rgba(0, 0, 255, 0.5)", borderColor: "rgba(0, 0, 255, 1)", borderWidth: 1, fill: {target: 'origin', above: 'rgba(0, 0, 255, 0.2)'}},
-              ],
-              title: "Support for Candidates by Income Bracket",
-            },
-            age: {
-              labels: ["18-25", "26-30", "36-42", "43-49", "65+"],
-              data: [
-                { label: "Democrat", data: [4300, 3200, 1800, 2500, 4800], backgroundColor: "rgba(0, 0, 255, 0.5)",borderColor: "rgba(0, 0, 255, 1)", borderWidth: 1, fill: {target: 'origin', above: 'rgba(0, 0, 255, 0.2)'}, tension: 0.5},
-              ],
-              title: "Support for Candidates by Age Group",
-            }
-          };
-
+              title: "Support for Candidates by Racial Group"
+          }
+      };
+      
         const { labels, data, title } = dataSets[dataSetType];
 
         const LineChart = new Chart(ctx, {
@@ -43,26 +51,31 @@ const LineGraph = ({dataSetType}) =>{
               options: {
                 responsive: true,
                 scales: {
-                  x:{
-                    title:{
-                      display: true,
-                      text: "Ethnicity",
-                      font: {
-                        size: 20,
-                      },
-                      color: '#000000'
+                  x: {
+                    type: 'linear', // Explicitly set axis type to linear
+                    title: {
+                        display: true,
+                        text: "Support Level",
+                        font: {
+                            size: 20,
+                        },
+                        color: '#000000'
                     },
-                    ticks:{
-                      font:{
-                        size: 18
-                      }
-                    }
-                  },
+                    ticks: {
+                        stepSize: 0.2, // Increment ticks by 0.2
+                        callback: (value) => value.toFixed(1), // Format values as one decimal place
+                        font: {
+                            size: 14
+                        }
+                    },
+                    min: 0.0, // Set minimum x-axis value
+                    max: 1.0 // Set maximum x-axis value
+                },
                   y: {
                     beginAtZero: true,
                     title: {
                       display: true,
-                      text: 'Number of Voters',
+                      text: 'Probability Density',
                       font: {
                         size: 20,
                       },
@@ -164,5 +177,3 @@ const LineGraph = ({dataSetType}) =>{
         
     )
 }
-
-export default LineGraph
