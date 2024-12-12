@@ -32,6 +32,13 @@
   pointer-events: auto;
 }
 
+.loading-overlay {
+  z-index: 1;
+
+  font-size: 48px;
+  color: #000000;
+}
+
 /* Navbar CSS */
 .navbar {
   display: flex;
@@ -44,7 +51,6 @@
 .navbar-home, .navbar-title {
   flex: 0 0 33.33%;
   background-color: transparent;
-  padding: 20px;
   box-sizing: border-box;
 }
 

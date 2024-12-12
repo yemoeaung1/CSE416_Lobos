@@ -3,7 +3,8 @@ package com.lobos.lobos_server.service;
 import org.springframework.stereotype.Service;
 
 import com.lobos.lobos_server.model.Graph;
-import com.lobos.lobos_server.enum_classes.FiltersEnum;
+import com.lobos.lobos_server.enum_classes.DataFiltersEnum;
+import com.lobos.lobos_server.enum_classes.MapFiltersEnum;
 import com.lobos.lobos_server.model.DataSet;
 
 import com.lobos.lobos_server.model.StateInfo;
@@ -32,23 +33,23 @@ public class GraphService {
         Graph graph = new Graph();
         graph.setGraphType("Bar");
 
-        FiltersEnum enumFilter = FiltersEnum.fromValue(filter);
+        DataFiltersEnum enumFilter = DataFiltersEnum.fromValue(filter);
 
         switch (enumFilter) {
-            case DEMOGRAPHIC:
+            case PARTY:
+                populatePartyData(graph, stateInfo);
+                break;
+            case RACE:
                 populateRaceData(graph, stateInfo);
                 break;
-            case ECONOMIC:
+            case INCOME:
                 populateIncomeData(graph, stateInfo);
                 break;
             case REGION_TYPE:
                 populateRegionData(graph, stateInfo);
                 break;
-            case ECO_POLITICAL:
-                populatePartyData(graph, stateInfo);
-                break;
             default:
-                throw new IllegalArgumentException("Invalid filter: " + filter);
+                throw new IllegalArgumentException("Invalid Filter: " + filter);
         }
         return graph;
     }
