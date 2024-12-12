@@ -4,12 +4,13 @@ import { FormControlLabel, Checkbox } from "@mui/material";
 import { MapViewOptions } from "../../enums";
 import LineGraph from "../GraphPlotComponents/LineGraph";
 
-export default function AnalysisTab({ selectedState, setMapView }) {
+export default function AnalysisTab({ selectedState, mapView, setMapView }) {
     const [selectedChart, setSelectedChart] = useState("precinct-analysis");
     const [selectedFilter, setSelectedFilter] = useState("income");
 
     useEffect(() => {
-        setMapView(MapViewOptions.PRECINCT);
+        if(mapView != MapViewOptions.PRECINCT)
+            setMapView(MapViewOptions.PRECINCT);
     }, [])
 
     // Define styles for tabs
@@ -80,7 +81,7 @@ export default function AnalysisTab({ selectedState, setMapView }) {
                         }
                         onClick={() => setSelectedFilter("race")}
                     >
-                        Race
+                        Racial/Ethnic
                     </button>
                     <button
                         className={

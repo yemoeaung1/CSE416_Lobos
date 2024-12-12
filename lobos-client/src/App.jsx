@@ -6,6 +6,7 @@ import StateMapContainer from "./components/StateMapContainer";
 import { DataTabOptions, MapViewOptions, States } from "./enums";
 
 function App() {
+    const [isLoading, setIsLoading] = useState(false);
 
     const [hoveredArea, setHoveredArea] = useState(States.NONE);
     const [selectedArea, setSelectedArea] = useState(States.NONE);
@@ -28,6 +29,7 @@ function App() {
     return (
         <div>
             <NavBar
+                isLoading={isLoading}
                 setMapView={setMapView}
                 hoveredArea={hoveredArea}
                 setHoveredArea={setHoveredArea}
@@ -37,9 +39,12 @@ function App() {
                 setHeatmapOpts={setHeatmapOpts}
             />
             <DataContainer
+                isLoading={isLoading}
                 selectedArea={selectedArea}
                 selectedState={selectedState}
+                mapView={mapView}
                 setMapView={setMapView}
+                heatmapOpts={heatmapOpts}
                 setHeatmapOpts={setHeatmapOpts}
                 dataTab={dataTab}
                 setDataTab={setDataTab}
@@ -48,7 +53,10 @@ function App() {
                 setHighlightedDistrict={setHighlightedDistrict}
             />
             <StateMapContainer
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
                 mapView={mapView}
+                setMapView={setMapView}
                 selectedState={selectedState}
                 setHoveredArea={setHoveredArea}
                 setSelectedArea={setSelectedArea}

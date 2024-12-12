@@ -18,6 +18,13 @@ const MapViewOptions = Object.freeze({
 })
 
 const DataFilters = Object.freeze({
+    PARTY: "Party",
+    RACE: "Race",
+    INCOME: "Income",
+    REGION_TYPE: "Region Type",
+})
+
+const HeatMapFilters = Object.freeze({
     DEMOGRAPHIC: "Demographic",
     ECONOMIC: "Economic",
     REGION_TYPE: "Region Type",
@@ -32,4 +39,4 @@ const PoliColors = Object.freeze({
     INDEPENDENT: "#4CAF50",
 })
 
-export { States, DataTabOptions, MapViewOptions, DataFilters, PoliColors }
+export { States, DataTabOptions, MapViewOptions, DataFilters, HeatMapFilters, PoliColors }

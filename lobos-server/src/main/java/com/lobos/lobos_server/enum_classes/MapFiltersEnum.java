@@ -1,6 +1,6 @@
 package com.lobos.lobos_server.enum_classes;
 
-public enum FiltersEnum {
+public enum MapFiltersEnum {
     DEMOGRAPHIC("Demographic"),
     ECONOMIC("Economic"),
     REGION_TYPE("Region Type"),
@@ -10,7 +10,7 @@ public enum FiltersEnum {
 
     private String str;
 
-    FiltersEnum(String str) {
+    MapFiltersEnum(String str) {
         this.str = str;
     }
 
@@ -18,8 +18,8 @@ public enum FiltersEnum {
         return this.str;
     }
     
-    public static FiltersEnum fromValue(String value) {
-        for (FiltersEnum filter : FiltersEnum.values()) {
+    public static MapFiltersEnum fromValue(String value) {
+        for (MapFiltersEnum filter : MapFiltersEnum.values()) {
             if (filter.str.equals(value)) {
                 return filter;
             }

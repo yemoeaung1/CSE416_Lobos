@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.lobos.lobos_server.enum_classes.FiltersEnum;
+import com.lobos.lobos_server.enum_classes.MapFiltersEnum;
 import com.lobos.lobos_server.enum_classes.RegionTypeEnum;
 import com.lobos.lobos_server.model.PrecinctData;
 
@@ -71,7 +71,7 @@ public class HeatmapMethods {
     }
 
     public static Map<String, ColorMapping> getBins(List<String> filters){
-        FiltersEnum filter = FiltersEnum.fromValue(filters.get(0));
+        MapFiltersEnum filter = MapFiltersEnum.fromValue(filters.get(0));
         switch(filter){
             case DEMOGRAPHIC: return demoBins; 
             case ECONOMIC: return ecoBins;
@@ -83,7 +83,7 @@ public class HeatmapMethods {
     }
 
     public static ColorMapping handleBins(List<String> filters, PrecinctData info){
-        FiltersEnum filter = FiltersEnum.fromValue(filters.get(0));
+        MapFiltersEnum filter = MapFiltersEnum.fromValue(filters.get(0));
         switch(filter){
             case DEMOGRAPHIC: return handleDemoBins(filters.get(1), info); 
             case ECONOMIC: return handleEcoBins(info);
