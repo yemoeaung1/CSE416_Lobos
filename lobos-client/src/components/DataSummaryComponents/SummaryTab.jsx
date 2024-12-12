@@ -37,11 +37,11 @@ export default function SummaryTab({ isLoading, selectedState, mapView, setMapVi
       poverty: stateInfo.stateData["Poverty Rate"],
     }
     : {
-      party: "Loading",
-      redistrictingParty: "Loading",
-      population: "Loading",
-      income: "Loading",
-      poverty: "Loading",
+      party: "Loading...",
+      redistrictingParty: "Loading...",
+      population: "Loading...",
+      income: "Loading...",
+      poverty: "Loading...",
     }
 
   return (

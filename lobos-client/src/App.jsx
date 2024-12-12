@@ -44,6 +44,7 @@ function App() {
                 selectedState={selectedState}
                 mapView={mapView}
                 setMapView={setMapView}
+                heatmapOpts={heatmapOpts}
                 setHeatmapOpts={setHeatmapOpts}
                 dataTab={dataTab}
                 setDataTab={setDataTab}

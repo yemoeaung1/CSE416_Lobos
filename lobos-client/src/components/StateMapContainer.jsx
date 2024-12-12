@@ -189,14 +189,15 @@ function MapController({ mapData, highlightedDistrict }) {
     }, [highlightedDistrict]);
 
     useEffect(() => {
-        map.invalidateSize();
-
         map.options.minZoom = mapData.properties.MIN_ZOOM;
         map.options.maxZoom = mapData.properties.MAX_ZOOM;
+        map.setMaxBounds(mapData.properties.MAX_BOUNDS);
 
         map.flyTo(mapData.properties.CENTER, mapData.properties.CURRENT_ZOOM, {
             animate: false,
-        }).setMaxBounds(mapData.properties.MAX_BOUNDS);
+        });
+
+        map.invalidateSize();
     }, [mapData]);
 
     return null;
