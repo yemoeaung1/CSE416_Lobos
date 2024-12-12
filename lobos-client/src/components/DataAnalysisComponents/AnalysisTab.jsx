@@ -80,7 +80,7 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                         }
                         onClick={() => setSelectedFilter("race")}
                     >
-                        Race
+                        Racial/Ethnic
                     </button>
                     <button
                         className={
