@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import BarGraph from "../GraphPlotComponents/BarGraph";
 import axios from "axios";
-import { States, DataFilters, MapViewOptions } from "../../enums";
+import BarGraph from "../GraphPlotComponents/BarGraph";
+import { Button, ButtonGroup, Box } from "@mui/material";
+import { States, DataFilters, MapViewOptions, HeatMapFilters } from "../../enums";
 
-export default function StateDataTab({ heatmapOpts, setHeatmapOpts, selectedState, mapView, setMapView }) {
+export default function StateDataTab({ isLoading, heatmapOpts, setHeatmapOpts, selectedState, mapView, setMapView }) {
   const [stateInfo, setStateInfo] = useState(null);
   const [dataSetType, setDataSetType] = useState(DataFilters.PARTY)
 
@@ -30,7 +31,11 @@ export default function StateDataTab({ heatmapOpts, setHeatmapOpts, selectedStat
 
   return (
     <>
-      <HeatMapSelection />
+      <HeatMapSelection
+        isLoading={isLoading}
+        heatmapOpts={heatmapOpts}
+        setHeatmapOpts={setHeatmapOpts}
+      />
       <GraphContainer
         selectedState={selectedState}
         dataSetType={dataSetType}
@@ -41,9 +46,57 @@ export default function StateDataTab({ heatmapOpts, setHeatmapOpts, selectedStat
   );
 }
 
-function HeatMapSelection() {
+function HeatMapSelection({ isLoading, heatmapOpts, setHeatmapOpts }) {
+  // Should be prevented if currently isLoading
+
+  const heatmapButtons = [
+    HeatMapFilters.NONE,
+    HeatMapFilters.POVERTY_LEVEL,
+    HeatMapFilters.REGION_TYPE,
+    HeatMapFilters.ECONOMIC,
+    HeatMapFilters.ECO_POLITICAL,
+    HeatMapFilters.DEMOGRAPHIC,
+  ]
+
   return (
-    <></>
+    <>
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+        <ButtonGroup
+          variant="contained"
+          aria-label="linked button group"
+          disabled={isLoading}
+        >
+          {heatmapButtons.map((element) => (
+            <HeatMapButton
+              key={element}
+              isLoading={isLoading}
+              heatmapOpts={heatmapOpts}
+              setHeatmapOpts={setHeatmapOpts}
+              buttonType={element}
+            />
+          ))}
+        </ButtonGroup>
+      </Box>
+    </>
+  );
+}
+
+function HeatMapButton({ heatmapOpts, setHeatmapOpts, buttonType }) {
+  const isButtonSelected = (heatmapOpts && heatmapOpts.length > 0 && heatmapOpts[0] === buttonType);
+
+  return (
+    <Button
+      onClick={() => setHeatmapOpts([buttonType])}
+      sx={{
+        backgroundColor: isButtonSelected ? "primary.main" : "grey.300",
+        color: isButtonSelected ? "white" : "black",
+        "&:hover": {
+          backgroundColor: isButtonSelected ? "primary.dark" : "grey.400",
+        },
+      }}
+    >
+      {buttonType}
+    </Button>
   );
 }
 
@@ -62,10 +115,10 @@ function GraphContainer({ selectedState, dataSetType, setDataSetType, stateInfo 
 function GraphButtonOptions({ dataSetType, setDataSetType }) {
   return (
     <>
-      <GraphButton dataSetType={dataSetType} setDataSetType={setDataSetType} buttonType={DataFilters.PARTY}/>
-      <GraphButton dataSetType={dataSetType} setDataSetType={setDataSetType} buttonType={DataFilters.RACE}/>
-      <GraphButton dataSetType={dataSetType} setDataSetType={setDataSetType} buttonType={DataFilters.INCOME}/>
-      <GraphButton dataSetType={dataSetType} setDataSetType={setDataSetType} buttonType={DataFilters.REGION_TYPE}/>
+      <GraphButton dataSetType={dataSetType} setDataSetType={setDataSetType} buttonType={DataFilters.PARTY} />
+      <GraphButton dataSetType={dataSetType} setDataSetType={setDataSetType} buttonType={DataFilters.RACE} />
+      <GraphButton dataSetType={dataSetType} setDataSetType={setDataSetType} buttonType={DataFilters.INCOME} />
+      <GraphButton dataSetType={dataSetType} setDataSetType={setDataSetType} buttonType={DataFilters.REGION_TYPE} />
     </>
   );
 }

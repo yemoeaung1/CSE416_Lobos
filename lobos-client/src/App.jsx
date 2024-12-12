@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import NavBar from "./components/NavBar";
 import DataContainer from "./components/DataContainer";
 import StateMapContainer from "./components/StateMapContainer";
-import { DataTabOptions, MapViewOptions, States } from "./enums";
+import { DataTabOptions, HeatMapFilters, MapViewOptions, States } from "./enums";
 
 function App() {
     const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +14,7 @@ function App() {
 
     const [mapView, setMapView] = useState(MapViewOptions.STATE);
     const [districtYear, setDistrictYear] = useState('2020');
-    const [heatmapOpts, setHeatmapOpts] = useState(null);
+    const [heatmapOpts, setHeatmapOpts] = useState([HeatMapFilters.NONE]);
     const [highlightedDistrict, setHighlightedDistrict] = useState(0);
 
     const [dataTab, setDataTab] = useState(DataTabOptions.SUMMARY);

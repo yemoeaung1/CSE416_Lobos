@@ -1,8 +1,9 @@
 import axios from "axios";
+import qs from "qs";
 import { useEffect, useRef, useState } from "react";
 import { MapContainer, GeoJSON, useMap } from "react-leaflet";
 import Color from "color";
-import { MapViewOptions, PoliColors, States } from "../enums";
+import { HeatMapFilters, MapViewOptions, PoliColors, States } from "../enums";
 
 export default function StateMapContainer({ isLoading, setIsLoading, mapView, setMapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, heatmapOpts, districtYear, highlightedDistrict }) {
     return (
@@ -47,12 +48,17 @@ function StatesMap({
 
         setIsLoading(true);
 
+        let heatmapParams = (heatmapOpts && heatmapOpts.length > 0 && heatmapOpts[0] != HeatMapFilters.NONE) ? heatmapOpts : null;
+
         axios
             .get(`http://localhost:8080/api/state-map`, {
                 params: {
                     state: selectedState,
                     view: mapView,
-                    heatmapOpts
+                    heatmapOpts: heatmapParams
+                },
+                paramsSerializer: (params) => {
+                  return qs.stringify(params, { arrayFormat: "repeat" });
                 },
             })
             .then((response) => {

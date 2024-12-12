@@ -1,5 +1,5 @@
 import { GiWolfHead } from "react-icons/gi";
-import { MapViewOptions, States } from "../enums";
+import { HeatMapFilters, MapViewOptions, States } from "../enums";
 
 export default function NavBar({ isLoading, setMapView, hoveredArea, setHoveredArea, setSelectedArea, selectedState, setHeatmapOpts }) {
     return (
@@ -29,7 +29,7 @@ function NavLogo({ isLoading, setMapView, setHoveredArea, setSelectedArea, setHe
         setMapView(MapViewOptions.STATE);
         setHoveredArea(States.NONE);
         setSelectedArea(States.NONE);
-        setHeatmapOpts();
+        setHeatmapOpts([HeatMapFilters.NONE]);
     }
 
     return (
