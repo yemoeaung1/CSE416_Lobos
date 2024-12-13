@@ -46,9 +46,6 @@ public class StateController {
             state = StatesEnum.NONE.toString();
             view = StateViewEnum.STATE.toString();
         }
-
-        if(heatmapOpts != null && !heatmapOpts.isEmpty() && !heatmapOpts.get(0).equals(MapFiltersEnum.NONE.toString()))
-            view = StateViewEnum.PRECINCT.toString();
         
         Map<String, Object> data = fetchStateMap(state, view, heatmapOpts);
         return ResponseEntity.ok(data);
@@ -65,8 +62,8 @@ public class StateController {
     private Map<String, Object> fetchStateMap(String state, String view, List<String> heatmapOpts){
         StateMapConfig stateMapConfig = stateService.getStateMapConfig(state);
         GeoJSON stateGeoJSON = stateService.getStateMap(state, view);
-        if(heatmapOpts != null && !heatmapOpts.isEmpty() && !heatmapOpts.get(0).equals(MapFiltersEnum.NONE.toString()))
-            appendHeatmapOpts(stateGeoJSON, state, heatmapOpts);
+        
+        appendHeatmapOpts(stateGeoJSON, state, heatmapOpts);
 
         Map<String, Object> data = new HashMap<>();
         Map<String, Object> properties = new HashMap<>();

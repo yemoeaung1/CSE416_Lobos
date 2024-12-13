@@ -85,6 +85,7 @@ public class HeatmapMethods {
     public static ColorMapping handleBins(List<String> filters, PrecinctData info){
         MapFiltersEnum filter = MapFiltersEnum.fromValue(filters.get(0));
         switch(filter){
+            case NONE: return new ColorMapping("", 0.75);
             case DEMOGRAPHIC: return handleDemoBins(filters.get(1), info); 
             case ECONOMIC: return handleEcoBins(info);
             case REGION_TYPE: return handleRegionBins(info);
