@@ -1,6 +1,7 @@
 package com.lobos.lobos_server.enum_classes;
 
 public enum MapFiltersEnum {
+    NONE("None"),
     DEMOGRAPHIC("Demographic"),
     ECONOMIC("Economic"),
     REGION_TYPE("Region Type"),

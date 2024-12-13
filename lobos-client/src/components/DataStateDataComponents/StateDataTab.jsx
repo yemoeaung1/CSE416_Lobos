@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import BarGraph from "../GraphPlotComponents/BarGraph";
-import { Button, ButtonGroup, Box } from "@mui/material";
+import { Button, ButtonGroup, Box, Menu, MenuItem } from "@mui/material";
 import { States, DataFilters, MapViewOptions, HeatMapFilters } from "../../enums";
 
 export default function StateDataTab({ isLoading, heatmapOpts, setHeatmapOpts, selectedState, mapView, setMapView }) {
@@ -11,6 +11,10 @@ export default function StateDataTab({ isLoading, heatmapOpts, setHeatmapOpts, s
   useEffect(() => {
     if (mapView != MapViewOptions.PRECINCT)
       setMapView(MapViewOptions.PRECINCT);
+
+    return () => {
+      setHeatmapOpts([HeatMapFilters.NONE]);
+    };
   }, []);
 
   useEffect(() => {
@@ -55,7 +59,7 @@ function HeatMapSelection({ isLoading, heatmapOpts, setHeatmapOpts }) {
     HeatMapFilters.REGION_TYPE,
     HeatMapFilters.ECONOMIC,
     HeatMapFilters.ECO_POLITICAL,
-    HeatMapFilters.DEMOGRAPHIC,
+    HeatMapFilters.DEMOGRAPHIC
   ]
 
   return (

@@ -159,9 +159,6 @@ public class HeatmapMethods {
         char key = info.getMajorityParty().charAt(0);
         int income = info.getMedianIncome();
 
-        System.out.println("MAP: " + key);
-        System.out.println(ecoPolBins);
-
         if(income >= 200000)
             return ecoPolBins.get(key + "-$200K+");
         else if(income >= 150000)

@@ -47,15 +47,12 @@ function StatesMap({
         }
 
         setIsLoading(true);
-
-        let heatmapParams = (heatmapOpts && heatmapOpts.length > 0 && heatmapOpts[0] != HeatMapFilters.NONE) ? heatmapOpts : null;
-
         axios
             .get(`http://localhost:8080/api/state-map`, {
                 params: {
                     state: selectedState,
                     view: mapView,
-                    heatmapOpts: heatmapParams
+                    heatmapOpts
                 },
                 paramsSerializer: (params) => {
                   return qs.stringify(params, { arrayFormat: "repeat" });
