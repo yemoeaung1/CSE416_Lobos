@@ -35,24 +35,52 @@ export default function StateDataTab({ isLoading, heatmapOpts, setHeatmapOpts, s
 
   return (
     <>
-      <HeatMapSelection
+      <SelectionMenu
         isLoading={isLoading}
         heatmapOpts={heatmapOpts}
         setHeatmapOpts={setHeatmapOpts}
-      />
-      <GraphContainer
         selectedState={selectedState}
+        stateInfo={stateInfo}
         dataSetType={dataSetType}
         setDataSetType={setDataSetType}
+      />
+      <GraphPopulationLabel
         stateInfo={stateInfo}
+      />
+      <BarGraph
+        dataSetType={dataSetType}
+        selectedState={selectedState}
       />
     </>
   );
 }
 
-function HeatMapSelection({ isLoading, heatmapOpts, setHeatmapOpts }) {
-  // Should be prevented if currently isLoading
+function SelectionMenu({ isLoading, heatmapOpts, setHeatmapOpts, selectedState, stateInfo, dataSetType, setDataSetType }) {
+  return (
+    <div className="flex flex-row">
+      <HeatMapLegend />
+      <HeatMapSelection
+        isLoading={isLoading}
+        heatmapOpts={heatmapOpts}
+        setHeatmapOpts={setHeatmapOpts}
+      />
+      <GraphSelection
+        dataSetType={dataSetType}
+        setDataSetType={setDataSetType}
+      />
+    </div>
+  );
+}
 
+function HeatMapLegend() {
+  return (
+    <div className="data-component-data-heatmap-legend">
+      Legend
+    </div>
+  );
+}
+
+function HeatMapSelection({ isLoading, heatmapOpts, setHeatmapOpts }) {
   const heatmapButtons = [
     HeatMapFilters.NONE,
     HeatMapFilters.POVERTY_LEVEL,
@@ -63,11 +91,12 @@ function HeatMapSelection({ isLoading, heatmapOpts, setHeatmapOpts }) {
   ]
 
   return (
-    <>
+    <div className="data-component-data-heatmap-selection">
       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
         <ButtonGroup
           variant="contained"
           aria-label="linked button group"
+          orientation="vertical"
           disabled={isLoading}
         >
           {heatmapButtons.map((element) => (
@@ -81,7 +110,7 @@ function HeatMapSelection({ isLoading, heatmapOpts, setHeatmapOpts }) {
           ))}
         </ButtonGroup>
       </Box>
-    </>
+    </div>
   );
 }
 
@@ -104,38 +133,48 @@ function HeatMapButton({ heatmapOpts, setHeatmapOpts, buttonType }) {
   );
 }
 
-function GraphContainer({ selectedState, dataSetType, setDataSetType, stateInfo }) {
+
+function GraphSelection({ dataSetType, setDataSetType }) {
+  const graphOptions = [DataFilters.PARTY, DataFilters.RACE, DataFilters.INCOME, DataFilters.REGION_TYPE];
+  
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between mb-4">
-        <GraphButtonOptions dataSetType={dataSetType} setDataSetType={setDataSetType} />
-        <GraphPopulationLabel stateInfo={stateInfo} />
-      </div>
-      <GraphDisplay selectedState={selectedState} dataSetType={dataSetType} />
+    <div className="data-component-data-graph-selection">
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+        <ButtonGroup
+          variant="contained"
+          aria-label="linked button group"
+          orientation="vertical"
+        >
+          {graphOptions.map((element) => (
+            <GraphButton
+              key={element}
+              dataSetType={dataSetType}
+              setDataSetType={setDataSetType}
+              buttonType={element}
+            />
+          ))}
+        </ButtonGroup>
+      </Box>
     </div>
   )
 }
 
-function GraphButtonOptions({ dataSetType, setDataSetType }) {
-  return (
-    <>
-      <GraphButton dataSetType={dataSetType} setDataSetType={setDataSetType} buttonType={DataFilters.PARTY} />
-      <GraphButton dataSetType={dataSetType} setDataSetType={setDataSetType} buttonType={DataFilters.RACE} />
-      <GraphButton dataSetType={dataSetType} setDataSetType={setDataSetType} buttonType={DataFilters.INCOME} />
-      <GraphButton dataSetType={dataSetType} setDataSetType={setDataSetType} buttonType={DataFilters.REGION_TYPE} />
-    </>
-  );
-}
-
 function GraphButton({ dataSetType, setDataSetType, buttonType }) {
-  let buttonClassName = (dataSetType === buttonType)
-    ? "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-    : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+  const isButtonSelected = (dataSetType == buttonType);
 
   return (
-    <button className={buttonClassName} onClick={() => { setDataSetType(buttonType) }}>
-      {` ${buttonType} `}
-    </button>
+    <Button
+      onClick={() => setDataSetType([buttonType])}
+      sx={{
+        backgroundColor: isButtonSelected ? "primary.main" : "grey.300",
+        color: isButtonSelected ? "white" : "black",
+        "&:hover": {
+          backgroundColor: isButtonSelected ? "primary.dark" : "grey.400",
+        },
+      }}
+    >
+      {buttonType}
+    </Button>
   );
 }
 
@@ -145,16 +184,6 @@ function GraphPopulationLabel({ stateInfo }) {
       <div className="text-2xl font-bold text-center font-roboto ml-24 mt-2">
         <span>Total Population:</span>
         <span className="text-2xl font-normal"> {stateInfo ? stateInfo.stateData["Total Population"].toLocaleString() : "Loading..."} </span>
-      </div>
-    </>
-  );
-}
-
-function GraphDisplay({ selectedState, dataSetType }) {
-  return (
-    <>
-      <div className="h-3/4 w-full">
-        <BarGraph dataSetType={dataSetType} selectedState={selectedState} />
       </div>
     </>
   );

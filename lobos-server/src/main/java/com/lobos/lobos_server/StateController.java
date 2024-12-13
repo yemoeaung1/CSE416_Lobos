@@ -90,8 +90,11 @@ public class StateController {
                 if(feature.getProperties().get("GEOID20") instanceof String)
                     key = (String) feature.getProperties().get("GEOID20");
 
-                PrecinctData info = precinctInfoMap.get(key);
-                ColorMapping colorMapping = HeatmapMethods.handleBins(heatmapOpts, info);
+                ColorMapping colorMapping;
+                if(precinctInfoMap == null)
+                    colorMapping = HeatmapMethods.handleBins(heatmapOpts, null);
+                else
+                    colorMapping = HeatmapMethods.handleBins(heatmapOpts, precinctInfoMap.get(key));
 
                 feature.getProperties().put("FCOLOR", colorMapping.getColor());
                 feature.getProperties().put("FOPACITY", colorMapping.getOpacity());

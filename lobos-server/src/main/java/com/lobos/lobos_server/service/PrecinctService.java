@@ -27,6 +27,10 @@ public class PrecinctService {
     @Cacheable(value = "precinct-info-map-cache", key = "#state")
     public Map<String, PrecinctData> fetchPrecinctInfoMap(String state){
         PrecinctInfo precinctInfo = precinctInfoRepository.findFirstByState(state);
+
+        if(precinctInfo == null)
+            return null;
+
         Map<String, PrecinctData> precinctInfoMap = new HashMap<>();
         for(PrecinctData obj: precinctInfo.getPrecincts()){
             precinctInfoMap.put((String) obj.getGEOID(), obj);
