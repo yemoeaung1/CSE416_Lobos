@@ -35,11 +35,11 @@ function HeatMapLegend({ legendInfo, hoveredArea }) {
 
     return (
         <div className="data-component-data-heatmap-legend">
-            <h1>Legend</h1>
+            <h3>Legend</h3>
             <div>
                 {legendInfo == null &&
                     <>
-                        LEGEND NULL
+                        No Heat Map Selected
                     </>
                 }
 
@@ -103,7 +103,7 @@ function HeatMapSelection({ isLoading, heatmapOpts, setHeatmapOpts }) {
 
     return (
         <div className="data-component-data-heatmap-selection">
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }}>
                 <ButtonGroup
                     variant="contained"
                     aria-label="linked button group"

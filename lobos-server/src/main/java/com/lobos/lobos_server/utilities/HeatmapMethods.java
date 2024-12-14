@@ -73,6 +73,9 @@ public class HeatmapMethods {
 
     @Cacheable(value = "", key = "#filters[0]")
     public static ArrayList<ColorMapping> getBins(List<String> filters){
+        if(filters == null)
+            return null;
+
         MapFiltersEnum filter = MapFiltersEnum.fromValue(filters.get(0));
         switch(filter){
             case NONE: return null;
@@ -86,6 +89,9 @@ public class HeatmapMethods {
     }
 
     public static ColorMapping handleBins(List<String> filters, PrecinctData info){
+        if(filters == null || info == null)
+            return new ColorMapping("", "", 0.75);
+
         MapFiltersEnum filter = MapFiltersEnum.fromValue(filters.get(0));
         switch(filter){
             case NONE: return new ColorMapping("", "", 0.75);
@@ -103,7 +109,7 @@ public class HeatmapMethods {
     }
 
     private static ColorMapping handleEcoBins(PrecinctData info){
-        int income = info.getMedianIncome();
+        double income = info.getMedianIncome();
 
         if(income >= 200000)
             return ecoBins.get(0);
@@ -137,7 +143,7 @@ public class HeatmapMethods {
     }
 
     private static ColorMapping handlePovertyBins(PrecinctData info){
-        double povertyRate = info.getPercentHouseholdsLivingBelowPovertyLevel();
+        double povertyRate = info.getPovertyRate();
 
         if(povertyRate >= 40)
             return povertyBins.get(0);
@@ -162,7 +168,7 @@ public class HeatmapMethods {
     private static ColorMapping handleEcoPolBins(PrecinctData info){
         char key = info.getMajorityParty().charAt(0);
         int offset = (key == 'D') ? 9 : 0;
-        int income = info.getMedianIncome();
+        double income = info.getMedianIncome();
 
         if(income >= 200000)
             return ecoPolBins.get(offset + 0);

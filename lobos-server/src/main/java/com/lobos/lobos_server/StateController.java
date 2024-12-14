@@ -70,7 +70,8 @@ public class StateController {
         StateMapConfig stateMapConfig = stateService.getStateMapConfig(state);
         GeoJSON stateGeoJSON = stateService.getStateMap(state, view);
         
-        appendHeatmapOpts(stateGeoJSON, state, heatmapOpts);
+        if(view.equals(StateViewEnum.PRECINCT.toString()))
+            appendHeatmapOpts(stateGeoJSON, state, heatmapOpts);
 
         Map<String, Object> data = new HashMap<>();
         Map<String, Object> properties = new HashMap<>();

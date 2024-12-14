@@ -3,27 +3,61 @@ package com.lobos.lobos_server.model;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 public class PrecinctData {
-    private String GEOID20;
-    private int total_population;
-    private int total_households;
-    private int households_below_poverty_line;
-    private int non_hispanic;
+    private String GEOID;
+    private String name;
+
     private int hispanic;
     private int white;
     private int black;
-    private int american_indian;
     private int asian;
-    private int hawaiian_pacific_islander;
-    private int other;
-    private int two_or_more;
-    private int median_income;
-    private double percent_households_living_below_poverty_level;
-    private String name;
+    private int non_hispanic;
+
+    @Field("LESS_10K")
+    private int income0K;
+    @Field("10K_15K")
+    private int income10K;
+    @Field("15K_20K")
+    private int income15K;
+    @Field("20K_25K")
+    private int income20K;
+    @Field("25K_30K")
+    private int income25K;
+    @Field("30K_35K")
+    private int income30K;
+    @Field("35K_40K")
+    private int income35K;
+    @Field("40K_45K")
+    private int income40K;
+    @Field("45K_50K")
+    private int income45K;
+    @Field("50K_60K")
+    private int income50K;
+    @Field("60K_75K")
+    private int income60K;
+    @Field("75K_100K")
+    private int income75K;
+    @Field("100K_125K")
+    private int income100K;
+    @Field("125K_150K")
+    private int income125K;
+    @Field("150K_200K")
+    private int income150K;
+    @Field("200K_MORE")
+    private int income200K;
+
+    private int total_population;
+    private int total_households;
+    private int households_below_poverty_line;
+    private double median_income;
+    private double poverty_rate;
+    
     @Field("land_area(m2)")
     private long land_area;
     private String region_type;
     private String[] neighbors;
     private int district;
+
+    private String incumbent;
     @Field("2020_PRES_R")
     private int PRES_R;
     @Field("2020_PRES_D")
@@ -31,7 +65,7 @@ public class PrecinctData {
     private String majority_party;
 
     public String getGEOID(){
-        return GEOID20;
+        return GEOID;
     }
 
     public int getTotalPopulation(){
@@ -62,32 +96,16 @@ public class PrecinctData {
         return black;
     }
 
-    public int getAmericanIndian(){
-        return american_indian;
-    }
-
     public int getAsian(){
         return asian;
     }
 
-    public int getHawaiianPacificIslander(){
-        return hawaiian_pacific_islander;
-    }
-
-    public int getOther(){
-        return other;
-    }
-
-    public int getTwoOrMore(){
-        return two_or_more;
-    }
-
-    public int getMedianIncome(){
+    public double getMedianIncome(){
         return median_income;
     }
 
-    public double getPercentHouseholdsLivingBelowPovertyLevel(){
-        return percent_households_living_below_poverty_level;
+    public double getPovertyRate(){
+        return poverty_rate;
     }
     
     public String getName(){
@@ -108,6 +126,10 @@ public class PrecinctData {
 
     public int getDistrict(){
         return district;
+    }
+
+    public String getIncumbent(){
+        return incumbent;
     }
 
     public int getPresR(){
