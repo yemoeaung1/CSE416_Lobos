@@ -8,7 +8,7 @@ import { DataTabOptions, HeatMapFilters, MapViewOptions, States } from "./enums"
 function App() {
     const [isLoading, setIsLoading] = useState(false);
 
-    const [hoveredArea, setHoveredArea] = useState(States.NONE);
+    const [hoveredArea, setHoveredArea] = useState(null);
     const [selectedArea, setSelectedArea] = useState(States.NONE);
     const [selectedState, setSelectedState] = useState(States.NONE);
 
@@ -42,6 +42,7 @@ function App() {
                 isLoading={isLoading}
                 selectedArea={selectedArea}
                 selectedState={selectedState}
+                hoveredArea={hoveredArea}
                 mapView={mapView}
                 setMapView={setMapView}
                 heatmapOpts={heatmapOpts}

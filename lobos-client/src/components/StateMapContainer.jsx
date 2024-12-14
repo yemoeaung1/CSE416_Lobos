@@ -101,11 +101,11 @@ function StatesMap({
     
         layer.on({
             mouseover: (e) => {
-                setHoveredArea(feature.properties.NAME);
+                setHoveredArea(feature);
                 e.target.setStyle({ fillColor: darkerColor, weight: 3 });
             },
             mouseout: (e) => {
-                setHoveredArea(States.NONE);
+                setHoveredArea(null);
                 e.target.setStyle({ fillColor: originalColor, weight: 1 });
             },
             click: (e) => {

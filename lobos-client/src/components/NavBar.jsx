@@ -27,7 +27,7 @@ function NavLogo({ isLoading, setMapView, setHoveredArea, setSelectedArea, setHe
         }
 
         setMapView(MapViewOptions.STATE);
-        setHoveredArea(States.NONE);
+        setHoveredArea(null);
         setSelectedArea(States.NONE);
         setHeatmapOpts([HeatMapFilters.NONE]);
     }
@@ -47,7 +47,7 @@ function NavTitle({ hoveredArea, selectedState }) {
     return (
         <div className="navbar-title flex flex-col items-center justify-center">
             <span className="text-4xl text-white averia-serif-title">{(selectedState !== States.NONE) ? selectedState : "[Select A State]"}</span>
-            <span className="text-base text-white averia-serif-title">{`Hovering: ${(hoveredArea !== States.NONE) ? hoveredArea : "...    "}`}</span>
+            <span className="text-base text-white averia-serif-title">{`Hovering: ${(hoveredArea !== null) ? (hoveredArea.properties.NAME) : "..."}`}</span>
         </div>
     )
 }
