@@ -83,13 +83,13 @@ export default function AnalysisTab({ selectedState, setMapView }) {
                     </button>
                     <button
                         className={
-                            selectedFilter === "incomeRace"
+                            selectedFilter === "income&race"
                                 ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
                                 : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
                         }
-                        onClick={() => setSelectedFilter("incomeRace")}
+                        onClick={() => setSelectedFilter("income&race")}
                     >
-                        ..
+                        Income & Race
                     </button>
                 </div>
             </div>

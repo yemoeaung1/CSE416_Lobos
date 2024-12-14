@@ -16,6 +16,7 @@
     "@sgratzl/chartjs-chart-boxplot": "^4.4.2",
     "axios": "^1.7.7",
     "chart.js": "^4.4.4",
+    "chartjs-plugin-annotation": "^3.1.0",
     "color": "^4.2.3",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.446.0",

@@ -84,33 +84,65 @@ public class StateService {
                         filteredData.put("democrat_percentage", 0.0);
                         filteredData.put("republican_percentage", 0.0);
                     }
+                    // Add region type
+                    String regionType = precinct.getRegionType();
+                    filteredData.put("region_type", regionType != null ? regionType : "Unknown");
 
-                    // Calculate and add race percentages
+                    // Calculate race percentages and combined values
                     int totalPopulation = precinct.getTotalPopulation();
                     if (totalPopulation > 0) {
-                        filteredData.put("hispanic_percentage",
-                            ((double) precinct.getHispanic() / totalPopulation) * 100);
-                        filteredData.put("non_hispanic_percentage",
-                            ((double) precinct.getNonHispanic() / totalPopulation) * 100);
-                        filteredData.put("white_percentage",
-                            ((double) precinct.getWhite() / totalPopulation) * 100);
-                        filteredData.put("black_percentage",
-                            ((double) precinct.getBlack() / totalPopulation) * 100);
-                        filteredData.put("asian_percentage",
-                            ((double) precinct.getAsian() / totalPopulation) * 100);
+                        double hispanicPercentage = ((double) precinct.getHispanic() / totalPopulation) * 100;
+                        double nonHispanicPercentage = ((double) precinct.getNonHispanic() / totalPopulation) * 100;
+                        double whitePercentage = ((double) precinct.getWhite() / totalPopulation) * 100;
+                        double blackPercentage = ((double) precinct.getBlack() / totalPopulation) * 100;
+                        double asianPercentage = ((double) precinct.getAsian() / totalPopulation) * 100;
+    
+                        // Add regular race percentages for the Race tab
+                        filteredData.put("hispanic_percentage", hispanicPercentage);
+                        filteredData.put("non_hispanic_percentage", nonHispanicPercentage);
+                        filteredData.put("white_percentage", whitePercentage);
+                        filteredData.put("black_percentage", blackPercentage);
+                        filteredData.put("asian_percentage", asianPercentage);
+    
+                        // Add combined values for each race
+                        filteredData.put("combined_hispanic", calculateCombinedValue(precinct.getMedianIncome(), hispanicPercentage));
+                        filteredData.put("combined_non_hispanic", calculateCombinedValue(precinct.getMedianIncome(), nonHispanicPercentage));
+                        filteredData.put("combined_white", calculateCombinedValue(precinct.getMedianIncome(), whitePercentage));
+                        filteredData.put("combined_black", calculateCombinedValue(precinct.getMedianIncome(), blackPercentage));
+                        filteredData.put("combined_asian", calculateCombinedValue(precinct.getMedianIncome(), asianPercentage));
                     } else {
+                        // Default to 0 if total population is missing or zero
                         filteredData.put("hispanic_percentage", 0.0);
                         filteredData.put("non_hispanic_percentage", 0.0);
                         filteredData.put("white_percentage", 0.0);
                         filteredData.put("black_percentage", 0.0);
                         filteredData.put("asian_percentage", 0.0);
+    
+                        filteredData.put("combined_hispanic", 0.0);
+                        filteredData.put("combined_non_hispanic", 0.0);
+                        filteredData.put("combined_white", 0.0);
+                        filteredData.put("combined_black", 0.0);
+                        filteredData.put("combined_asian", 0.0);
                     }
-                    // Add region type
-                    String regionType = precinct.getRegionType();
-                    filteredData.put("region_type", regionType != null ? regionType : "Unknown");
 
                     filteredPrecinctData.add(filteredData);
                 }
+                int hispanicCount = 0, nonHispanicCount = 0, whiteCount = 0, blackCount = 0, asianCount = 0;
+
+                for (Map<String, Object> precinct : filteredPrecinctData) {
+                    if ((double) precinct.get("combined_hispanic") > 1) hispanicCount++;
+                    if ((double) precinct.get("combined_non_hispanic") > 1) nonHispanicCount++;
+                    if ((double) precinct.get("combined_white") > 1) whiteCount++;
+                    if ((double) precinct.get("combined_black") > 1) blackCount++;
+                    if ((double) precinct.get("combined_asian") > 1) asianCount++;
+                }
+
+                System.out.println("Hispanic: " + hispanicCount);
+                System.out.println("Non-Hispanic: " + nonHispanicCount);
+                System.out.println("White: " + whiteCount);
+                System.out.println("Black: " + blackCount);
+                System.out.println("Asian: " + asianCount);
+
                 // Log the filtered data
                 // System.out.println("Filtered data for state: " + state + ": " + filteredPrecinctData);
                 System.out.println("Filtered data for state: " + state + " is ready.");
@@ -120,6 +152,25 @@ public class StateService {
             System.out.println("No data found for state: " + state);
             return Collections.emptyList();
         }
+    }
+    // Helper method to calculate the combined value
+    private double calculateCombinedValue(double medianIncome, double racePercentage) {
+        // Check if racePercentage is 0 or invalid
+        if (racePercentage <= 0) {
+            return 0; // Skip normalization and return 0 if racePercentage is invalid
+        }
+    
+        // Check if medianIncome is invalid
+        if (medianIncome <= 0) {
+            System.out.println("Invalid median income, skipping normalization.");
+            return 0; // Return 0 if income is invalid
+        }
+    
+        // Normalize income for scaling
+        double normalizedIncome = medianIncome / 1000.0;
+    
+        // Return the linear combination of normalized income and race percentage
+        return (0.5 * normalizedIncome) + (0.5 * racePercentage);
     }
     
 }
