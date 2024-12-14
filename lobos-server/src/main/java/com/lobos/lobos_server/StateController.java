@@ -14,6 +14,7 @@ import com.lobos.lobos_server.utilities.ColorMapping;
 import com.lobos.lobos_server.utilities.GeoJSON;
 import com.lobos.lobos_server.utilities.HeatmapMethods;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,12 @@ public class StateController {
             @RequestParam(required = true) String state) {
 
         Map<String, Object> data = stateService.getStateInfo(state);
+        return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("/state-map-legend")
+    public ResponseEntity<ArrayList<ColorMapping>> getStateMapLegend(@RequestParam(required = true) List<String> heatmapOpts) {
+        ArrayList<ColorMapping> data = HeatmapMethods.getBins(heatmapOpts);
         return ResponseEntity.ok(data);
     }
 

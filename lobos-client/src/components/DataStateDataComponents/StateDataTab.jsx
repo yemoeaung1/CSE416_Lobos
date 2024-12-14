@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import qs from "qs";
 import BarGraph from "../GraphPlotComponents/BarGraph";
 import { Button, ButtonGroup, Box, Menu, MenuItem } from "@mui/material";
 import { States, DataFilters, MapViewOptions, HeatMapFilters } from "../../enums";
@@ -7,6 +8,7 @@ import { States, DataFilters, MapViewOptions, HeatMapFilters } from "../../enums
 export default function StateDataTab({ isLoading, heatmapOpts, setHeatmapOpts, selectedState, mapView, setMapView }) {
   const [stateInfo, setStateInfo] = useState(null);
   const [dataSetType, setDataSetType] = useState(DataFilters.PARTY)
+  const [legendInfo, setLegendInfo] = useState(null);
 
   useEffect(() => {
     if (mapView != MapViewOptions.PRECINCT)
@@ -33,6 +35,28 @@ export default function StateDataTab({ isLoading, heatmapOpts, setHeatmapOpts, s
     }
   }, [selectedState]);
 
+  useEffect(() => {
+    if (heatmapOpts[0] == HeatMapFilters.NONE) {
+      setLegendInfo(null);
+      return;
+    }
+
+    axios.get(`http://localhost:8080/api/state-map-legend`, {
+      params: {
+        heatmapOpts
+      },
+      paramsSerializer: (params) => {
+        return qs.stringify(params, { arrayFormat: "repeat" });
+      },
+    })
+      .then(response => {
+        setLegendInfo(response.data)
+      })
+      .catch(error => {
+        console.error("Error Retrieving Info:", error);
+      });
+  }, [heatmapOpts]);
+
   return (
     <>
       <SelectionMenu
@@ -43,9 +67,7 @@ export default function StateDataTab({ isLoading, heatmapOpts, setHeatmapOpts, s
         stateInfo={stateInfo}
         dataSetType={dataSetType}
         setDataSetType={setDataSetType}
-      />
-      <GraphPopulationLabel
-        stateInfo={stateInfo}
+        legendInfo={legendInfo}
       />
       <BarGraph
         dataSetType={dataSetType}
@@ -55,16 +77,17 @@ export default function StateDataTab({ isLoading, heatmapOpts, setHeatmapOpts, s
   );
 }
 
-function SelectionMenu({ isLoading, heatmapOpts, setHeatmapOpts, selectedState, stateInfo, dataSetType, setDataSetType }) {
+function SelectionMenu({ isLoading, heatmapOpts, setHeatmapOpts, legendInfo, selectedState, stateInfo, dataSetType, setDataSetType }) {
   return (
     <div className="flex flex-row">
-      <HeatMapLegend />
+      <HeatMapLegend legendInfo={legendInfo} />
       <HeatMapSelection
         isLoading={isLoading}
         heatmapOpts={heatmapOpts}
         setHeatmapOpts={setHeatmapOpts}
       />
       <GraphSelection
+        stateInfo={stateInfo}
         dataSetType={dataSetType}
         setDataSetType={setDataSetType}
       />
@@ -72,10 +95,36 @@ function SelectionMenu({ isLoading, heatmapOpts, setHeatmapOpts, selectedState, 
   );
 }
 
-function HeatMapLegend() {
+function HeatMapLegend({ legendInfo }) {
   return (
     <div className="data-component-data-heatmap-legend">
-      Legend
+      <h1>Legend</h1>
+      {legendInfo == null &&
+        <>
+          LEGEND NULL
+        </>
+      }
+
+      {legendInfo != null &&
+        <>
+          {Object.entries(legendInfo).map(([key, { name, color, opacity }]) => (
+            <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              {/* Color Square */}
+              <div
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  backgroundColor: color,
+                  opacity: opacity,
+                  border: '1px solid #000',
+                }}
+              ></div>
+              {/* Label */}
+              <span>{name}</span>
+            </div>
+          ))}
+        </>
+      }
     </div>
   );
 }
@@ -134,9 +183,9 @@ function HeatMapButton({ heatmapOpts, setHeatmapOpts, buttonType }) {
 }
 
 
-function GraphSelection({ dataSetType, setDataSetType }) {
+function GraphSelection({ stateInfo, dataSetType, setDataSetType }) {
   const graphOptions = [DataFilters.PARTY, DataFilters.RACE, DataFilters.INCOME, DataFilters.REGION_TYPE];
-  
+
   return (
     <div className="data-component-data-graph-selection">
       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
@@ -155,6 +204,9 @@ function GraphSelection({ dataSetType, setDataSetType }) {
           ))}
         </ButtonGroup>
       </Box>
+      <GraphPopulationLabel
+        stateInfo={stateInfo}
+      />
     </div>
   )
 }
