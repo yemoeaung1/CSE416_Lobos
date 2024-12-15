@@ -68,21 +68,28 @@ public class StateService {
                 // Extract necessary fields from each precinct
                 for (PrecinctData precinct : precincts) {
                     Map<String, Object> filteredData = new HashMap<>();
+                    filteredData.put("geoid", precinct.getGEOID());
                     filteredData.put("median_income", precinct.getMedianIncome());
 
                     // Calculate Democratic and Republican vote percentages
                     int demVotes = precinct.getPresD();
                     int repVotes = precinct.getPresR();
                     int totalVotes = demVotes + repVotes;
-
+                    
                     if (totalVotes > 0) {
                         double demPercentage = ((double) demVotes / totalVotes) * 100;
                         double repPercentage = ((double) repVotes / totalVotes) * 100;
                         filteredData.put("democrat_percentage", demPercentage);
                         filteredData.put("republican_percentage", repPercentage);
+                        filteredData.put("democrat_votes", demVotes);
+                        filteredData.put("republican_votes", repVotes);
+                        filteredData.put("total_votes", totalVotes);
                     } else {
                         filteredData.put("democrat_percentage", 0.0);
                         filteredData.put("republican_percentage", 0.0);
+                        filteredData.put("democrat_votes", 0.0);
+                        filteredData.put("republican_votes", 0.0);
+                        filteredData.put("total_votes", 0.0);
                     }
                     // Add region type
                     String regionType = precinct.getRegionType();
@@ -91,6 +98,8 @@ public class StateService {
                     // Calculate race percentages and combined values
                     int totalPopulation = precinct.getTotalPopulation();
                     if (totalPopulation > 0) {
+                        filteredData.put("total_population", totalPopulation);
+                        int nonWhite = totalPopulation - precinct.getWhite();
                         double hispanicPercentage = ((double) precinct.getHispanic() / totalPopulation) * 100;
                         double nonHispanicPercentage = ((double) precinct.getNonHispanic() / totalPopulation) * 100;
                         double whitePercentage = ((double) precinct.getWhite() / totalPopulation) * 100;
@@ -103,7 +112,8 @@ public class StateService {
                         filteredData.put("white_percentage", whitePercentage);
                         filteredData.put("black_percentage", blackPercentage);
                         filteredData.put("asian_percentage", asianPercentage);
-    
+                        filteredData.put("non_white", nonWhite);
+
                         // Add combined values for each race
                         filteredData.put("combined_hispanic", calculateCombinedValue(precinct.getMedianIncome(), hispanicPercentage));
                         filteredData.put("combined_non_hispanic", calculateCombinedValue(precinct.getMedianIncome(), nonHispanicPercentage));
@@ -117,7 +127,9 @@ public class StateService {
                         filteredData.put("white_percentage", 0.0);
                         filteredData.put("black_percentage", 0.0);
                         filteredData.put("asian_percentage", 0.0);
-    
+                        filteredData.put("non_white", 0.0);
+                        filteredData.put("total_population", 0.0);
+
                         filteredData.put("combined_hispanic", 0.0);
                         filteredData.put("combined_non_hispanic", 0.0);
                         filteredData.put("combined_white", 0.0);
@@ -127,21 +139,6 @@ public class StateService {
 
                     filteredPrecinctData.add(filteredData);
                 }
-                int hispanicCount = 0, nonHispanicCount = 0, whiteCount = 0, blackCount = 0, asianCount = 0;
-
-                for (Map<String, Object> precinct : filteredPrecinctData) {
-                    if ((double) precinct.get("combined_hispanic") > 1) hispanicCount++;
-                    if ((double) precinct.get("combined_non_hispanic") > 1) nonHispanicCount++;
-                    if ((double) precinct.get("combined_white") > 1) whiteCount++;
-                    if ((double) precinct.get("combined_black") > 1) blackCount++;
-                    if ((double) precinct.get("combined_asian") > 1) asianCount++;
-                }
-
-                System.out.println("Hispanic: " + hispanicCount);
-                System.out.println("Non-Hispanic: " + nonHispanicCount);
-                System.out.println("White: " + whiteCount);
-                System.out.println("Black: " + blackCount);
-                System.out.println("Asian: " + asianCount);
 
                 // Log the filtered data
                 // System.out.println("Filtered data for state: " + state + ": " + filteredPrecinctData);

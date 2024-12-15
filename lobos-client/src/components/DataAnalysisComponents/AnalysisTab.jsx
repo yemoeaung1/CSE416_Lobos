@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter";
+import PrecinctDataTable from "../GraphPlotComponents/PrecinctDataTable";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { MapViewOptions } from "../../enums";
 
 export default function AnalysisTab({ selectedState, setMapView }) {
     const [selectedChart, setSelectedChart] = useState("precinct-analysis");
     const [selectedFilter, setSelectedFilter] = useState("income");
+    const [showTable, setShowTable] = useState(false); // For toggling the table
+    const [selectedGEOID, setSelectedGEOID] = useState(null); // GEOID of selected point
+    const [precinctData, setPrecinctData] = useState([]); // Store fetched precinct data
 
     useEffect(() => {
         setMapView(MapViewOptions.PRECINCT);
@@ -92,14 +96,36 @@ export default function AnalysisTab({ selectedState, setMapView }) {
                         Income & Race
                     </button>
                 </div>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={showTable}
+                            onChange={(e) => setShowTable(e.target.checked)}
+                            color="primary"
+                        />
+                    }
+                    label="Show Table"
+                    className="ml-4"
+                />
             </div>
 
             {/* Chart Display */}
-            <div className="h-3/4 w-full mt-5">
+            <div
+                className={`transition-all duration-300 ${
+                    showTable && selectedChart === "precinct-analysis"
+                        ? "h-2/4"
+                        : "h-3/4"
+                } w-full mt-5`}
+                style={{
+                    paddingBottom: showTable ? "40px" : "10px", // Add extra space when the table is shown
+                }}
+            >
                 {selectedChart === "precinct-analysis" && (
                     <IncomeVotingScatter
                         selectedState={selectedState}
-                        selectedFilter={selectedFilter} // Pass the selected filter as a prop
+                        selectedFilter={selectedFilter}
+                        onSelectGEOID={setSelectedGEOID} // Get selected GEOID from scatter plot
+                        onPrecinctDataFetched={setPrecinctData} // Get precinct data
                     />
                 )}
                 {selectedChart === "ecological-inference" && (
@@ -109,6 +135,13 @@ export default function AnalysisTab({ selectedState, setMapView }) {
                     </div>
                 )}
             </div>
+            {/* Table Display */}
+            {selectedChart === "precinct-analysis" && showTable && (
+                <PrecinctDataTable
+                    precinctData={precinctData}
+                    selectedGEOID={selectedGEOID} // Pass selected GEOID to the table
+                />
+            )}
         </div>
     );
 }

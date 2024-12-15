@@ -4,14 +4,19 @@ import regression from "regression";
 import axios from "axios";
 import { States } from "../../enums";
 
-const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
+const IncomeVotingScatter = ({
+    selectedFilter,
+    selectedState,
+    onSelectGEOID,
+    onPrecinctDataFetched,
+}) => {
     const chartRef = useRef(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [precinctData, setPrecinctData] = useState([]);
     const [selectedIncomeLevel, setSelectedIncomeLevel] = useState("all");
     const [selectedRace, setSelectedRace] = useState("white");
-    const [selectedRace2, setSelectedRace2] = useState("asian");
+    const [selectedRace2, setSelectedRace2] = useState("white");
     const [selectedRegion, setSelectedRegion] = useState("all");
 
     // Fetch precinct data whenever the selected state changes
@@ -31,6 +36,8 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                 );
                 setPrecinctData(response.data);
                 setLoading(false);
+                // Pass the fetched data to AnalysisTab
+                onPrecinctDataFetched(response.data);
             } catch (err) {
                 setError("Failed to fetch data");
                 setLoading(false);
@@ -38,7 +45,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
         };
 
         fetchPrecinctData();
-    }, [selectedState]);
+    }, [selectedState, onPrecinctDataFetched]);
 
     useEffect(() => {
         if (loading || error || !precinctData.length) {
@@ -83,26 +90,31 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
             democratData = filteredData.map((precinct) => ({
                 x: precinct.median_income,
                 y: precinct.democrat_percentage,
+                geoid: precinct.geoid,
             }));
 
             republicanData = filteredData.map((precinct) => ({
                 x: precinct.median_income,
                 y: precinct.republican_percentage,
+                geoid: precinct.geoid,
             }));
         } else if (selectedFilter === "race") {
             democratData = precinctData.map((precinct) => ({
                 x: precinct[`${selectedRace}_percentage`],
                 y: precinct.democrat_percentage,
+                geoid: precinct.geoid,
             }));
             republicanData = precinctData.map((precinct) => ({
                 x: precinct[`${selectedRace}_percentage`],
                 y: precinct.republican_percentage,
+                geoid: precinct.geoid,
             }));
         } else if (selectedFilter === "income&race") {
             democratData = filteredData
                 .map((precinct) => ({
                     x: precinct[`combined_${selectedRace2}`],
                     y: precinct.democrat_percentage,
+                    geoid: precinct.geoid,
                 }))
                 .filter((point) => point.x !== 0);
 
@@ -110,6 +122,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                 .map((precinct) => ({
                     x: precinct[`combined_${selectedRace2}`],
                     y: precinct.republican_percentage,
+                    geoid: precinct.geoid,
                 }))
                 .filter((point) => point.x !== 0);
             console.log("Filtered Data for Income & Race:", filteredData);
@@ -361,6 +374,24 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                         },
                     },
                 },
+            },
+            onClick: (event, elements) => {
+                if (elements.length > 0) {
+                    // Get the clicked point's index
+                    const index = elements[0].index;
+                    const datasetIndex = elements[0].datasetIndex;
+
+                    // Retrieve the clicked dataset and point
+                    const clickedDataset =
+                        scatterChart.data.datasets[datasetIndex];
+                    const clickedPoint = clickedDataset.data[index];
+
+                    // Send the GEOID to the parent component
+                    if (clickedPoint && clickedPoint.geoid) {
+                        onSelectGEOID(clickedPoint.geoid); // Call the callback with GEOID
+                    }
+                    console.log(clickedPoint.geoid);
+                }
             },
         };
 
