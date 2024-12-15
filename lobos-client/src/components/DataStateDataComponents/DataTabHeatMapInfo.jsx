@@ -47,6 +47,8 @@ function HeatMapLegendTop({ heatmapOpts, legendInfo }) {
     const splitEntries = [];
 
     if (entries) {
+        entries.pop();
+
         for (let i = 0; i < entries.length; i += 4) {
             splitEntries.push(entries.slice(i, i + 4));
         }
