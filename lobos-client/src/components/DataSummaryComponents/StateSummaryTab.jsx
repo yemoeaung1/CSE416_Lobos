@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { useEffect, useState } from "react";
-import { MapViewOptions, States } from '../../enums';
+import { DataFilters, MapViewOptions, States } from '../../enums';
+import GraphContainer from './GraphInfo';
 
-export default function StateSummaryTab({ selectedState, mapView, setMapView }) {
+export default function StateSummaryTab({ selectedState, selectedArea, mapView, setMapView }) {
     const [stateInfo, setStateInfo] = useState(null);
+    const [dataSetType, setDataSetType] = useState(DataFilters.PARTY)
 
     useEffect(() => {
         if (mapView != MapViewOptions.STATE)
@@ -46,13 +48,27 @@ export default function StateSummaryTab({ selectedState, mapView, setMapView }) 
 
     return (
         <>
+            <StateDetails stateDetails={stateDetails} />
+            <GraphContainer
+                selectedArea={selectedArea}
+                mapView={MapViewOptions.STATE}
+                dataSetType={dataSetType}
+                setDataSetType={setDataSetType}
+            />
+        </>
+    );
+}
+
+function StateDetails({ stateDetails }) {
+    return (
+        <>
             <div className="flex flex-col items-center justify-center pb-8 montserrat">
                 <span className="font-bold pb-2">Redistricting Party</span>
                 <span>{stateDetails.redistrictingParty}</span>
             </div>
             <div className="data-component-info ">
                 <div className={`data-component-info-stat-box montserrat`}>
-                    <span className="font-bold pb-2">Majority Party</span>
+                    <span className="font-bold pb-2">Political Lean</span>
                     <span>{`${stateDetails.party}`}</span>
                 </div>
                 <div className={`data-component-info-stat-box montserrat`}>

@@ -1,8 +1,11 @@
 package com.lobos.lobos_server;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.lobos.lobos_server.enum_classes.MapViewsEnum;
 import com.lobos.lobos_server.model.Graph;
 import com.lobos.lobos_server.service.GraphService;
 
@@ -12,20 +15,33 @@ import com.lobos.lobos_server.service.GraphService;
 public class GraphController {
     private final GraphService graphService;
 
+    @Autowired
     public GraphController(GraphService graphService) {
         this.graphService = graphService;
     }
 
-    @GetMapping("/bar")
-    public ResponseEntity<?> getBarGraph(@RequestParam String state, @RequestParam String filter) {
-        try {
-            Graph graph = graphService.getGraphForState(state, filter);
-            return ResponseEntity.ok(graph);
-        } 
-        catch (RuntimeException e) {
-            System.out.println("Not Found");
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
-    }
+    @GetMapping("/graph-bar")
+    public ResponseEntity<?> getBarGraph(
+            @RequestParam(required = true) String area,
+            @RequestParam(required = true) String view,
+            @RequestParam(required = true) String filter) {
 
+        Graph graph = null;
+
+        if (view.equals(MapViewsEnum.STATE.toString())){
+            graph = graphService.getGraphForState(area, filter);
+        }
+        else if (view.equals(MapViewsEnum.DISTRICT.toString())){
+            graph = graphService.getGraphForDistrict(area, filter);
+        }
+        else if (view.equals(MapViewsEnum.PRECINCT.toString())){
+            graph = graphService.getGraphForPrecinct(area, filter);
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST) 
+                .body("Invalid Map View");
+        }
+
+        return ResponseEntity.ok(graph);
+    }
 }

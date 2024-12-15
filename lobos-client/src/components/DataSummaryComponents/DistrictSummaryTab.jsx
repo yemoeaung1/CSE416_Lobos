@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { useEffect, useState } from "react";
-import { MapViewOptions, States } from '../../enums';
+import { DataFilters, MapViewOptions, States } from '../../enums';
+import GraphContainer from './GraphInfo';
 
-export default function DistrictSummaryTab({ isLoading, selectedState, mapView, setMapView, districtYear, setDistrictYear, setHighlightedDistrict }) {
+export default function DistrictSummaryTab({ selectedState, selectedArea, mapView, setMapView, setHighlightedDistrict }) {
     const [districtInfo, setDistrictInfo] = useState(null);
+    const [dataSetType, setDataSetType] = useState(DataFilters.PARTY);
 
     useEffect(() => {
         if (mapView != MapViewOptions.DISTRICT)
@@ -30,31 +32,17 @@ export default function DistrictSummaryTab({ isLoading, selectedState, mapView, 
 
     return (
         <>
-            <DistrictPlanButton isLoading={isLoading} districtYear={districtYear} setDistrictYear={setDistrictYear} />
             <div className="flex flex-col items-center justify-center">
                 {isInfoUpdated && <CongressionalTable districtInfo={districtInfo} selectedState={selectedState} setHighlightedDistrict={setHighlightedDistrict} />}
             </div>
+            <GraphContainer
+                selectedArea={selectedArea}
+                mapView={MapViewOptions.DISTRICT}
+                dataSetType={dataSetType}
+                setDataSetType={setDataSetType}
+            />
         </>
     )
-}
-
-function DistrictPlanButton({ isLoading, districtYear, setDistrictYear }) {
-    return (
-        <div>
-            <div>{`Congressional District Plan (${districtYear})`}</div>
-            <div>{`Change to ${(districtYear == '2020') ? '2022' : '2020'}`}</div>
-            <button
-                disabled={isLoading}
-                style={{
-                    backgroundColor: isLoading ? "gray" : "blue",
-                    color: "white",
-                    cursor: isLoading ? "not-allowed" : "pointer",
-                }}
-                onClick={() => { setDistrictYear((districtYear == '2020') ? '2022' : '2020') }}>
-                Click Me
-            </button>
-        </div>
-    );
 }
 
 function CongressionalTable({ districtInfo, setHighlightedDistrict }) {

@@ -5,7 +5,7 @@ import { MapContainer, GeoJSON, useMap } from "react-leaflet";
 import Color from "color";
 import { HeatMapFilters, MapViewOptions, PoliColors, States } from "../enums";
 
-export default function StateMapContainer({ isLoading, setIsLoading, mapView, setMapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, heatmapOpts, districtYear, highlightedDistrict }) {
+export default function StateMapContainer({ isLoading, setIsLoading, mapView, setMapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, heatmapOpts, highlightedDistrict }) {
     return (
         <div className="wrapper" style={{ width: (selectedState !== States.NONE) ? "40%" : "100%" }}>
             <StatesMap
@@ -18,7 +18,6 @@ export default function StateMapContainer({ isLoading, setIsLoading, mapView, se
                 mapView={mapView}
                 setMapView={setMapView}
                 heatmapOpts={heatmapOpts}
-                districtYear={districtYear}
                 highlightedDistrict={highlightedDistrict}
             />
         </div>
@@ -35,7 +34,6 @@ function StatesMap({
     mapView,
     setMapView,
     heatmapOpts,
-    districtYear,
     highlightedDistrict,
 }) {
     const [mapData, setMapData] = useState(null);
@@ -72,13 +70,6 @@ function StatesMap({
                 setIsLoading(false);
             });
     }, [mapView, heatmapOpts]);
-
-    useEffect(() => {
-        if(mapView == MapViewOptions.DISTRICT && districtYear != '2020')
-            setMapView(MapViewOptions.DISTRICT + districtYear);
-        else if(!Object.values(MapViewOptions).includes(mapView))
-            setMapView(MapViewOptions.DISTRICT);
-    }, [districtYear]);
 
     if(!mapData)
         return;

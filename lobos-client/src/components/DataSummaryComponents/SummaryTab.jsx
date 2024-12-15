@@ -5,7 +5,7 @@ import StateSummaryTab from './StateSummaryTab';
 import DistrictSummaryTab from './DistrictSummaryTab';
 import PrecinctSummaryTab from './PrecinctSummaryTab';
 
-export default function SummaryTab({ isLoading, selectedState, heatmapOpts, setHeatmapOpts, hoveredArea, mapView, setMapView, districtYear, setDistrictYear, setHighlightedDistrict }) {
+export default function SummaryTab({ isLoading, selectedState, selectedArea, heatmapOpts, setHeatmapOpts, hoveredArea, mapView, setMapView, setHighlightedDistrict }) {
   const [selectedTab, setSelectedTab] = useState(MapViewOptions.STATE);
 
   return (
@@ -15,6 +15,7 @@ export default function SummaryTab({ isLoading, selectedState, heatmapOpts, setH
       {selectedTab == MapViewOptions.STATE &&
         <StateSummaryTab
           selectedState={selectedState}
+          selectedArea={selectedArea}
           mapView={mapView}
           setMapView={setMapView}
         />
@@ -24,10 +25,9 @@ export default function SummaryTab({ isLoading, selectedState, heatmapOpts, setH
         <DistrictSummaryTab
           isLoading={isLoading}
           selectedState={selectedState}
+          selectedArea={selectedArea}
           mapView={mapView}
           setMapView={setMapView}
-          districtYear={districtYear}
-          setDistrictYear={setDistrictYear}
           setHighlightedDistrict={setHighlightedDistrict}
         />
       }
@@ -35,7 +35,7 @@ export default function SummaryTab({ isLoading, selectedState, heatmapOpts, setH
       {selectedTab == MapViewOptions.PRECINCT &&
         <PrecinctSummaryTab
           isLoading={isLoading}
-          selectedState={selectedState}
+          selectedArea={selectedArea}
           heatmapOpts={heatmapOpts}
           setHeatmapOpts={setHeatmapOpts}
           hoveredArea={hoveredArea}
@@ -69,7 +69,6 @@ function TabSelector({ isLoading, selectedTab, setSelectedTab }) {
     <nav
       className="flex justify-end mb-4 space-x-8 border-b-2 border-gray-300"
       style={{ borderBottom: "2px solid #e5e7eb" }}
-      disabled={isLoading}
     >
       <div
         style={
@@ -77,7 +76,10 @@ function TabSelector({ isLoading, selectedTab, setSelectedTab }) {
             ? activeTabStyle
             : tabStyle
         }
-        onClick={() => setSelectedTab(MapViewOptions.STATE)}
+        onClick={() => {
+          if(!isLoading)
+            setSelectedTab(MapViewOptions.STATE)}
+        }
       >
         State Summary
       </div>
@@ -87,7 +89,10 @@ function TabSelector({ isLoading, selectedTab, setSelectedTab }) {
             ? activeTabStyle
             : tabStyle
         }
-        onClick={() => setSelectedTab(MapViewOptions.DISTRICT)}
+        onClick={() => {
+          if(!isLoading)
+            setSelectedTab(MapViewOptions.DISTRICT)}
+        }
       >
         District Summary
       </div>
@@ -97,7 +102,10 @@ function TabSelector({ isLoading, selectedTab, setSelectedTab }) {
             ? activeTabStyle
             : tabStyle
         }
-        onClick={() => setSelectedTab(MapViewOptions.PRECINCT)}
+        onClick={() => {
+          if(!isLoading)
+            setSelectedTab(MapViewOptions.PRECINCT)}
+        }
       >
         Precinct Summary
       </div>
