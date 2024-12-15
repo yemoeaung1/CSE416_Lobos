@@ -5,6 +5,7 @@ export default function HeatMapInfo({ isLoading, heatmapOpts, setHeatmapOpts, le
     return (
         <div className="data-component-data-heatmap">
             <HeatMapLegend
+                heatmapOpts={heatmapOpts}
                 legendInfo={legendInfo}
                 hoveredArea={hoveredArea}
             />
@@ -17,7 +18,7 @@ export default function HeatMapInfo({ isLoading, heatmapOpts, setHeatmapOpts, le
     );
 }
 
-function HeatMapLegend({ legendInfo, hoveredArea }) {
+function HeatMapLegend({ heatmapOpts, legendInfo, hoveredArea }) {
     let hoveredBin = null;
     if (legendInfo !== null && hoveredArea !== null) {
         hoveredBin = legendInfo.find(
@@ -35,13 +36,13 @@ function HeatMapLegend({ legendInfo, hoveredArea }) {
 
     return (
         <div className="data-component-data-heatmap-legend">
-            <HeatMapLegendTop legendInfo={legendInfo} />
-            <HeatMapLegendBottom hoveredBin={hoveredBin} />
+            <HeatMapLegendTop heatmapOpts={heatmapOpts} legendInfo={legendInfo} />
+            <HeatMapLegendBottom hoveredBin={hoveredBin} hoveredArea={hoveredArea} />
         </div>
     );
 }
 
-function HeatMapLegendTop({ legendInfo }) {
+function HeatMapLegendTop({ heatmapOpts, legendInfo }) {
     const entries = (legendInfo != null) ? Object.entries(legendInfo) : null;
     const splitEntries = [];
 
@@ -61,22 +62,26 @@ function HeatMapLegendTop({ legendInfo }) {
                     </div>
                 }
 
-                {legendInfo != null &&
+                {(legendInfo != null && heatmapOpts[0] != HeatMapFilters.ECO_POLITICAL) &&
                     <div className="flex flex-column gap-4">
                         {splitEntries.map((entry, index) => (
                             <HeatMapLegendBins key={index} bins={entry} />
                         ))}
                     </div>
                 }
+
+                {(legendInfo != null && heatmapOpts[0] == HeatMapFilters.ECO_POLITICAL) &&
+                    <EcoPoliHeatMapLegendBins legendInfo={legendInfo} />
+                }
             </div>
         </div>
     );
 }
 
-function HeatMapLegendBottom({ hoveredBin }) {
+function HeatMapLegendBottom({ hoveredBin, hoveredArea }) {
     return (
         <div className="data-component-data-heatmap-legend-bottom">
-            <div className="averia-serif pb-1">Hovering:</div>
+            <div className="averia-serif pb-1">{`Hovering: ${(hoveredArea) ? hoveredArea.properties.NAME : ""}`}</div>
             <HeatMapLegendBin
                 name={hoveredBin.name}
                 color={hoveredBin.color}
@@ -112,7 +117,85 @@ function HeatMapLegendBin({ name, color, opacity }) {
                     opacity: opacity,
                     border: '1px solid #000',
                 }}
-            ></div>
+            />
+            <span className="montserrat">{name}</span>
+        </div>
+    );
+}
+
+
+function EcoPoliHeatMapLegendBins({ legendInfo }) {
+    const splitEntries = [];
+    const entries = (legendInfo != null) ? Object.entries(legendInfo) : null;
+    const poliEntries = {
+        rSplits: [],
+        dSplits: []
+    }
+
+    if (entries) {
+        const entriesMidPoint = entries.length / 2;
+
+        for (let i = 0; i < entriesMidPoint; i += 1) {
+            poliEntries.rSplits.push(entries[i]);
+            poliEntries.dSplits.push(entries[entriesMidPoint + i]);
+        }
+
+        let entriesArr = [];
+        for (let i = 0; i < entriesMidPoint; i += 1) {
+            if (i !== 0 && i % 4 === 0) {
+                splitEntries.push(entriesArr);
+                entriesArr = [];
+            }
+
+            entriesArr.push({
+                name: poliEntries.rSplits[i][1].name.substring(2),
+                color1: poliEntries.rSplits[i][1].color,
+                color2: poliEntries.dSplits[i][1].color,
+                opacity1: poliEntries.rSplits[i][1].opacity,
+                opacity2: poliEntries.dSplits[i][1].opacity,
+            })
+        }
+
+        if(entriesArr.length !== 0)
+            splitEntries.push(entriesArr);
+    }
+
+    return (
+        <div className="flex flex-column gap-4">
+            {splitEntries.map((entry, index) => (
+                <div key={index}>
+                    {entry.map((bin) => (
+                        <DoubleHeatMapLegendBin
+                            key={bin.name}
+                            name={bin.name}
+                            element={bin}
+                        />
+                    ))}
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function DoubleHeatMapLegendBin({ name, element }) {
+    return (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingBottom: '2px' }}>
+            <div
+                style={{
+                    width: '20px',
+                    height: '20px',
+                    backgroundColor: element.color1,
+                    opacity: element.opacity1,
+                    border: '1px solid #000',
+                }} />
+            <div
+                style={{
+                    width: '20px',
+                    height: '20px',
+                    backgroundColor: element.color2,
+                    opacity: element.opacity2,
+                    border: '1px solid #000',
+                }} />
             <span className="montserrat">{name}</span>
         </div>
     );
@@ -195,6 +278,7 @@ function HeatMapButton({ heatmapOpts, setHeatmapOpts, buttonType }) {
         <Button
             onClick={() => setHeatmapOpts([buttonType])}
             sx={{
+                textTransform: 'none',
                 backgroundColor: isButtonSelected ? "primary.main" : "grey.200",
                 color: isButtonSelected ? "grey.200" : "primary.main",
                 transition: "all 0.3s ease-in-out",
@@ -248,6 +332,7 @@ function HeatMapRaceButton({ heatmapOpts, setHeatmapOpts, buttonType }) {
         <Button
             onClick={() => setHeatmapOpts([HeatMapFilters.DEMOGRAPHIC, buttonType])}
             sx={{
+                textTransform: 'none',
                 backgroundColor: isButtonSelected ? "primary.main" : "grey.200",
                 color: isButtonSelected ? "grey.200" : "primary.main",
                 transition: "all 0.3s ease-in-out",

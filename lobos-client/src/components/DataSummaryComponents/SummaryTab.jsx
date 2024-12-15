@@ -60,26 +60,26 @@ export default function SummaryTab({ isLoading, selectedState, mapView, setMapVi
             Click Me
         </button>
       </div>
-      <div className="flex flex-col items-center justify-center pb-8">
-        <span className="font-bold underline merriweather pb-2">Redistricting Party</span>
-        <span className="montserrat">{stateDetails.redistrictingParty}</span>
+      <div className="flex flex-col items-center justify-center pb-8 montserrat">
+        <span className="font-bold pb-2">Redistricting Party</span>
+        <span>{stateDetails.redistrictingParty}</span>
       </div>
       <div className="data-component-info ">
-        <div className={`data-component-info-stat-box`}>
-          <span className="font-bold underline merriweather pb-2">Majority Party</span>
-          <span className="montserrat">{`${stateDetails.party}`}</span>
+        <div className={`data-component-info-stat-box montserrat`}>
+          <span className="font-bold pb-2">Majority Party</span>
+          <span>{`${stateDetails.party}`}</span>
         </div>
-        <div className={`data-component-info-stat-box`}>
-          <span className="font-bold underline merriweather pb-2">Population</span>
-          <span className="montserrat">{`${stateDetails.population.toLocaleString()}`}</span>
+        <div className={`data-component-info-stat-box montserrat`}>
+          <span className="font-bold pb-2">Population</span>
+          <span>{`${stateDetails.population.toLocaleString()}`}</span>
         </div>
-        <div className={`data-component-info-stat-box`}>
-          <span className="font-bold underline merriweather pb-2">Median HH Income</span>
-          <span className="montserrat">{`$${stateDetails.income.toLocaleString()}`}</span>
+        <div className={`data-component-info-stat-box montserrat`}>
+          <span className="font-bold pb-2">Median HH Income</span>
+          <span>{`$${stateDetails.income.toLocaleString()}`}</span>
         </div>
-        <div className={`data-component-info-stat-box`}>
-          <span className="font-bold underline merriweather pb-2">Poverty Rate</span>
-          <span className="montserrat">{`${stateDetails.poverty}%`}</span>
+        <div className={`data-component-info-stat-box montserrat`}>
+          <span className="font-bold pb-2">Poverty Rate</span>
+          <span>{`${stateDetails.poverty}%`}</span>
         </div>
       </div>
       <div className="flex flex-col items-center justify-center">
@@ -102,7 +102,7 @@ function RepresentativesData({ stateInfo, setHighlightedDistrict }) {
 
   return (
     <div className="table-container">
-      <table className="merriweather congress-table">
+      <table className="montserrat congress-table">
         <thead>
           <tr>
             <th>#</th>
