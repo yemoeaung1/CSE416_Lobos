@@ -9,14 +9,11 @@ const BarGraph = ({ dataSetType, selectedState }) => {
     useEffect(() => {
         const fetchGraphData = async () => {
             try {
-                console.log(dataSetType);
                 const response = await axios.get(
                     `http://localhost:8080/api/bar?state=${selectedState}&filter=${dataSetType}`
                 );
                 const { labels, dataSets, title, xlabel, ylabel } =
                     response.data;
-                console.log(response.data);
-                console.log(xlabel);
 
                 setGraphData({
                     labels,

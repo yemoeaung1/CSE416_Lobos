@@ -6,12 +6,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "graphs")
 public class Graph {
+    private String graphType;
     private String title;
     private String xLabel;
     private String yLabel;
     private List<String> labels; // Labels for x-axis (e.g., parties, races, etc.)
     private List<DataSet> dataSets; // Data sets for the graph
-    private String graphType;
 
     public Graph() {
     }
