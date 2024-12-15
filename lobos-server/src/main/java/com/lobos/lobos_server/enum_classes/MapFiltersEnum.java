@@ -7,7 +7,8 @@ public enum MapFiltersEnum {
     REGION_TYPE("Region Type"),
     POVERTY_LEVEL("Poverty Rate"),
     ECO_DEMOGRAPHIC("Economic/Demographic"),
-    ECO_POLITICAL("Political/Income");
+    ECO_POLITICAL("Political/Income"),
+    ELECTORAL("Electoral");
 
     private String str;
 

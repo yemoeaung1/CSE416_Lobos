@@ -31,7 +31,8 @@ const HeatMapFilters = Object.freeze({
     REGION_TYPE: "Region Type",
     POVERTY_LEVEL: "Poverty Rate",
     ECO_DEMOGRAPHIC: "Economic/Demographic",
-    ECO_POLITICAL: "Political/Income"
+    ECO_POLITICAL: "Political/Income",
+    ELECTORAL: "Electoral",
 })
 
 const PoliColors = Object.freeze({

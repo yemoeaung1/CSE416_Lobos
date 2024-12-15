@@ -226,11 +226,12 @@ function HeatMapSelection({ isLoading, heatmapOpts, setHeatmapOpts }) {
 function HeatMapSelectionTop({ isLoading, heatmapOpts, setHeatmapOpts }) {
     const heatmapButtons = [
         HeatMapFilters.NONE,
-        HeatMapFilters.POVERTY_LEVEL,
-        HeatMapFilters.ECONOMIC,
-        HeatMapFilters.REGION_TYPE,
-        HeatMapFilters.ECO_POLITICAL,
         HeatMapFilters.DEMOGRAPHIC,
+        HeatMapFilters.POVERTY_LEVEL,
+        HeatMapFilters.REGION_TYPE,
+        HeatMapFilters.ECONOMIC,
+        HeatMapFilters.ECO_POLITICAL,
+        HeatMapFilters.ELECTORAL
     ]
 
     return (
