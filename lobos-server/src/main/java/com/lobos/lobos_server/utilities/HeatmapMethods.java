@@ -21,7 +21,12 @@ public class HeatmapMethods {
 
     static {
         demoBins = new ArrayList<>();
-        demoBins.add(new ColorMapping("Default", "#FFFFFF", 0.8));
+        demoBins.add(new ColorMapping("50%+", "hsl(280, 60%, 20%)", 0.8));
+        demoBins.add(new ColorMapping("25%-50%", "hsl(280, 60%, 30%)", 0.8));
+        demoBins.add(new ColorMapping("10%-25%", "hsl(280, 60%, 40%)", 0.8));
+        demoBins.add(new ColorMapping("5%-10%", "hsl(280, 60%, 55%)", 0.8));
+        demoBins.add(new ColorMapping("2.5%-5%", "hsl(280, 60%, 70%)", 0.8));
+        demoBins.add(new ColorMapping("0%-2.5%", "hsl(280, 60%, 85%)", 0.8));
 
         ecoBins = new ArrayList<>();
         ecoBins.add(new ColorMapping("$200K+", "hsl(120 90% 20%)", 1));
@@ -95,7 +100,7 @@ public class HeatmapMethods {
         MapFiltersEnum filter = MapFiltersEnum.fromValue(filters.get(0));
         switch(filter){
             case NONE: return new ColorMapping("", "", 0.75);
-            case DEMOGRAPHIC: return handleDemoBins(filters.get(1), info); 
+            case DEMOGRAPHIC: return handleDemoBins(filters, info); 
             case ECONOMIC: return handleEcoBins(info);
             case REGION_TYPE: return handleRegionBins(info);
             case POVERTY_LEVEL: return handlePovertyBins(info);
@@ -104,8 +109,35 @@ public class HeatmapMethods {
         }
     }
 
-    private static ColorMapping handleDemoBins(String filter, PrecinctData info){
-        return defaultColorMapping;
+    private static ColorMapping handleDemoBins(List<String> filter, PrecinctData info){
+        if(filter.size() < 2)
+            return defaultColorMapping;
+
+        int totalPopulation = 0;
+
+        if(filter.get(1).equalsIgnoreCase("black"))
+            totalPopulation = info.getBlack();
+        else if(filter.get(1).equalsIgnoreCase("asian"))
+            totalPopulation = info.getAsian();
+        else if(filter.get(1).equalsIgnoreCase("hispanic"))
+            totalPopulation = info.getHispanic();
+        else
+            return defaultColorMapping;
+
+        double percentage = (double) totalPopulation / info.getTotalPopulation();
+
+        if(percentage >= 0.5)
+            return demoBins.get(0);
+        else if(percentage >= 0.25)
+            return demoBins.get(1);
+        else if(percentage >= 0.10)
+            return demoBins.get(2);
+        else if(percentage >= 0.05)
+            return demoBins.get(3);
+        else if(percentage >= 0.025)
+            return demoBins.get(4);
+        else
+            return demoBins.get(5);
     }
 
     private static ColorMapping handleEcoBins(PrecinctData info){

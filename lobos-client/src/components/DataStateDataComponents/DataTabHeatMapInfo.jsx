@@ -303,7 +303,7 @@ function HeatMapSelectionBottom({ heatmapOpts, setHeatmapOpts }) {
 
     return (
         <div className={`data-component-data-heatmap-selection-bottom ${isRaceSelectAvailable ? "text-black" : "text-gray-400"}`}>
-            <div className="averia-serif pb-1">Racial/Ethnic Group:</div>
+            <div className="averia-serif pb-1">Minority Group:</div>
             <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }}>
                 <ButtonGroup
                     variant="contained"

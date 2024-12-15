@@ -46,6 +46,11 @@ function StatesMap({
             return;
         }
 
+        if(mapView == MapViewOptions.PRECINCT && heatmapOpts[0] == HeatMapFilters.DEMOGRAPHIC && heatmapOpts.length < 2){
+            console.log("Demographic Heat Map: No Option Selected");
+            return
+        }
+
         setIsLoading(true);
         axios
             .get(`http://localhost:8080/api/state-map`, {
