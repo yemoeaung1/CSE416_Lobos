@@ -4,7 +4,7 @@ import PrecinctDataTable from "../GraphPlotComponents/PrecinctDataTable";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { MapViewOptions } from "../../enums";
 
-export default function AnalysisTab({ selectedState, setMapView }) {
+export default function AnalysisTab({ selectedState, mapView, setMapView }) {
     const [selectedChart, setSelectedChart] = useState("precinct-analysis");
     const [selectedFilter, setSelectedFilter] = useState("income");
     const [showTable, setShowTable] = useState(false); // For toggling the table
@@ -12,8 +12,9 @@ export default function AnalysisTab({ selectedState, setMapView }) {
     const [precinctData, setPrecinctData] = useState([]); // Store fetched precinct data
 
     useEffect(() => {
-        setMapView(MapViewOptions.PRECINCT);
-    }, []);
+        if(mapView != MapViewOptions.PRECINCT)
+            setMapView(MapViewOptions.PRECINCT);
+    }, [])
 
     // Define styles for tabs
     const tabStyle = {

@@ -1,18 +1,22 @@
 import axios from "axios";
+import qs from "qs";
 import { useEffect, useRef, useState } from "react";
 import { MapContainer, GeoJSON, useMap } from "react-leaflet";
 import Color from "color";
-import { MapViewOptions, PoliColors, States } from "../enums";
+import { HeatMapFilters, MapViewOptions, PoliColors, States } from "../enums";
 
-export default function StateMapContainer({ mapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, heatmapOpts, districtYear, highlightedDistrict }) {
+export default function StateMapContainer({ isLoading, setIsLoading, mapView, setMapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, heatmapOpts, districtYear, highlightedDistrict }) {
     return (
         <div className="wrapper" style={{ width: (selectedState !== States.NONE) ? "40%" : "100%" }}>
             <StatesMap
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
                 selectedState={selectedState}
                 setHoveredArea={setHoveredArea}
                 setSelectedArea={setSelectedArea}
                 selectedArea={selectedArea}
                 mapView={mapView}
+                setMapView={setMapView}
                 heatmapOpts={heatmapOpts}
                 districtYear={districtYear}
                 highlightedDistrict={highlightedDistrict}
@@ -22,11 +26,14 @@ export default function StateMapContainer({ mapView, selectedState, setHoveredAr
 }
 
 function StatesMap({
+    isLoading,
+    setIsLoading,
     selectedState,
     setHoveredArea,
     selectedArea,
     setSelectedArea,
     mapView,
+    setMapView,
     heatmapOpts,
     districtYear,
     highlightedDistrict,
@@ -34,25 +41,44 @@ function StatesMap({
     const [mapData, setMapData] = useState(null);
 
     useEffect(() => {
-        let mapViewOpt = mapView;
-        if(mapView == MapViewOptions.DISTRICT && districtYear != '2020')
-            mapViewOpt = mapView + districtYear;
+        if(isLoading){
+            console.log("Loading Failure: Multiple Axios Requests");
+            return;
+        }
 
+        if(mapView == MapViewOptions.PRECINCT && heatmapOpts[0] == HeatMapFilters.DEMOGRAPHIC && heatmapOpts.length < 2){
+            console.log("Demographic Heat Map: No Option Selected");
+            return
+        }
+
+        setIsLoading(true);
         axios
             .get(`http://localhost:8080/api/state-map`, {
                 params: {
                     state: selectedState,
-                    view: mapViewOpt,
+                    view: mapView,
                     heatmapOpts
+                },
+                paramsSerializer: (params) => {
+                  return qs.stringify(params, { arrayFormat: "repeat" });
                 },
             })
             .then((response) => {
                 setMapData(response.data);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.error("Error Retrieving Map:", error);
+                setIsLoading(false);
             });
-    }, [districtYear,mapView, heatmapOpts]);
+    }, [mapView, heatmapOpts]);
+
+    useEffect(() => {
+        if(mapView == MapViewOptions.DISTRICT && districtYear != '2020')
+            setMapView(MapViewOptions.DISTRICT + districtYear);
+        else if(!Object.values(MapViewOptions).includes(mapView))
+            setMapView(MapViewOptions.DISTRICT);
+    }, [districtYear]);
 
     if(!mapData)
         return;
@@ -80,11 +106,11 @@ function StatesMap({
     
         layer.on({
             mouseover: (e) => {
-                setHoveredArea(feature.properties.NAME);
+                setHoveredArea(feature);
                 e.target.setStyle({ fillColor: darkerColor, weight: 3 });
             },
             mouseout: (e) => {
-                setHoveredArea(States.NONE);
+                setHoveredArea(null);
                 e.target.setStyle({ fillColor: originalColor, weight: 1 });
             },
             click: (e) => {
@@ -171,14 +197,15 @@ function MapController({ mapData, highlightedDistrict }) {
     }, [highlightedDistrict]);
 
     useEffect(() => {
-        map.invalidateSize();
-
         map.options.minZoom = mapData.properties.MIN_ZOOM;
         map.options.maxZoom = mapData.properties.MAX_ZOOM;
+        map.setMaxBounds(mapData.properties.MAX_BOUNDS);
 
         map.flyTo(mapData.properties.CENTER, mapData.properties.CURRENT_ZOOM, {
             animate: false,
-        }).setMaxBounds(mapData.properties.MAX_BOUNDS);
+        });
+
+        map.invalidateSize();
     }, [mapData]);
 
     return null;
