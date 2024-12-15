@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup } from "@mui/material";
+import { Box, Button, ButtonGroup, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { HeatMapFilters } from "../../enums";
 
 export default function HeatMapInfo({ isLoading, heatmapOpts, setHeatmapOpts, legendInfo, hoveredArea }) {
@@ -42,13 +42,15 @@ function HeatMapLegend({ heatmapOpts, legendInfo, hoveredArea }) {
     );
 }
 
-function HeatMapLegendTop({ heatmapOpts, legendInfo }) {
+function HeatMapLegendTop({ legendInfo }) {
     const entries = (legendInfo != null) ? Object.entries(legendInfo) : null;
     const splitEntries = [];
 
     if (entries) {
-        for (let i = 0; i < entries.length; i += 4) {
-            splitEntries.push(entries.slice(i, i + 4));
+        entries.pop();
+
+        for (let i = 0; i < entries.length; i += 3) {
+            splitEntries.push(entries.slice(i, i + 3));
         }
     }
 
@@ -62,7 +64,7 @@ function HeatMapLegendTop({ heatmapOpts, legendInfo }) {
                     </div>
                 }
 
-                {(legendInfo != null && heatmapOpts[0] != HeatMapFilters.ECO_POLITICAL) &&
+                {(legendInfo != null && legendInfo.type != HeatMapFilters.ECO_POLITICAL && legendInfo.type != HeatMapFilters.ELECTORAL) &&
                     <div className="flex flex-column gap-4">
                         {splitEntries.map((entry, index) => (
                             <HeatMapLegendBins key={index} bins={entry} />
@@ -70,8 +72,8 @@ function HeatMapLegendTop({ heatmapOpts, legendInfo }) {
                     </div>
                 }
 
-                {(legendInfo != null && heatmapOpts[0] == HeatMapFilters.ECO_POLITICAL) &&
-                    <EcoPoliHeatMapLegendBins legendInfo={legendInfo} />
+                {(legendInfo != null && (legendInfo.type == HeatMapFilters.ECO_POLITICAL || legendInfo.type == HeatMapFilters.ELECTORAL)) &&
+                    <BichromaticLegendBins legendInfo={legendInfo} />
                 }
             </div>
         </div>
@@ -123,16 +125,17 @@ function HeatMapLegendBin({ name, color, opacity }) {
     );
 }
 
-
-function EcoPoliHeatMapLegendBins({ legendInfo }) {
+function BichromaticLegendBins({ legendInfo }) {
     const splitEntries = [];
-    const entries = (legendInfo != null) ? Object.entries(legendInfo) : null;
+    const allEntries = (legendInfo != null) ? Object.entries(legendInfo) : null;
+    const entries = (allEntries != null) ? allEntries.map(([key, value]) => value) : null;
     const poliEntries = {
         rSplits: [],
         dSplits: []
     }
 
     if (entries) {
+        entries.pop();
         const entriesMidPoint = entries.length / 2;
 
         for (let i = 0; i < entriesMidPoint; i += 1) {
@@ -142,21 +145,21 @@ function EcoPoliHeatMapLegendBins({ legendInfo }) {
 
         let entriesArr = [];
         for (let i = 0; i < entriesMidPoint; i += 1) {
-            if (i !== 0 && i % 4 === 0) {
+            if (i !== 0 && i % 3 === 0) {
                 splitEntries.push(entriesArr);
                 entriesArr = [];
             }
 
             entriesArr.push({
-                name: poliEntries.rSplits[i][1].name.substring(2),
-                color1: poliEntries.rSplits[i][1].color,
-                color2: poliEntries.dSplits[i][1].color,
-                opacity1: poliEntries.rSplits[i][1].opacity,
-                opacity2: poliEntries.dSplits[i][1].opacity,
+                name: poliEntries.rSplits[i].name.substring(2),
+                color1: poliEntries.rSplits[i].color,
+                color2: poliEntries.dSplits[i].color,
+                opacity1: poliEntries.rSplits[i].opacity,
+                opacity2: poliEntries.dSplits[i].opacity,
             })
         }
 
-        if(entriesArr.length !== 0)
+        if (entriesArr.length !== 0)
             splitEntries.push(entriesArr);
     }
 
@@ -219,76 +222,36 @@ function HeatMapSelection({ isLoading, heatmapOpts, setHeatmapOpts }) {
 }
 
 function HeatMapSelectionTop({ isLoading, heatmapOpts, setHeatmapOpts }) {
-    const heatmapButtons1 = [
+    const heatmapButtons = [
         HeatMapFilters.NONE,
+        HeatMapFilters.DEMOGRAPHIC,
         HeatMapFilters.POVERTY_LEVEL,
-        HeatMapFilters.DEMOGRAPHIC
-    ]
-
-    const heatmapButtons2 = [
-        HeatMapFilters.ECONOMIC,
         HeatMapFilters.REGION_TYPE,
-        HeatMapFilters.ECO_POLITICAL
+        HeatMapFilters.ECONOMIC,
+        HeatMapFilters.ECO_POLITICAL,
+        HeatMapFilters.ELECTORAL
     ]
 
     return (
         <div className="data-component-data-heatmap-selection-top">
-            <div className="averia-serif text-2xl pb-2">Heat Map Selection</div>
-            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }}>
-                <ButtonGroup
-                    variant="contained"
-                    aria-label="linked button group"
-                    orientation="vertical"
+            <div className="averia-serif text-2xl pb-4">Heat Map Selection</div>
+            <FormControl fullWidth>
+                <InputLabel id="heat-map-dropdown-label">Options</InputLabel>
+                <Select
+                    labelId="heat-map-dropdown-label"
+                    value={heatmapOpts[0]}
+                    onChange={(event) => setHeatmapOpts([event.target.value])}
+                    label="Options"
                     disabled={isLoading}
                 >
-                    {heatmapButtons1.map((element) => (
-                        <HeatMapButton
-                            key={element}
-                            heatmapOpts={heatmapOpts}
-                            setHeatmapOpts={setHeatmapOpts}
-                            buttonType={element}
-                        />
+                    {heatmapButtons.map((option, index) => (
+                        <MenuItem key={index} value={option}>
+                            {option}
+                        </MenuItem>
                     ))}
-                </ButtonGroup>
-
-                <ButtonGroup
-                    variant="contained"
-                    aria-label="linked button group"
-                    orientation="vertical"
-                    disabled={isLoading}
-                >
-                    {heatmapButtons2.map((element) => (
-                        <HeatMapButton
-                            key={element}
-                            heatmapOpts={heatmapOpts}
-                            setHeatmapOpts={setHeatmapOpts}
-                            buttonType={element}
-                        />
-                    ))}
-                </ButtonGroup>
-            </Box>
+                </Select>
+            </FormControl>
         </div>
-    );
-}
-
-function HeatMapButton({ heatmapOpts, setHeatmapOpts, buttonType }) {
-    const isButtonSelected = (heatmapOpts && heatmapOpts.length > 0 && heatmapOpts[0] === buttonType);
-
-    return (
-        <Button
-            onClick={() => setHeatmapOpts([buttonType])}
-            sx={{
-                textTransform: 'none',
-                backgroundColor: isButtonSelected ? "primary.main" : "grey.200",
-                color: isButtonSelected ? "grey.200" : "primary.main",
-                transition: "all 0.3s ease-in-out",
-                "&:hover": {
-                    backgroundColor: isButtonSelected ? "primary.dark" : "grey.300",
-                },
-            }}
-        >
-            {buttonType}
-        </Button>
     );
 }
 
@@ -302,7 +265,7 @@ function HeatMapSelectionBottom({ heatmapOpts, setHeatmapOpts }) {
     const isRaceSelectAvailable = (heatmapOpts[0] == HeatMapFilters.DEMOGRAPHIC);
 
     return (
-        <div className={`data-component-data-heatmap-selection-bottom ${isRaceSelectAvailable ? "text-black" : "text-gray-400"}`}>
+        <div className={`data-component-data-heatmap-selection-bottom pb-2 ${isRaceSelectAvailable ? "text-black" : "text-gray-400"}`}>
             <div className="averia-serif pb-1">Minority Group:</div>
             <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }}>
                 <ButtonGroup
@@ -333,6 +296,9 @@ function HeatMapRaceButton({ heatmapOpts, setHeatmapOpts, buttonType }) {
             onClick={() => setHeatmapOpts([HeatMapFilters.DEMOGRAPHIC, buttonType])}
             sx={{
                 textTransform: 'none',
+                padding: "2px 12px",
+                minHeight: "20px",
+                fontSize: "0.8rem",
                 backgroundColor: isButtonSelected ? "primary.main" : "grey.200",
                 color: isButtonSelected ? "grey.200" : "primary.main",
                 transition: "all 0.3s ease-in-out",

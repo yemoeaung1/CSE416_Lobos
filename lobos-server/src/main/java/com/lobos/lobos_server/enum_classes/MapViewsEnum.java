@@ -1,13 +1,14 @@
 package com.lobos.lobos_server.enum_classes;
 
-public enum StateViewEnum {
+public enum MapViewsEnum {
+    NONE("None"),
     STATE("State"),
     DISTRICT("District"),
     PRECINCT("Precinct");
 
     private String str;
 
-    StateViewEnum(String str) {
+    MapViewsEnum(String str) {
         this.str = str;
     }
 

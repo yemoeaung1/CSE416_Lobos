@@ -26,7 +26,7 @@ function NavLogo({ isLoading, setMapView, setHoveredArea, setSelectedArea, setHe
             return;
         }
 
-        setMapView(MapViewOptions.STATE);
+        setMapView(MapViewOptions.NONE);
         setHoveredArea(null);
         setSelectedArea(States.NONE);
         setHeatmapOpts([HeatMapFilters.NONE]);

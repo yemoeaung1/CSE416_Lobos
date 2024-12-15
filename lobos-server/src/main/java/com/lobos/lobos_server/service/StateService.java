@@ -17,26 +17,20 @@ import com.lobos.lobos_server.repository.StateInfoRepository;
 import com.lobos.lobos_server.repository.StateMapConfigRepository;
 import com.lobos.lobos_server.repository.StateMapRepository;
 import com.lobos.lobos_server.utilities.GeoJSON;
-import com.lobos.lobos_server.repository.PrecinctInfoRepository;
-import com.lobos.lobos_server.model.PrecinctData;
-import com.lobos.lobos_server.model.PrecinctInfo;
 
 @Service
 public class StateService {
     private final StateInfoRepository stateInfoRepository;
     private final StateMapConfigRepository stateMapConfigRepository;
     private final StateMapRepository stateMapRepository;
-    private final PrecinctInfoRepository precinctInfoRepository;
 
     @Autowired
     public StateService(StateInfoRepository stateInfoRepository,
                         StateMapConfigRepository stateMapConfigRepository,
-                        StateMapRepository stateMapRepository,
-                        PrecinctInfoRepository precinctInfoRepository) {
+                        StateMapRepository stateMapRepository) {
         this.stateInfoRepository = stateInfoRepository;
         this.stateMapRepository = stateMapRepository;
         this.stateMapConfigRepository = stateMapConfigRepository;
-        this.precinctInfoRepository = precinctInfoRepository;
     }
 
     @Cacheable(value = "state-info-cache", key = "#state")
@@ -45,8 +39,7 @@ public class StateService {
 
         Map<String, Object> data = new HashMap<>();
         data.put("state", stateInfo.getState());
-        data.put("stateData", stateInfo.getStateData());
-        data.put("districtData", stateInfo.getDistrictData());
+        data.put("data", stateInfo.getData());
 
         return data;
     }
@@ -63,74 +56,4 @@ public class StateService {
     public StateMapConfig getStateMapConfig(String state) {
         return stateMapConfigRepository.findFirstByState(state);
     }
-
-    public List<Map<String, Object>> getPrecinctDataByState(String state) {
-        PrecinctInfo precinctInfo = precinctInfoRepository.findFirstByState(state);
-
-        if (precinctInfo != null) {
-            PrecinctData[] precincts = precinctInfo.getPrecincts();
-
-            if (precincts == null || precincts.length == 0) {
-                System.out.println("No precinct data found for state: " + state);
-                return Collections.emptyList();
-            } else {
-                List<Map<String, Object>> filteredPrecinctData = new ArrayList<>();
-
-                // Extract necessary fields from each precinct
-                for (PrecinctData precinct : precincts) {
-                    Map<String, Object> filteredData = new HashMap<>();
-                    filteredData.put("median_income", precinct.getMedianIncome());
-
-                    // Calculate Democratic and Republican vote percentages
-                    int demVotes = precinct.getPresD();
-                    int repVotes = precinct.getPresR();
-                    int totalVotes = demVotes + repVotes;
-
-                    if (totalVotes > 0) {
-                        double demPercentage = ((double) demVotes / totalVotes) * 100;
-                        double repPercentage = ((double) repVotes / totalVotes) * 100;
-                        filteredData.put("democrat_percentage", demPercentage);
-                        filteredData.put("republican_percentage", repPercentage);
-                    } else {
-                        filteredData.put("democrat_percentage", 0.0);
-                        filteredData.put("republican_percentage", 0.0);
-                    }
-
-                    // Calculate and add race percentages
-                    int totalPopulation = precinct.getTotalPopulation();
-                    if (totalPopulation > 0) {
-                        filteredData.put("hispanic_percentage",
-                            ((double) precinct.getHispanic() / totalPopulation) * 100);
-                        filteredData.put("non_hispanic_percentage",
-                            ((double) precinct.getNonHispanic() / totalPopulation) * 100);
-                        filteredData.put("white_percentage",
-                            ((double) precinct.getWhite() / totalPopulation) * 100);
-                        filteredData.put("black_percentage",
-                            ((double) precinct.getBlack() / totalPopulation) * 100);
-                        filteredData.put("asian_percentage",
-                            ((double) precinct.getAsian() / totalPopulation) * 100);
-                    } else {
-                        filteredData.put("hispanic_percentage", 0.0);
-                        filteredData.put("non_hispanic_percentage", 0.0);
-                        filteredData.put("white_percentage", 0.0);
-                        filteredData.put("black_percentage", 0.0);
-                        filteredData.put("asian_percentage", 0.0);
-                    }
-                    // Add region type
-                    String regionType = precinct.getRegionType();
-                    filteredData.put("region_type", regionType != null ? regionType : "Unknown");
-
-                    filteredPrecinctData.add(filteredData);
-                }
-                // Log the filtered data
-                // System.out.println("Filtered data for state: " + state + ": " + filteredPrecinctData);
-                System.out.println("Filtered data for state: " + state + " is ready.");
-                return filteredPrecinctData;
-            }
-        } else {
-            System.out.println("No data found for state: " + state);
-            return Collections.emptyList();
-        }
-    }
-    
 }

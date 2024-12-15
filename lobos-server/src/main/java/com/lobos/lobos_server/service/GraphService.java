@@ -69,8 +69,8 @@ public class GraphService {
         List<Double> data = new ArrayList<>();
         List<DataSet> dataSets = new ArrayList<>();
 
-        if (stateInfo.getStateData().containsKey("Race")) {
-        Map<String, Object> raceData = (Map<String, Object>) stateInfo.getStateData().get("Race");
+        if (stateInfo.getData().containsKey("Race")) {
+        Map<String, Object> raceData = (Map<String, Object>) stateInfo.getData().get("Race");
 
         for (String race : raceData.keySet()) {
             Map<String, Object> raceDetails = (Map<String, Object>) raceData.get(race);
@@ -107,8 +107,8 @@ public class GraphService {
         List<Double> data = new ArrayList<>();
         List<DataSet> dataSets = new ArrayList<>();
 
-        if (stateInfo.getStateData().containsKey("Household Income")) {
-            Map<String, Object> incomeData = (Map<String, Object>) stateInfo.getStateData().get("Household Income");
+        if (stateInfo.getData().containsKey("Household Income")) {
+            Map<String, Object> incomeData = (Map<String, Object>) stateInfo.getData().get("Household Income");
 
             // Loop through each income bracket
             for (String incomeBracket : incomeData.keySet()) {
@@ -143,8 +143,8 @@ public class GraphService {
         List<Double> data = new ArrayList<>();
         List<DataSet> dataSets = new ArrayList<>();
 
-        if (stateInfo.getStateData().containsKey("Region Type Distribution")) {
-        Map<String, Object> regionData = (Map<String, Object>) stateInfo.getStateData().get("Region Type Distribution");
+        if (stateInfo.getData().containsKey("Region Type Distribution")) {
+        Map<String, Object> regionData = (Map<String, Object>) stateInfo.getData().get("Region Type Distribution");
 
         for (String regionType : regionData.keySet()) {
             Object populationObj = regionData.get(regionType);
@@ -180,9 +180,9 @@ public class GraphService {
     List<Double> data = new ArrayList<>();
     List<DataSet> dataSets = new ArrayList<>();
 
-    if (stateInfo.getStateData().containsKey("Democratic") && stateInfo.getStateData().containsKey("Republican")) {
-        Object democraticPopulation = stateInfo.getStateData().get("Democratic");
-        Object republicanPopulation = stateInfo.getStateData().get("Republican");
+    if (stateInfo.getData().containsKey("Democratic") && stateInfo.getData().containsKey("Republican")) {
+        Object democraticPopulation = stateInfo.getData().get("Democratic");
+        Object republicanPopulation = stateInfo.getData().get("Republican");
 
         // Add population data
         data.add(Double.parseDouble(democraticPopulation.toString()));

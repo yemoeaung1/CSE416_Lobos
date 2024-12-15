@@ -12,6 +12,6 @@ public class CachingConfig {
 
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("state-info-cache", "state-map-cache", "state-map-legend-cache", "state-map-config-cache", "precinct-info-cache", "precinct-info-map-cache");
+        return new ConcurrentMapCacheManager("state-info-cache", "state-map-cache", "state-map-legend-cache", "state-map-config-cache", "district-info-cache", "precinct-info-cache", "precinct-info-map-cache");
     }
 }
