@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
+import { data } from "autoprefixer";
 
 export default function LineGraph({ graphData, title }) {
   const chartRef = useRef(null);
@@ -9,7 +10,7 @@ export default function LineGraph({ graphData, title }) {
   useEffect(() => {
     const ctx = chartRef.current.getContext("2d");
 
-    console.log(graphData.dataset)
+    console.log(graphData.labels)
 
     const LineChart = new Chart(ctx, {
       type: "line",
@@ -23,8 +24,8 @@ export default function LineGraph({ graphData, title }) {
           })),
           borderColor: dataset.borderColor,
           borderWidth: dataset.borderWidth,
-          backgroundColor: "rgba(0, 0, 255, 0.2)",
-          fill: { target: "origin", above: "rgba(0, 0, 255, 0.2)" },
+          backgroundColor: dataset.borderColor,
+          fill: { target: "origin", above: dataset.borderColor },
           tension: 0.5,
           pointRadius: 0
         })),
@@ -58,7 +59,7 @@ export default function LineGraph({ graphData, title }) {
               display: true,
               text: "Probability Density",
               font: {
-                size: 20,
+                size: 18,
               },
               color: "#000000",
             },
@@ -71,7 +72,7 @@ export default function LineGraph({ graphData, title }) {
         },
         plugins: {
           legend: {
-            display: false,
+            display: true,
             position: "top",
             labels: {
               font: {
@@ -83,7 +84,7 @@ export default function LineGraph({ graphData, title }) {
             display: true,
             text: title,
             font: {
-              size: 28,
+              size: 24,
               weight: "bold",
             },
             color: "#000000",

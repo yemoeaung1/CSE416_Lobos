@@ -3,49 +3,16 @@ import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { MapViewOptions } from "../../enums";
 import LineGraph from "../GraphPlotComponents/LineGraph";
+import EcologicalInferenceTab from "./EcologicalInferenceTab";
 import axios from "axios";
 
 export default function AnalysisTab({ selectedState, mapView, setMapView }) {
   const [selectedChart, setSelectedChart] = useState("precinct-analysis");
-  const [selectedFilter, setSelectedFilter] = useState("income");
+  const [selectedFilter, setSelectedFilter] = useState("race");
   const [dropdownOptions, setDropdownOptions] = useState([]);
   const [selectedDropdownOption, setSelectedDropdownOption] = useState(null);
   const [republicanGraphData, setRepublicanGraphData] = useState(null);
   const [democraticGraphData, setDemocraticGraphData] = useState(null);
-
-  // Fetch data for both Republican and Democratic graphs
-  useEffect(() => {
-    const fetchGraphData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/api/ecological-inference?state=${selectedState}&filter=${"race"}&filterOption=${"White"}`
-        );
-
-        const data = response.data;
-        console.log(data);
-        // Separate Republican and Democratic datasets
-        setRepublicanGraphData({
-          labels: data.labels,
-          dataSets: data.dataSets.filter((ds) =>
-            ds.label.includes("Republican")
-          ),
-        });
-
-        console.log(republicanGraphData);
-
-        setDemocraticGraphData({
-          labels: data.labels,
-          dataSets: data.dataSets.filter((ds) =>
-            ds.label.includes("Democratic")
-          ),
-        });
-      } catch (error) {
-        console.error("Error fetching graph data:", error);
-      }
-    };
-
-    fetchGraphData();
-  }, [selectedState]);
 
   // Update dropdown options based on selected filter
   useEffect(() => {
@@ -141,7 +108,7 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
         </div>
       </div>
 
-      {/* Dropdown Menu */}
+      {/* Dropdown Menu
       {dropdownOptions.length > 0 && (
         <div className="mt-4">
           <select
@@ -159,7 +126,7 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
             ))}
           </select>
         </div>
-      )}
+      )} */}
 
       {/* Chart Display */}
       <div className="h-3/4 w-full mt-5">
@@ -170,24 +137,9 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
           />
         )}
         {selectedChart === "ecological-inference" && (
-          <div className="space-y-6 flex flex-col w-full h-full">
-            {republicanGraphData && (
-              <div className="h-1/2 w-full flex justify-center items-center">
-                <LineGraph
-                  graphData={republicanGraphData}
-                  title="Support for Republican Candidates"
-                />
-              </div>
-            )}
-            {democraticGraphData && (
-              <div className="h-1/2 w-full flex justify-center items-center">
-                <LineGraph
-                  graphData={democraticGraphData}
-                  title="Support for Democratic Candidates"
-                />
-              </div>
-            )}
-          </div>
+          <>
+            <EcologicalInferenceTab selectedState={selectedState} filter={selectedFilter} filterOption={selectedDropdownOption}/>
+          </>
         )}
       </div>
     </div>

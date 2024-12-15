@@ -6,15 +6,18 @@ import com.lobos.lobos_server.model.EcologicalInferenceInfo;
 
 import com.lobos.lobos_server.model.Graph;
 import com.lobos.lobos_server.service.GraphService;
+import com.lobos.lobos_server.service.EcologicalInferenceService;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
 public class GraphController {
     private final GraphService graphService;
+    private final EcologicalInferenceService ecologicalInferenceService;
 
-    public GraphController(GraphService graphService) {
+    public GraphController(GraphService graphService, EcologicalInferenceService ecologicalInferenceService) {
         this.graphService = graphService;
+        this.ecologicalInferenceService = ecologicalInferenceService;
     }
 
     //Bar graph
@@ -34,7 +37,7 @@ public class GraphController {
     @GetMapping("/ecological-inference")
     public ResponseEntity<?> getEcologicalInferenceGraph(@RequestParam String state, @RequestParam String filter, @RequestParam String filterOption) {
         try {
-            Graph graph = graphService.getEcologicalInferenceForState(state, filter, filterOption);
+            Graph graph = ecologicalInferenceService.getEcologicalInferenceForState(state, filter, filterOption);
             return ResponseEntity.ok(graph);
         } 
         catch (RuntimeException e) {
