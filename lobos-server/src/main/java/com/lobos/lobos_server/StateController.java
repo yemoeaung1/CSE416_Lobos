@@ -32,11 +32,6 @@ public class StateController {
         this.precinctService = precinctService;
     }
 
-    @GetMapping("/precinct-data")
-    public List<Map<String, Object>> getPrecinctData(@RequestParam String state) {
-        return stateService.getPrecinctDataByState(state);
-    }
-
     @GetMapping("/state-map")
     public ResponseEntity<Map<String, Object>> getStateMap(
             @RequestParam(required = true) String state,

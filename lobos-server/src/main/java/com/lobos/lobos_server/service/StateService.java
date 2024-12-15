@@ -45,8 +45,7 @@ public class StateService {
 
         Map<String, Object> data = new HashMap<>();
         data.put("state", stateInfo.getState());
-        data.put("stateData", stateInfo.getStateData());
-        data.put("districtData", stateInfo.getDistrictData());
+        data.put("data", stateInfo.getData());
 
         return data;
     }

@@ -12,7 +12,7 @@ export default function DistrictSummaryTab({ isLoading, selectedState, mapView, 
 
     useEffect(() => {
         if (selectedState !== States.NONE) {
-            axios.get(`http://localhost:8080/api/state-info`, {
+            axios.get(`http://localhost:8080/api/district-info`, {
                 params: {
                     state: selectedState
                 }
@@ -66,21 +66,21 @@ function CongressionalTable({ districtInfo, setHighlightedDistrict }) {
         setHighlightedDistrict({ name: "N/A", party: "N/A" });
     };
 
-    const districts = Object.entries(districtInfo.districtData);
+    const districts = Object.entries(districtInfo.data);
 
     return (
         <div className="table-container">
             <table className="montserrat congress-table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th style={{ width: '32px' }}>#</th>
                         <th>Repr. Name</th>
                         <th>Repr. Party</th>
-                        <th style={{ textAlign: 'right' }}>Median HH Income</th>
+                        <th style={{ textAlign: 'right' }}>Median HH-Income</th>
                         <th style={{ textAlign: 'right' }}>Poverty Rate</th>
-                        <th style={{ textAlign: 'right' }}>Region (U)</th>
-                        <th style={{ textAlign: 'right' }}>Region (SU)</th>
-                        <th style={{ textAlign: 'right' }}>Region (R)</th>
+                        <th style={{ textAlign: 'right' }}>Region (Urban)</th>
+                        <th style={{ textAlign: 'right' }}>Region (Suburban)</th>
+                        <th style={{ textAlign: 'right' }}>Region (Rural)</th>
                         <th style={{ textAlign: 'right' }}>Vote Margin</th>
                     </tr>
                 </thead>

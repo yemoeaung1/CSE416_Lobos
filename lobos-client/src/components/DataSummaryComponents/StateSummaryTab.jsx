@@ -30,11 +30,11 @@ export default function StateSummaryTab({ selectedState, mapView, setMapView }) 
 
     let stateDetails = isInfoUpdated
         ? {
-            party: stateInfo.stateData["Political Party"],
-            redistrictingParty: stateInfo.stateData["Redistricting Party"],
-            population: stateInfo.stateData["Total Population"],
-            income: stateInfo.stateData["Median Household Income"],
-            poverty: stateInfo.stateData["Poverty Rate"],
+            party: stateInfo.data["Political Party"],
+            redistrictingParty: stateInfo.data["Redistricting Party"],
+            population: stateInfo.data["Total Population"],
+            income: stateInfo.data["Median Household Income"],
+            poverty: stateInfo.data["Poverty Rate"],
         }
         : {
             party: "Loading...",
