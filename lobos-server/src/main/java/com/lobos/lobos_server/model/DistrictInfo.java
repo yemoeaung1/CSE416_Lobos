@@ -5,8 +5,8 @@ import java.util.Map;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "state-info")
-public class StateInfo {
+@Document(collection = "district-info")
+public class DistrictInfo {
     @Id
     private String id;
     private String state;
