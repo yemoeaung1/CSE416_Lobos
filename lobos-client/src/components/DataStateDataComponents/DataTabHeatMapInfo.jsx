@@ -62,7 +62,7 @@ function HeatMapLegendTop({ heatmapOpts, legendInfo }) {
                     </div>
                 }
 
-                {(legendInfo != null && heatmapOpts[0] != HeatMapFilters.ECO_POLITICAL) &&
+                {(legendInfo != null && !legendInfo.isEcoPoli) &&
                     <div className="flex flex-column gap-4">
                         {splitEntries.map((entry, index) => (
                             <HeatMapLegendBins key={index} bins={entry} />
@@ -70,7 +70,7 @@ function HeatMapLegendTop({ heatmapOpts, legendInfo }) {
                     </div>
                 }
 
-                {(legendInfo != null && heatmapOpts[0] == HeatMapFilters.ECO_POLITICAL) &&
+                {(legendInfo != null && legendInfo.isEcoPoli) &&
                     <EcoPoliHeatMapLegendBins legendInfo={legendInfo} />
                 }
             </div>
@@ -126,19 +126,23 @@ function HeatMapLegendBin({ name, color, opacity }) {
 
 function EcoPoliHeatMapLegendBins({ legendInfo }) {
     const splitEntries = [];
-    const entries = (legendInfo != null) ? Object.entries(legendInfo) : null;
+    const allEntries = (legendInfo != null) ? Object.entries(legendInfo) : null;
+    const entries = (allEntries != null) ? allEntries.map(([key, value]) => value) : null;
     const poliEntries = {
         rSplits: [],
         dSplits: []
     }
 
     if (entries) {
+        entries.pop();
         const entriesMidPoint = entries.length / 2;
 
         for (let i = 0; i < entriesMidPoint; i += 1) {
             poliEntries.rSplits.push(entries[i]);
             poliEntries.dSplits.push(entries[entriesMidPoint + i]);
         }
+
+        console.log("POLI:", poliEntries);
 
         let entriesArr = [];
         for (let i = 0; i < entriesMidPoint; i += 1) {
@@ -148,11 +152,11 @@ function EcoPoliHeatMapLegendBins({ legendInfo }) {
             }
 
             entriesArr.push({
-                name: poliEntries.rSplits[i][1].name.substring(2),
-                color1: poliEntries.rSplits[i][1].color,
-                color2: poliEntries.dSplits[i][1].color,
-                opacity1: poliEntries.rSplits[i][1].opacity,
-                opacity2: poliEntries.dSplits[i][1].opacity,
+                name: poliEntries.rSplits[i].name.substring(2),
+                color1: poliEntries.rSplits[i].color,
+                color2: poliEntries.dSplits[i].color,
+                opacity1: poliEntries.rSplits[i].opacity,
+                opacity2: poliEntries.dSplits[i].opacity,
             })
         }
 

@@ -43,6 +43,9 @@ export default function StateDataTab({ isLoading, heatmapOpts, setHeatmapOpts, s
       return;
     }
 
+    if (mapView == MapViewOptions.PRECINCT && heatmapOpts[0] == HeatMapFilters.DEMOGRAPHIC && heatmapOpts.length < 2)
+      return;
+
     axios.get(`http://localhost:8080/api/state-map-legend`, {
       params: {
         heatmapOpts
@@ -52,7 +55,13 @@ export default function StateDataTab({ isLoading, heatmapOpts, setHeatmapOpts, s
       },
     })
       .then(response => {
-        setLegendInfo(response.data)
+        const infoData = response.data;
+        infoData.isEcoPoli = false;
+
+        if(heatmapOpts[0] == HeatMapFilters.ECO_POLITICAL)
+          infoData.isEcoPoli = true;
+
+        setLegendInfo(infoData);
       })
       .catch(error => {
         console.error("Error Retrieving Info:", error);
