@@ -198,7 +198,11 @@ const IncomeVotingScatter = ({
             stepSize,
             scalingFactor
         );
-
+        // Reset income level and region filter when switching to Income & Race or Race tab
+        if (selectedFilter !== "income") {
+            setSelectedIncomeLevel("all");
+            setSelectedRegion("all");
+        }
         const chartData = {
             datasets: [
                 {
@@ -281,17 +285,34 @@ const IncomeVotingScatter = ({
                     }
                 }
             } else if (selectedFilter === "income&race") {
-                switch (selectedRace2) {
-                    case "black":
-                        return { min: 20, max: 120 };
-                    case "asian":
-                        return { min: 0, max: 120 };
-                    case "hispanic":
-                        return { min: 0, max: 120 };
-                    case "non_hispanic":
-                        return { min: 40, max: 175 };
-                    default:
-                        return { min: 0, max: 175 };
+                if (selectedState === "Utah") {
+                    switch (selectedRace2) {
+                        case "black":
+                            return { min: 20, max: 120 };
+                        case "asian":
+                            return { min: 0, max: 120 };
+                        case "hispanic":
+                            return { min: 0, max: 120 };
+                        case "non_hispanic":
+                            return { min: 40, max: 175 };
+                        default:
+                            return { min: 0, max: 175 };
+                    }
+                } else if (selectedState === "South Carolina") {
+                    switch (selectedRace2) {
+                        case "white":
+                            return { min: 0, max: 160 };
+                        case "black":
+                            return { min: 20, max: 100 };
+                        case "asian":
+                            return { min: 0, max: 110 };
+                        case "hispanic":
+                            return { min: 0, max: 100 };
+                        case "non_hispanic":
+                            return { min: 40, max: 160 };
+                        default:
+                            return { min: 0, max: 175 };
+                    }
                 }
             }
             return { min: 0, max: 100 }; // Fallback range
@@ -354,6 +375,7 @@ const IncomeVotingScatter = ({
                 title: {
                     display: true,
                     text: getChartTitle(),
+                    color: "#000000",
                     font: {
                         size: 30,
                         weight: "bold",
@@ -368,7 +390,7 @@ const IncomeVotingScatter = ({
                             } else {
                                 const xValue =
                                     context.parsed.x.toLocaleString();
-                                const yValue = context.parsed.y;
+                                const yValue = context.parsed.y.toFixed(2);
                                 return `${label}: (${xValue}, ${yValue}%)`;
                             }
                         },
@@ -428,9 +450,9 @@ const IncomeVotingScatter = ({
     };
 
     const getXAxisTitle = () => {
-        if (selectedFilter === "income") return "Annual Income Range ($)";
+        if (selectedFilter === "income") return "Annual Household Income ($)";
         if (selectedFilter === "race")
-            return `${getFormattedRaceName(selectedRace)} Percentage`;
+            return `${getFormattedRaceName(selectedRace)} Percentage (%)`;
         if (selectedFilter === "income&race") {
             return `Combined ${getFormattedRaceName(
                 selectedRace2

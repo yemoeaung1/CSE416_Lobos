@@ -12,9 +12,9 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
     const [precinctData, setPrecinctData] = useState([]); // Store fetched precinct data
 
     useEffect(() => {
-        if(mapView != MapViewOptions.PRECINCT)
+        if (mapView != MapViewOptions.PRECINCT)
             setMapView(MapViewOptions.PRECINCT);
-    }, [])
+    }, []);
 
     // Define styles for tabs
     const tabStyle = {
@@ -118,7 +118,7 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                         : "h-3/4"
                 } w-full mt-5`}
                 style={{
-                    paddingBottom: showTable ? "40px" : "10px", // Add extra space when the table is shown
+                    paddingBottom: showTable ? "10px" : "10px", // Add extra space when the table is shown
                 }}
             >
                 {selectedChart === "precinct-analysis" && (
@@ -138,10 +138,17 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
             </div>
             {/* Table Display */}
             {selectedChart === "precinct-analysis" && showTable && (
-                <PrecinctDataTable
-                    precinctData={precinctData}
-                    selectedGEOID={selectedGEOID} // Pass selected GEOID to the table
-                />
+                <div
+                    className="flex-grow w-full overflow-auto mt-6"
+                    style={{
+                        paddingTop: "20px", // Additional spacing above the table
+                    }}
+                >
+                    <PrecinctDataTable
+                        precinctData={precinctData}
+                        selectedGEOID={selectedGEOID}
+                    />
+                </div>
             )}
         </div>
     );

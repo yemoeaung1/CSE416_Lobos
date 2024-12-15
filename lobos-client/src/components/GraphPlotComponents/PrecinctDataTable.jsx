@@ -80,22 +80,37 @@ const PrecinctDataTable = ({ precinctData, selectedGEOID }) => {
                             >
                                 {startIndex + index + 1}
                             </td>
-                            <td className="border border-gray-300 p-2">
+                            <td
+                                style={{ textAlign: "right" }}
+                                className="border border-gray-300 p-2"
+                            >
                                 {precinct.total_population}
                             </td>
                             <td className="border border-gray-300 p-2 text-center">
                                 {precinct.region_type}
                             </td>
-                            <td className="border border-gray-300 p-2">
+                            <td
+                                style={{ textAlign: "right" }}
+                                className="border border-gray-300 p-2"
+                            >
                                 {precinct.non_white.toLocaleString()}
                             </td>
-                            <td className="border border-gray-300 p-2">
+                            <td
+                                style={{ textAlign: "right" }}
+                                className="border border-gray-300 p-2"
+                            >
                                 ${precinct.median_income.toLocaleString()}
                             </td>
-                            <td className="border border-gray-300 p-2">
+                            <td
+                                style={{ textAlign: "right" }}
+                                className="border border-gray-300 p-2"
+                            >
                                 {precinct.republican_votes.toLocaleString()}
                             </td>
-                            <td className="border border-gray-300 p-2">
+                            <td
+                                style={{ textAlign: "right" }}
+                                className="border border-gray-300 p-2"
+                            >
                                 {precinct.democrat_votes.toLocaleString()}
                             </td>
                         </tr>
