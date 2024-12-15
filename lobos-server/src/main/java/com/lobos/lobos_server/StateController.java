@@ -3,13 +3,10 @@ package com.lobos.lobos_server;
 import com.lobos.lobos_server.enum_classes.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.lobos.lobos_server.model.PrecinctData;
-import com.lobos.lobos_server.model.PrecinctInfo;
-import com.lobos.lobos_server.model.StateInfo;
 import com.lobos.lobos_server.model.StateMapConfig;
 import com.lobos.lobos_server.service.PrecinctService;
 import com.lobos.lobos_server.service.StateService;
@@ -17,6 +14,7 @@ import com.lobos.lobos_server.utilities.ColorMapping;
 import com.lobos.lobos_server.utilities.GeoJSON;
 import com.lobos.lobos_server.utilities.HeatmapMethods;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +31,7 @@ public class StateController {
         this.stateService = stateService;
         this.precinctService = precinctService;
     }
+
     @GetMapping("/precinct-data")
     public List<Map<String, Object>> getPrecinctData(@RequestParam String state) {
         return stateService.getPrecinctDataByState(state);
@@ -42,15 +41,12 @@ public class StateController {
     public ResponseEntity<Map<String, Object>> getStateMap(
             @RequestParam(required = true) String state,
             @RequestParam(required = true) String view,
-            @RequestParam(required = false) List<String> heatmapOpts) {
+            @RequestParam(required = true) List<String> heatmapOpts) {
         
         if(state.equals(StatesEnum.NONE.toString()) || view.equals(StateViewEnum.STATE.toString())){
             state = StatesEnum.NONE.toString();
             view = StateViewEnum.STATE.toString();
         }
-
-        if(heatmapOpts != null && !heatmapOpts.isEmpty())
-            view = StateViewEnum.PRECINCT.toString();
         
         Map<String, Object> data = fetchStateMap(state, view, heatmapOpts);
         return ResponseEntity.ok(data);
@@ -60,26 +56,21 @@ public class StateController {
     public ResponseEntity<Map<String, Object>> getStateInfo(
             @RequestParam(required = true) String state) {
 
-        Map<String, Object> data = fetchStateInfo(state);
+        Map<String, Object> data = stateService.getStateInfo(state);
         return ResponseEntity.ok(data);
     }
 
-    @Cacheable(value = "lobosCache", key = "'STATE-INFO:' + #state")
-    private Map<String, Object> fetchStateInfo(String state){
-        StateInfo stateInfo = stateService.getStateInfo(state);
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("state", stateInfo.getState());
-        data.put("stateData", stateInfo.getStateData());
-        data.put("districtData", stateInfo.getDistrictData());
-
-        return data;
+    @GetMapping("/state-map-legend")
+    public ResponseEntity<ArrayList<ColorMapping>> getStateMapLegend(@RequestParam(required = true) List<String> heatmapOpts) {
+        ArrayList<ColorMapping> data = HeatmapMethods.getBins(heatmapOpts);
+        return ResponseEntity.ok(data);
     }
 
     private Map<String, Object> fetchStateMap(String state, String view, List<String> heatmapOpts){
         StateMapConfig stateMapConfig = stateService.getStateMapConfig(state);
-        GeoJSON stateGeoJSON = fetchGeoJSON(state, view);
-        if(heatmapOpts != null && !heatmapOpts.isEmpty())
+        GeoJSON stateGeoJSON = stateService.getStateMap(state, view);
+        
+        if(view.equals(StateViewEnum.PRECINCT.toString()))
             appendHeatmapOpts(stateGeoJSON, state, heatmapOpts);
 
         Map<String, Object> data = new HashMap<>();
@@ -97,26 +88,9 @@ public class StateController {
         return data;
     }
 
-    @Cacheable(value = "lobosCache", key = "'GEOJSON' + #state + '_' + #view")
-    private GeoJSON fetchGeoJSON(String state, String view){
-        GeoJSON stateGeoJSON = stateService.getStateMap(state, view).getGeoJSON();
-        return stateGeoJSON;
-    }
-
-    @Cacheable(value = "lobosCache", key = "'PRECINCT-INFO-MAP:' + #state")
-    private Map<String, PrecinctData> fetchPrecinctInfoMap(String state){
-        PrecinctInfo precinctInfo = precinctService.getPrecinctInfo(state);
-        Map<String, PrecinctData> precinctInfoMap = new HashMap<>();
-        for(PrecinctData obj: precinctInfo.getPrecincts()){
-            precinctInfoMap.put((String) obj.getGEOID(), obj);
-        }
-
-        return precinctInfoMap;
-    }
-
     private void appendHeatmapOpts(GeoJSON geoJSON, String state, List<String> heatmapOpts){
         try{
-            Map<String, PrecinctData> precinctInfoMap = fetchPrecinctInfoMap(state);
+            Map<String, PrecinctData> precinctInfoMap = precinctService.fetchPrecinctInfoMap(state);
 
             // Loop through all features in GeoJSON
             for (GeoJSON.Feature feature : geoJSON.getFeatures()) {
@@ -124,8 +98,11 @@ public class StateController {
                 if(feature.getProperties().get("GEOID20") instanceof String)
                     key = (String) feature.getProperties().get("GEOID20");
 
-                PrecinctData info = precinctInfoMap.get(key);
-                ColorMapping colorMapping = HeatmapMethods.handleBins(heatmapOpts, info);
+                ColorMapping colorMapping;
+                if(precinctInfoMap == null)
+                    colorMapping = HeatmapMethods.handleBins(heatmapOpts, null);
+                else
+                    colorMapping = HeatmapMethods.handleBins(heatmapOpts, precinctInfoMap.get(key));
 
                 feature.getProperties().put("FCOLOR", colorMapping.getColor());
                 feature.getProperties().put("FOPACITY", colorMapping.getOpacity());

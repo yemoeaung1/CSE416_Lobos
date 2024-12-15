@@ -1,8 +1,4 @@
-import { useState } from "react";
-
 import {
-    BsArrowBarLeft,
-    BsArrowBarRight,
     BsInfoCircle,
     BsFillBarChartFill,
     BsGraphUp,
@@ -14,7 +10,7 @@ import StateDataTab from "./DataStateDataComponents/StateDataTab";
 import AnalysisTab from "./DataAnalysisComponents/AnalysisTab";
 import EnsembleTab from "./DataEnsembleComponents/EnsembleTab";
 
-export default function DataContainer({ isLoading, selectedArea, selectedState, mapView, setMapView, heatmapOpts, setHeatmapOpts, dataTab, setDataTab, districtYear, setDistrictYear, setHighlightedDistrict }) {
+export default function DataContainer({ isLoading, selectedArea, selectedState, hoveredArea, mapView, setMapView, heatmapOpts, setHeatmapOpts, dataTab, setDataTab, districtYear, setDistrictYear, setHighlightedDistrict }) {
     return (
         <div className="data-container">
             <DataTabs
@@ -28,6 +24,7 @@ export default function DataContainer({ isLoading, selectedArea, selectedState, 
                 isLoading={isLoading}
                 selectedArea={selectedArea}
                 selectedState={selectedState}
+                hoveredArea={hoveredArea}
                 mapView={mapView}
                 setMapView={setMapView}
                 heatmapOpts={heatmapOpts}
@@ -91,7 +88,7 @@ function DataTabs({ isLoading, selectedState, dataTab, setDataTab }) {
     );
 }
 
-function DataComponent({ dataTab, isLoading, selectedState, mapView, setMapView, heatmapOpts, setHeatmapOpts, districtYear, setDistrictYear, setHighlightedDistrict }) {
+function DataComponent({ dataTab, isLoading, selectedState, hoveredArea, mapView, setMapView, heatmapOpts, setHeatmapOpts, districtYear, setDistrictYear, setHighlightedDistrict }) {
     if (selectedState == States.NONE) {
         return (
             <div className="data-component" />
@@ -101,7 +98,7 @@ function DataComponent({ dataTab, isLoading, selectedState, mapView, setMapView,
   return (
     <div className="data-component open">
       {dataTab === DataTabOptions.SUMMARY && <SummaryTab isLoading={isLoading} selectedState={selectedState} mapView={mapView} setMapView={setMapView} districtYear={districtYear} setDistrictYear={setDistrictYear} setHighlightedDistrict={setHighlightedDistrict}/>}
-      {dataTab === DataTabOptions.STATE_DATA && <StateDataTab selectedState={selectedState} heatmapOpts={heatmapOpts} setHeatmapOpts={setHeatmapOpts} mapView={mapView} setMapView={setMapView}/>}
+      {dataTab === DataTabOptions.STATE_DATA && <StateDataTab isLoading={isLoading} selectedState={selectedState} hoveredArea={hoveredArea} heatmapOpts={heatmapOpts} setHeatmapOpts={setHeatmapOpts} mapView={mapView} setMapView={setMapView}/>}
       {dataTab === DataTabOptions.ANALYSIS && <AnalysisTab selectedState={selectedState} mapView={mapView} setMapView={setMapView} />}
       {dataTab === DataTabOptions.ENSEMBLE && <EnsembleTab mapView={mapView} setMapView={setMapView} setHeatmapOpts={setHeatmapOpts} />}
     </div>

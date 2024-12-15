@@ -3,18 +3,18 @@ import { useEffect, useState } from "react";
 import NavBar from "./components/NavBar";
 import DataContainer from "./components/DataContainer";
 import StateMapContainer from "./components/StateMapContainer";
-import { DataTabOptions, MapViewOptions, States } from "./enums";
+import { DataTabOptions, HeatMapFilters, MapViewOptions, States } from "./enums";
 
 function App() {
     const [isLoading, setIsLoading] = useState(false);
 
-    const [hoveredArea, setHoveredArea] = useState(States.NONE);
+    const [hoveredArea, setHoveredArea] = useState(null);
     const [selectedArea, setSelectedArea] = useState(States.NONE);
     const [selectedState, setSelectedState] = useState(States.NONE);
 
     const [mapView, setMapView] = useState(MapViewOptions.STATE);
     const [districtYear, setDistrictYear] = useState('2020');
-    const [heatmapOpts, setHeatmapOpts] = useState(null);
+    const [heatmapOpts, setHeatmapOpts] = useState([HeatMapFilters.NONE]);
     const [highlightedDistrict, setHighlightedDistrict] = useState(0);
 
     const [dataTab, setDataTab] = useState(DataTabOptions.SUMMARY);
@@ -42,6 +42,7 @@ function App() {
                 isLoading={isLoading}
                 selectedArea={selectedArea}
                 selectedState={selectedState}
+                hoveredArea={hoveredArea}
                 mapView={mapView}
                 setMapView={setMapView}
                 heatmapOpts={heatmapOpts}

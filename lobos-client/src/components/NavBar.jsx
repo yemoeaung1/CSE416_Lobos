@@ -1,5 +1,5 @@
 import { GiWolfHead } from "react-icons/gi";
-import { MapViewOptions, States } from "../enums";
+import { HeatMapFilters, MapViewOptions, States } from "../enums";
 
 export default function NavBar({ isLoading, setMapView, hoveredArea, setHoveredArea, setSelectedArea, selectedState, setHeatmapOpts }) {
     return (
@@ -27,14 +27,14 @@ function NavLogo({ isLoading, setMapView, setHoveredArea, setSelectedArea, setHe
         }
 
         setMapView(MapViewOptions.STATE);
-        setHoveredArea(States.NONE);
+        setHoveredArea(null);
         setSelectedArea(States.NONE);
-        setHeatmapOpts();
+        setHeatmapOpts([HeatMapFilters.NONE]);
     }
 
     return (
         <div className="navbar-home text-white">
-            <span className="flex flex-row items-center justify-center cursor-pointer hover:bg-red-800 p-4" onClick={() => clearSelection()}>
+            <span className="navbar-logo" onClick={() => clearSelection()}>
                 <GiWolfHead size={42} />
                 <span className="text-4xl pl-4 averia-serif">Lobos</span>
             </span>
@@ -47,7 +47,7 @@ function NavTitle({ hoveredArea, selectedState }) {
     return (
         <div className="navbar-title flex flex-col items-center justify-center">
             <span className="text-4xl text-white averia-serif-title">{(selectedState !== States.NONE) ? selectedState : "[Select A State]"}</span>
-            <span className="text-base text-white averia-serif-title">{`Hovering: ${(hoveredArea !== States.NONE) ? hoveredArea : "...    "}`}</span>
+            <span className="text-base text-white averia-serif-title">{`Hovering: ${(hoveredArea !== null) ? (hoveredArea.properties.NAME) : "..."}`}</span>
         </div>
     )
 }

@@ -1,8 +1,9 @@
 import axios from "axios";
+import qs from "qs";
 import { useEffect, useRef, useState } from "react";
 import { MapContainer, GeoJSON, useMap } from "react-leaflet";
 import Color from "color";
-import { MapViewOptions, PoliColors, States } from "../enums";
+import { HeatMapFilters, MapViewOptions, PoliColors, States } from "../enums";
 
 export default function StateMapContainer({ isLoading, setIsLoading, mapView, setMapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, heatmapOpts, districtYear, highlightedDistrict }) {
     return (
@@ -45,14 +46,21 @@ function StatesMap({
             return;
         }
 
-        setIsLoading(true);
+        if(mapView == MapViewOptions.PRECINCT && heatmapOpts[0] == HeatMapFilters.DEMOGRAPHIC && heatmapOpts.length < 2){
+            console.log("Demographic Heat Map: No Option Selected");
+            return
+        }
 
+        setIsLoading(true);
         axios
             .get(`http://localhost:8080/api/state-map`, {
                 params: {
                     state: selectedState,
                     view: mapView,
                     heatmapOpts
+                },
+                paramsSerializer: (params) => {
+                  return qs.stringify(params, { arrayFormat: "repeat" });
                 },
             })
             .then((response) => {
@@ -98,11 +106,11 @@ function StatesMap({
     
         layer.on({
             mouseover: (e) => {
-                setHoveredArea(feature.properties.NAME);
+                setHoveredArea(feature);
                 e.target.setStyle({ fillColor: darkerColor, weight: 3 });
             },
             mouseout: (e) => {
-                setHoveredArea(States.NONE);
+                setHoveredArea(null);
                 e.target.setStyle({ fillColor: originalColor, weight: 1 });
             },
             click: (e) => {

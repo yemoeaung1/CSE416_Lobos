@@ -7,15 +7,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.lobos.lobos_server.enum_classes.StatesEnum;
 import com.lobos.lobos_server.model.StateInfo;
-import com.lobos.lobos_server.model.StateMap;
 import com.lobos.lobos_server.model.StateMapConfig;
 import com.lobos.lobos_server.repository.StateInfoRepository;
 import com.lobos.lobos_server.repository.StateMapConfigRepository;
 import com.lobos.lobos_server.repository.StateMapRepository;
+import com.lobos.lobos_server.utilities.GeoJSON;
 import com.lobos.lobos_server.repository.PrecinctInfoRepository;
 import com.lobos.lobos_server.model.PrecinctData;
 import com.lobos.lobos_server.model.PrecinctInfo;
@@ -38,17 +39,27 @@ public class StateService {
         this.precinctInfoRepository = precinctInfoRepository;
     }
 
-    public StateInfo getStateInfo(String state){
-        return stateInfoRepository.findFirstByState(state);
+    @Cacheable(value = "state-info-cache", key = "#state")
+    public Map<String, Object> getStateInfo(String state){
+        StateInfo stateInfo = stateInfoRepository.findFirstByState(state);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("state", stateInfo.getState());
+        data.put("stateData", stateInfo.getStateData());
+        data.put("districtData", stateInfo.getDistrictData());
+
+        return data;
     }
 
-    public StateMap getStateMap(String state, String view){
+    @Cacheable(value = "state-map-cache", key = "#state + '-' + #view")
+    public GeoJSON getStateMap(String state, String view){
         if(state.equals(StatesEnum.NONE.toString()))
-            return stateMapRepository.findFirstByState(state);
+            return stateMapRepository.findFirstByState(state).getGeoJSON();
         else
-            return stateMapRepository.findFirstByStateAndView(state, view);
+            return stateMapRepository.findFirstByStateAndView(state, view).getGeoJSON();
     }
-
+    
+    @Cacheable(value = "state-map-config-cache", key = "#state")
     public StateMapConfig getStateMapConfig(String state) {
         return stateMapConfigRepository.findFirstByState(state);
     }
