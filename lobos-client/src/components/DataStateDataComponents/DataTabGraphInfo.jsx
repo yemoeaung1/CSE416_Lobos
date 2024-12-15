@@ -53,11 +53,12 @@ export default function GraphContainer({ selectedState, stateInfo, dataSetType, 
       <Button
         onClick={() => setDataSetType([buttonType])}
         sx={{
-          backgroundColor: isButtonSelected ? "primary.main" : "grey.300",
-          color: isButtonSelected ? "white" : "black",
-          "&:hover": {
-            backgroundColor: isButtonSelected ? "primary.dark" : "grey.400",
-          },
+            backgroundColor: isButtonSelected ? "primary.main" : "grey.200",
+            color: isButtonSelected ? "grey.200" : "primary.main",
+            transition: "all 0.3s ease-in-out",
+            "&:hover": {
+                backgroundColor: isButtonSelected ? "primary.dark" : "grey.300",
+            },
         }}
       >
         {buttonType}

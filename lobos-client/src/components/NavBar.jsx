@@ -34,7 +34,7 @@ function NavLogo({ isLoading, setMapView, setHoveredArea, setSelectedArea, setHe
 
     return (
         <div className="navbar-home text-white">
-            <span className="flex flex-row items-center justify-center cursor-pointer hover:bg-red-800 p-4" onClick={() => clearSelection()}>
+            <span className="navbar-logo" onClick={() => clearSelection()}>
                 <GiWolfHead size={42} />
                 <span className="text-4xl pl-4 averia-serif">Lobos</span>
             </span>
