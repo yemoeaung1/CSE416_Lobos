@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.lobos.lobos_server.service.DistrictService;
-import com.lobos.lobos_server.service.StateService;
+import com.lobos.lobos_server.service.PrecinctService;
 
 import java.util.List;
 import java.util.Map;
@@ -16,18 +16,18 @@ import java.util.Map;
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
 public class RegionController {
-    private final StateService stateService;
     private final DistrictService districtService;
+    private final PrecinctService precinctService;
 
     @Autowired
-    public RegionController(StateService stateService, DistrictService districtService) {
-        this.stateService = stateService;
+    public RegionController(DistrictService districtService, PrecinctService precinctService) {
         this.districtService = districtService;
+        this.precinctService = precinctService;
     }
 
     @GetMapping("/precinct-data")
     public List<Map<String, Object>> getPrecinctData(@RequestParam String state) {
-        return stateService.getPrecinctDataByState(state);
+        return precinctService.getPrecinctDataByState(state);
     }
 
     @GetMapping("/district-info")
