@@ -5,44 +5,45 @@ import StateSummaryTab from './StateSummaryTab';
 import DistrictSummaryTab from './DistrictSummaryTab';
 import PrecinctSummaryTab from './PrecinctSummaryTab';
 
-export default function SummaryTab({ isLoading, selectedState, heatmapOpts, setHeatmapOpts, hoveredArea, mapView, setMapView, districtYear, setDistrictYear, setHighlightedDistrict }) {
+export default function SummaryTab({ isLoading, selectedState, selectedArea, heatmapOpts, setHeatmapOpts, hoveredArea, mapView, setMapView, setHighlightedDistrict }) {
   const [selectedTab, setSelectedTab] = useState(MapViewOptions.STATE);
 
   return (
     <>
-      <TabSelector isLoading={isLoading} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+      <div className='flex flex-col h-full'>
+        <TabSelector isLoading={isLoading} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        {selectedTab == MapViewOptions.STATE &&
+          <StateSummaryTab
+            selectedState={selectedState}
+            selectedArea={selectedArea}
+            mapView={mapView}
+            setMapView={setMapView}
+          />
+        }
 
-      {selectedTab == MapViewOptions.STATE &&
-        <StateSummaryTab
-          selectedState={selectedState}
-          mapView={mapView}
-          setMapView={setMapView}
-        />
-      }
+        {selectedTab == MapViewOptions.DISTRICT &&
+          <DistrictSummaryTab
+            isLoading={isLoading}
+            selectedState={selectedState}
+            selectedArea={selectedArea}
+            mapView={mapView}
+            setMapView={setMapView}
+            setHighlightedDistrict={setHighlightedDistrict}
+          />
+        }
 
-      {selectedTab == MapViewOptions.DISTRICT &&
-        <DistrictSummaryTab
-          isLoading={isLoading}
-          selectedState={selectedState}
-          mapView={mapView}
-          setMapView={setMapView}
-          districtYear={districtYear}
-          setDistrictYear={setDistrictYear}
-          setHighlightedDistrict={setHighlightedDistrict}
-        />
-      }
-
-      {selectedTab == MapViewOptions.PRECINCT &&
-        <PrecinctSummaryTab
-          isLoading={isLoading}
-          selectedState={selectedState}
-          heatmapOpts={heatmapOpts}
-          setHeatmapOpts={setHeatmapOpts}
-          hoveredArea={hoveredArea}
-          mapView={mapView}
-          setMapView={setMapView}
-        />
-      }
+        {selectedTab == MapViewOptions.PRECINCT &&
+          <PrecinctSummaryTab
+            isLoading={isLoading}
+            selectedArea={selectedArea}
+            heatmapOpts={heatmapOpts}
+            setHeatmapOpts={setHeatmapOpts}
+            hoveredArea={hoveredArea}
+            mapView={mapView}
+            setMapView={setMapView}
+          />
+        }
+      </div>
     </>
   );
 }
@@ -69,7 +70,6 @@ function TabSelector({ isLoading, selectedTab, setSelectedTab }) {
     <nav
       className="flex justify-end mb-4 space-x-8 border-b-2 border-gray-300"
       style={{ borderBottom: "2px solid #e5e7eb" }}
-      disabled={isLoading}
     >
       <div
         style={
@@ -77,7 +77,11 @@ function TabSelector({ isLoading, selectedTab, setSelectedTab }) {
             ? activeTabStyle
             : tabStyle
         }
-        onClick={() => setSelectedTab(MapViewOptions.STATE)}
+        onClick={() => {
+          if (!isLoading)
+            setSelectedTab(MapViewOptions.STATE)
+        }
+        }
       >
         State Summary
       </div>
@@ -87,7 +91,11 @@ function TabSelector({ isLoading, selectedTab, setSelectedTab }) {
             ? activeTabStyle
             : tabStyle
         }
-        onClick={() => setSelectedTab(MapViewOptions.DISTRICT)}
+        onClick={() => {
+          if (!isLoading)
+            setSelectedTab(MapViewOptions.DISTRICT)
+        }
+        }
       >
         District Summary
       </div>
@@ -97,7 +105,11 @@ function TabSelector({ isLoading, selectedTab, setSelectedTab }) {
             ? activeTabStyle
             : tabStyle
         }
-        onClick={() => setSelectedTab(MapViewOptions.PRECINCT)}
+        onClick={() => {
+          if (!isLoading)
+            setSelectedTab(MapViewOptions.PRECINCT)
+        }
+        }
       >
         Precinct Summary
       </div>

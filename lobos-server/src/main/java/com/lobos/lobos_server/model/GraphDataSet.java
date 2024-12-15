@@ -1,19 +1,15 @@
 package com.lobos.lobos_server.model;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.List;
 
-//Add a specific dataset for a specific state
-@Document
-public class DataSet {
-    private String label; // Name of the data set (e.g., "Democrat", "Republican")
-    private List<Double> data; // Data values for the corresponding labels
-    private String backgroundColor; // Background color of the bar
-    private String borderColor; // Border color of the bar
-    private int borderWidth; // Border width of the bar
 
-    // Getters and Setters
+public class GraphDataSet {
+    private String label;
+    private List<Double> data;
+    private String backgroundColor;
+    private String borderColor;
+    private int borderWidth;
+
     public String getLabel() {
         return label;
     }
@@ -22,7 +18,6 @@ public class DataSet {
         this.label = label;
     }
     
-    //Getters and Setters for Data
     public List<Double> getData() {
         return data;
     }
@@ -31,7 +26,6 @@ public class DataSet {
         this.data = data;
     }
 
-    //Getters and Setters for BackGroundColor
     public String getBackgroundColor() {
         return backgroundColor;
     }
@@ -40,7 +34,6 @@ public class DataSet {
         this.backgroundColor = backgroundColor;
     }
 
-    //Getters and Setters for Border Color
     public String getBorderColor() {
         return borderColor;
     }
@@ -49,7 +42,6 @@ public class DataSet {
         this.borderColor = borderColor;
     }
 
-    //Getters and Setters for BorderWidth
     public int getBorderWidth() {
         return borderWidth;
     }
