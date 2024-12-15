@@ -64,7 +64,7 @@ function HeatMapLegendTop({ legendInfo }) {
                     </div>
                 }
 
-                {(legendInfo != null && !legendInfo.isEcoPoli) &&
+                {(legendInfo != null && legendInfo.type != HeatMapFilters.ECO_POLITICAL && legendInfo.type != HeatMapFilters.ELECTORAL) &&
                     <div className="flex flex-column gap-4">
                         {splitEntries.map((entry, index) => (
                             <HeatMapLegendBins key={index} bins={entry} />
@@ -72,8 +72,8 @@ function HeatMapLegendTop({ legendInfo }) {
                     </div>
                 }
 
-                {(legendInfo != null && legendInfo.isEcoPoli) &&
-                    <EcoPoliHeatMapLegendBins legendInfo={legendInfo} />
+                {(legendInfo != null && (legendInfo.type == HeatMapFilters.ECO_POLITICAL || legendInfo.type == HeatMapFilters.ELECTORAL)) &&
+                    <BichromaticLegendBins legendInfo={legendInfo} />
                 }
             </div>
         </div>
@@ -125,7 +125,7 @@ function HeatMapLegendBin({ name, color, opacity }) {
     );
 }
 
-function EcoPoliHeatMapLegendBins({ legendInfo }) {
+function BichromaticLegendBins({ legendInfo }) {
     const splitEntries = [];
     const allEntries = (legendInfo != null) ? Object.entries(legendInfo) : null;
     const entries = (allEntries != null) ? allEntries.map(([key, value]) => value) : null;
@@ -142,8 +142,6 @@ function EcoPoliHeatMapLegendBins({ legendInfo }) {
             poliEntries.rSplits.push(entries[i]);
             poliEntries.dSplits.push(entries[entriesMidPoint + i]);
         }
-
-        console.log("POLI:", poliEntries);
 
         let entriesArr = [];
         for (let i = 0; i < entriesMidPoint; i += 1) {

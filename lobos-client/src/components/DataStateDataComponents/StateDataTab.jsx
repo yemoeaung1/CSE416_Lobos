@@ -56,10 +56,7 @@ export default function StateDataTab({ isLoading, heatmapOpts, setHeatmapOpts, s
     })
       .then(response => {
         const infoData = response.data;
-        infoData.isEcoPoli = false;
-
-        if(heatmapOpts[0] == HeatMapFilters.ECO_POLITICAL)
-          infoData.isEcoPoli = true;
+        infoData.type = heatmapOpts[0];
 
         setLegendInfo(infoData);
       })
