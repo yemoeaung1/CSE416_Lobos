@@ -1,69 +1,67 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
-import { Box, Button, ButtonGroup } from "@mui/material";
-import { DataFilters, States } from "../../enums";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { DataFilters, MapViewOptions, States } from "../../enums";
 
 export default function GraphContainer({ selectedArea, mapView, dataSetType, setDataSetType }) {
   return (
-    <div className="flex flex-row">
+    <>
       <GraphSelection
+        mapView={mapView}
         dataSetType={dataSetType}
         setDataSetType={setDataSetType}
+      />
+      <SelectionLabel 
+        selectedArea={selectedArea}
+        mapView={mapView}
       />
       <BarGraph
         mapView={mapView}
         dataSetType={dataSetType}
         selectedArea={selectedArea}
       />
-    </div>
+    </>
   );
 }
 
-function GraphSelection({ dataSetType, setDataSetType }) {
+function GraphSelection({ mapView, dataSetType, setDataSetType }) {
   const graphOptions = [DataFilters.PARTY, DataFilters.RACE, DataFilters.INCOME, DataFilters.REGION_TYPE];
+
+  if (mapView != MapViewOptions.STATE)
+    graphOptions.pop();
 
   return (
     <div className="data-component-data-graph-selection">
-      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
-        <ButtonGroup
-          variant="contained"
-          aria-label="linked button group"
-          orientation="vertical"
+      <FormControl>
+        <InputLabel id="graph-dropdown-label" sx={{ fontFamily: "Montserrat, san-serif" }}>Graph Options</InputLabel>
+        <Select
+          labelId="graph-dropdown-label"
+          value={dataSetType}
+          onChange={(event) => setDataSetType(event.target.value)}
+          label="Graph Options"
+          sx={{
+            minWidth: '196px',
+            fontFamily: "Montserrat, san-serif",
+          }}
         >
-          {graphOptions.map((element) => (
-            <GraphButton
-              key={element}
-              dataSetType={dataSetType}
-              setDataSetType={setDataSetType}
-              buttonType={element}
-            />
+          {graphOptions.map((option, index) => (
+            <MenuItem key={index} value={option} sx={{ fontFamily: "Montserrat, san-serif" }}>
+              {option}
+            </MenuItem>
           ))}
-        </ButtonGroup>
-      </Box>
+        </Select>
+      </FormControl>
     </div>
-  )
+  );
 }
 
-function GraphButton({ dataSetType, setDataSetType, buttonType }) {
-  const isButtonSelected = (dataSetType == buttonType);
-
+function SelectionLabel({ selectedArea, mapView }){
   return (
-    <Button
-      onClick={() => setDataSetType(buttonType)}
-      sx={{
-        textTransform: 'none',
-        backgroundColor: isButtonSelected ? "primary.main" : "grey.200",
-        color: isButtonSelected ? "grey.200" : "primary.main",
-        transition: "all 0.3s ease-in-out",
-        "&:hover": {
-          backgroundColor: isButtonSelected ? "primary.dark" : "grey.300",
-        },
-      }}
-    >
-      {buttonType}
-    </Button>
-  );
+    <div className="averia-serif text-lg p-2">
+      {`Selected ${mapView}: ${selectedArea}`}
+    </div>
+  )
 }
 
 function BarGraph({ mapView, dataSetType, selectedArea }) {
@@ -177,7 +175,7 @@ function BarGraph({ mapView, dataSetType, selectedArea }) {
   }, [graphData]);
 
   return (
-    <div className="flex-1 flex justify-center items-center">
+    <div className="flex-1">
       <canvas ref={chartRef} className="w-full h-full"></canvas>
     </div>
   );

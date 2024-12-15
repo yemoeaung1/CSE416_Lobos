@@ -37,6 +37,10 @@ export default function StateSummaryTab({ selectedState, selectedArea, mapView, 
             population: stateInfo.data["Total Population"],
             income: stateInfo.data["Median Household Income"],
             poverty: stateInfo.data["Poverty Rate"],
+            densityMI: stateInfo.data["Population Density (Sq Mi)"],
+            densityKM: stateInfo.data["Population Density (Sq Km)"],
+            districts: stateInfo.data["Total Districts"],
+            precincts: stateInfo.data["Total Precincts"],
         }
         : {
             party: "Loading...",
@@ -44,6 +48,10 @@ export default function StateSummaryTab({ selectedState, selectedArea, mapView, 
             population: "Loading...",
             income: "Loading...",
             poverty: "Loading...",
+            densityMI: "Loading...",
+            densityKM: "Loading...",
+            districts: "Loading...",
+            precincts: "Loading...",
         }
 
     return (
@@ -61,29 +69,39 @@ export default function StateSummaryTab({ selectedState, selectedArea, mapView, 
 
 function StateDetails({ stateDetails }) {
     return (
-        <>
-            <div className="flex flex-col items-center justify-center pb-8 montserrat">
-                <span className="font-bold pb-2">Redistricting Party</span>
-                <span>{stateDetails.redistrictingParty}</span>
+        <div className="data-component-info-grid">
+            <div className="data-component-info-grid-cell montserrat">
+                <div className="font-bold pb-1">Population</div>
+                <div>{`${stateDetails.population.toLocaleString()}`}</div>
             </div>
-            <div className="data-component-info ">
-                <div className={`data-component-info-stat-box montserrat`}>
-                    <span className="font-bold pb-2">Political Lean</span>
-                    <span>{`${stateDetails.party}`}</span>
-                </div>
-                <div className={`data-component-info-stat-box montserrat`}>
-                    <span className="font-bold pb-2">Population</span>
-                    <span>{`${stateDetails.population.toLocaleString()}`}</span>
-                </div>
-                <div className={`data-component-info-stat-box montserrat`}>
-                    <span className="font-bold pb-2">Median HH Income</span>
-                    <span>{`$${stateDetails.income.toLocaleString()}`}</span>
-                </div>
-                <div className={`data-component-info-stat-box montserrat`}>
-                    <span className="font-bold pb-2">Poverty Rate</span>
-                    <span>{`${stateDetails.poverty}%`}</span>
-                </div>
+            <div className="data-component-info-grid-cell montserrat">
+                <div className="font-bold pb-1">Population Density</div>
+                <div>{`${stateDetails.densityMI} per sq mile`}</div>
             </div>
-        </>
+            <div className="data-component-info-grid-cell montserrat">
+                <div className="font-bold pb-1">Political Lean</div>
+                <div>{`${stateDetails.party}`}</div>
+            </div>
+            <div className="data-component-info-grid-cell montserrat">
+                <div className="font-bold pb-1">Redistricting Party</div>
+                <div>{stateDetails.redistrictingParty}</div>
+            </div>
+            <div className="data-component-info-grid-cell montserrat">
+                <div className="font-bold pb-1">Median HH Income</div>
+                <div>{`$${stateDetails.income.toLocaleString()}`}</div>
+            </div>
+            <div className="data-component-info-grid-cell montserrat">
+                <div className="font-bold pb-1">Poverty Rate</div>
+                <div>{`${stateDetails.poverty}%`}</div>
+            </div>
+            <div className="data-component-info-grid-cell montserrat">
+                <div className="font-bold pb-1"># of Districts</div>
+                <div>{`${stateDetails.districts}`}</div>
+            </div>
+            <div className="data-component-info-grid-cell montserrat">
+                <div className="font-bold pb-1"># of Precincts</div>
+                <div>{`${stateDetails.precincts}`}</div>
+            </div>
+        </div>
     );
 }

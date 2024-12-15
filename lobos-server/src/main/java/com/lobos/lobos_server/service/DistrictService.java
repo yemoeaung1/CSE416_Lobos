@@ -26,6 +26,7 @@ public class DistrictService {
         Map<String, Object> data = new HashMap<>();
         data.put("state", districtInfo.getState());
         data.put("data", districtInfo.getData());
+        data.put("representativeData", districtInfo.getRepresentativeData());
 
         return data;
     }

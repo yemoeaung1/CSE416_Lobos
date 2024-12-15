@@ -54,7 +54,7 @@ function CongressionalTable({ districtInfo, setHighlightedDistrict }) {
         setHighlightedDistrict({ name: "N/A", party: "N/A" });
     };
 
-    const districts = Object.entries(districtInfo.data);
+    const districts = Object.entries(districtInfo.representativeData);
 
     return (
         <div className="table-container">

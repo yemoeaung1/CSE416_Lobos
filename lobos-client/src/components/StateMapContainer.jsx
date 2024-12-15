@@ -32,7 +32,6 @@ function StatesMap({
     selectedArea,
     setSelectedArea,
     mapView,
-    setMapView,
     heatmapOpts,
     highlightedDistrict,
 }) {
@@ -105,7 +104,7 @@ function StatesMap({
                 e.target.setStyle({ fillColor: originalColor, weight: 1 });
             },
             click: (e) => {
-                if (feature.properties.ACTIVE)
+                if (mapView != MapViewOptions.NONE || feature.properties.ACTIVE)
                     setSelectedArea(feature.properties.NAME);
             },
         });

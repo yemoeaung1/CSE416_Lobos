@@ -10,39 +10,40 @@ export default function SummaryTab({ isLoading, selectedState, selectedArea, hea
 
   return (
     <>
-      <TabSelector isLoading={isLoading} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+      <div className='flex flex-col h-full'>
+        <TabSelector isLoading={isLoading} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        {selectedTab == MapViewOptions.STATE &&
+          <StateSummaryTab
+            selectedState={selectedState}
+            selectedArea={selectedArea}
+            mapView={mapView}
+            setMapView={setMapView}
+          />
+        }
 
-      {selectedTab == MapViewOptions.STATE &&
-        <StateSummaryTab
-          selectedState={selectedState}
-          selectedArea={selectedArea}
-          mapView={mapView}
-          setMapView={setMapView}
-        />
-      }
+        {selectedTab == MapViewOptions.DISTRICT &&
+          <DistrictSummaryTab
+            isLoading={isLoading}
+            selectedState={selectedState}
+            selectedArea={selectedArea}
+            mapView={mapView}
+            setMapView={setMapView}
+            setHighlightedDistrict={setHighlightedDistrict}
+          />
+        }
 
-      {selectedTab == MapViewOptions.DISTRICT &&
-        <DistrictSummaryTab
-          isLoading={isLoading}
-          selectedState={selectedState}
-          selectedArea={selectedArea}
-          mapView={mapView}
-          setMapView={setMapView}
-          setHighlightedDistrict={setHighlightedDistrict}
-        />
-      }
-
-      {selectedTab == MapViewOptions.PRECINCT &&
-        <PrecinctSummaryTab
-          isLoading={isLoading}
-          selectedArea={selectedArea}
-          heatmapOpts={heatmapOpts}
-          setHeatmapOpts={setHeatmapOpts}
-          hoveredArea={hoveredArea}
-          mapView={mapView}
-          setMapView={setMapView}
-        />
-      }
+        {selectedTab == MapViewOptions.PRECINCT &&
+          <PrecinctSummaryTab
+            isLoading={isLoading}
+            selectedArea={selectedArea}
+            heatmapOpts={heatmapOpts}
+            setHeatmapOpts={setHeatmapOpts}
+            hoveredArea={hoveredArea}
+            mapView={mapView}
+            setMapView={setMapView}
+          />
+        }
+      </div>
     </>
   );
 }
@@ -77,8 +78,9 @@ function TabSelector({ isLoading, selectedTab, setSelectedTab }) {
             : tabStyle
         }
         onClick={() => {
-          if(!isLoading)
-            setSelectedTab(MapViewOptions.STATE)}
+          if (!isLoading)
+            setSelectedTab(MapViewOptions.STATE)
+        }
         }
       >
         State Summary
@@ -90,8 +92,9 @@ function TabSelector({ isLoading, selectedTab, setSelectedTab }) {
             : tabStyle
         }
         onClick={() => {
-          if(!isLoading)
-            setSelectedTab(MapViewOptions.DISTRICT)}
+          if (!isLoading)
+            setSelectedTab(MapViewOptions.DISTRICT)
+        }
         }
       >
         District Summary
@@ -103,8 +106,9 @@ function TabSelector({ isLoading, selectedTab, setSelectedTab }) {
             : tabStyle
         }
         onClick={() => {
-          if(!isLoading)
-            setSelectedTab(MapViewOptions.PRECINCT)}
+          if (!isLoading)
+            setSelectedTab(MapViewOptions.PRECINCT)
+        }
         }
       >
         Precinct Summary

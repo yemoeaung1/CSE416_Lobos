@@ -236,16 +236,17 @@ function HeatMapSelectionTop({ isLoading, heatmapOpts, setHeatmapOpts }) {
         <div className="data-component-data-heatmap-selection-top">
             <div className="averia-serif text-2xl pb-4">Heat Map Selection</div>
             <FormControl fullWidth>
-                <InputLabel id="heat-map-dropdown-label">Options</InputLabel>
+                <InputLabel id="heat-map-dropdown-label" sx={{ fontFamily: "Montserrat, san-serif" }}>Options</InputLabel>
                 <Select
                     labelId="heat-map-dropdown-label"
                     value={heatmapOpts[0]}
                     onChange={(event) => setHeatmapOpts([event.target.value])}
                     label="Options"
                     disabled={isLoading}
+                    sx={{ fontFamily: 'Montserrat, sans-serif', }}
                 >
                     {heatmapButtons.map((option, index) => (
-                        <MenuItem key={index} value={option}>
+                        <MenuItem sx={{ fontFamily: 'Montserrat, sans-serif', }} key={index} value={option}>
                             {option}
                         </MenuItem>
                     ))}
@@ -299,6 +300,7 @@ function HeatMapRaceButton({ heatmapOpts, setHeatmapOpts, buttonType }) {
                 padding: "2px 12px",
                 minHeight: "20px",
                 fontSize: "0.8rem",
+                fontFamily: "Montserrat, san-serif",
                 backgroundColor: isButtonSelected ? "primary.main" : "grey.200",
                 color: isButtonSelected ? "grey.200" : "primary.main",
                 transition: "all 0.3s ease-in-out",
