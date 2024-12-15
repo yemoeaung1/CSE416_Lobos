@@ -112,6 +112,7 @@ function DataComponent({ dataTab, isLoading, selectedState, hoveredArea, mapView
                     mapView={mapView}
                     setMapView={setMapView}
                     setHeatmapOpts={setHeatmapOpts}
+                    selectedState={selectedState}
                 />
             }
         </div>
