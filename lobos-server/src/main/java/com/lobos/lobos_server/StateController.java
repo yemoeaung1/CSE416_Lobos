@@ -43,10 +43,8 @@ public class StateController {
             @RequestParam(required = true) String view,
             @RequestParam(required = true) List<String> heatmapOpts) {
         
-        if(state.equals(StatesEnum.NONE.toString()) || view.equals(StateViewEnum.STATE.toString())){
-            state = StatesEnum.NONE.toString();
+        if(state.equals(StatesEnum.NONE.toString()))
             view = StateViewEnum.STATE.toString();
-        }
         
         Map<String, Object> data = fetchStateMap(state, view, heatmapOpts);
         return ResponseEntity.ok(data);

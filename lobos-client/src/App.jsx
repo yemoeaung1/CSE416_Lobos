@@ -12,7 +12,7 @@ function App() {
     const [selectedArea, setSelectedArea] = useState(States.NONE);
     const [selectedState, setSelectedState] = useState(States.NONE);
 
-    const [mapView, setMapView] = useState(MapViewOptions.STATE);
+    const [mapView, setMapView] = useState(MapViewOptions.NONE);
     const [districtYear, setDistrictYear] = useState('2020');
     const [heatmapOpts, setHeatmapOpts] = useState([HeatMapFilters.NONE]);
     const [highlightedDistrict, setHighlightedDistrict] = useState(0);

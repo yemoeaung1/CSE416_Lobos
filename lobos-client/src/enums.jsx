@@ -6,12 +6,12 @@ const States = Object.freeze({
 
 const DataTabOptions = Object.freeze({
     SUMMARY: "summary",
-    STATE_DATA: "state_data",
     ANALYSIS: "analysis",
     ENSEMBLE: "ensemble"
 })
 
 const MapViewOptions = Object.freeze({
+    NONE: "None",
     STATE: "State",
     DISTRICT: "District",
     PRECINCT: "Precinct"

@@ -1,12 +1,10 @@
 import {
     BsInfoCircle,
-    BsFillBarChartFill,
     BsGraphUp,
     BsMap,
 } from "react-icons/bs";
 import { DataTabOptions, States } from "../enums";
 import SummaryTab from "./DataSummaryComponents/SummaryTab";
-import StateDataTab from "./DataStateDataComponents/StateDataTab";
 import AnalysisTab from "./DataAnalysisComponents/AnalysisTab";
 import EnsembleTab from "./DataEnsembleComponents/EnsembleTab";
 
@@ -39,11 +37,11 @@ export default function DataContainer({ isLoading, selectedArea, selectedState, 
 
 function DataTabs({ isLoading, selectedState, dataTab, setDataTab }) {
     const trySetDataTab = (opt) => {
-        if(isLoading){
+        if (isLoading) {
             console.log("Loading Failure: Switching Tabs");
             return;
         }
-        
+
         setDataTab(opt);
     }
 
@@ -56,15 +54,6 @@ function DataTabs({ isLoading, selectedState, dataTab, setDataTab }) {
             >
                 <BsInfoCircle className="toolbar-icon" />
                 <span className="toolbar-label">Summary</span>
-            </div>
-
-            <div
-                className={`toolbar-item ${dataTab === DataTabOptions.STATE_DATA ? "tool-selected" : ""
-                    }`}
-                onClick={() => trySetDataTab(DataTabOptions.STATE_DATA)}
-            >
-                <BsFillBarChartFill className="toolbar-icon" />
-                <span className="toolbar-label">State Data</span>
             </div>
 
             <div
@@ -95,12 +84,36 @@ function DataComponent({ dataTab, isLoading, selectedState, hoveredArea, mapView
         );
     }
 
-  return (
-    <div className="data-component open">
-      {dataTab === DataTabOptions.SUMMARY && <SummaryTab isLoading={isLoading} selectedState={selectedState} mapView={mapView} setMapView={setMapView} districtYear={districtYear} setDistrictYear={setDistrictYear} setHighlightedDistrict={setHighlightedDistrict}/>}
-      {dataTab === DataTabOptions.STATE_DATA && <StateDataTab isLoading={isLoading} selectedState={selectedState} hoveredArea={hoveredArea} heatmapOpts={heatmapOpts} setHeatmapOpts={setHeatmapOpts} mapView={mapView} setMapView={setMapView}/>}
-      {dataTab === DataTabOptions.ANALYSIS && <AnalysisTab selectedState={selectedState} mapView={mapView} setMapView={setMapView} />}
-      {dataTab === DataTabOptions.ENSEMBLE && <EnsembleTab mapView={mapView} setMapView={setMapView} setHeatmapOpts={setHeatmapOpts} />}
-    </div>
-  );
+    return (
+        <div className="data-component open">
+            {dataTab === DataTabOptions.SUMMARY &&
+                <SummaryTab
+                    isLoading={isLoading}
+                    selectedState={selectedState}
+                    heatmapOpts={heatmapOpts}
+                    setHeatmapOpts={setHeatmapOpts}
+                    hoveredArea={hoveredArea}
+                    mapView={mapView}
+                    setMapView={setMapView}
+                    districtYear={districtYear}
+                    setDistrictYear={setDistrictYear}
+                    setHighlightedDistrict={setHighlightedDistrict}
+                />
+            }
+            {dataTab === DataTabOptions.ANALYSIS &&
+                <AnalysisTab
+                    selectedState={selectedState}
+                    mapView={mapView}
+                    setMapView={setMapView}
+                />
+            }
+            {dataTab === DataTabOptions.ENSEMBLE &&
+                <EnsembleTab
+                    mapView={mapView}
+                    setMapView={setMapView}
+                    setHeatmapOpts={setHeatmapOpts}
+                />
+            }
+        </div>
+    );
 }
