@@ -4,13 +4,19 @@ import regression from "regression";
 import axios from "axios";
 import { States } from "../../enums";
 
-const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
+const IncomeVotingScatter = ({
+    selectedFilter,
+    selectedState,
+    onSelectGEOID,
+    onPrecinctDataFetched,
+}) => {
     const chartRef = useRef(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [precinctData, setPrecinctData] = useState([]);
     const [selectedIncomeLevel, setSelectedIncomeLevel] = useState("all");
     const [selectedRace, setSelectedRace] = useState("white");
+    const [selectedRace2, setSelectedRace2] = useState("white");
     const [selectedRegion, setSelectedRegion] = useState("all");
 
     // Fetch precinct data whenever the selected state changes
@@ -30,6 +36,8 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                 );
                 setPrecinctData(response.data);
                 setLoading(false);
+                // Pass the fetched data to AnalysisTab
+                onPrecinctDataFetched(response.data);
             } catch (err) {
                 setError("Failed to fetch data");
                 setLoading(false);
@@ -37,7 +45,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
         };
 
         fetchPrecinctData();
-    }, [selectedState]);
+    }, [selectedState, onPrecinctDataFetched]);
 
     useEffect(() => {
         if (loading || error || !precinctData.length) {
@@ -82,21 +90,42 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
             democratData = filteredData.map((precinct) => ({
                 x: precinct.median_income,
                 y: precinct.democrat_percentage,
+                geoid: precinct.geoid,
             }));
 
             republicanData = filteredData.map((precinct) => ({
                 x: precinct.median_income,
                 y: precinct.republican_percentage,
+                geoid: precinct.geoid,
             }));
         } else if (selectedFilter === "race") {
             democratData = precinctData.map((precinct) => ({
                 x: precinct[`${selectedRace}_percentage`],
                 y: precinct.democrat_percentage,
+                geoid: precinct.geoid,
             }));
             republicanData = precinctData.map((precinct) => ({
                 x: precinct[`${selectedRace}_percentage`],
                 y: precinct.republican_percentage,
+                geoid: precinct.geoid,
             }));
+        } else if (selectedFilter === "income&race") {
+            democratData = filteredData
+                .map((precinct) => ({
+                    x: precinct[`combined_${selectedRace2}`],
+                    y: precinct.democrat_percentage,
+                    geoid: precinct.geoid,
+                }))
+                .filter((point) => point.x !== 0);
+
+            republicanData = filteredData
+                .map((precinct) => ({
+                    x: precinct[`combined_${selectedRace2}`],
+                    y: precinct.republican_percentage,
+                    geoid: precinct.geoid,
+                }))
+                .filter((point) => point.x !== 0);
+            console.log("Filtered Data for Income & Race:", filteredData);
         }
 
         // Calculate min and max x-values from the filtered data to adapt to income range
@@ -169,23 +198,29 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
             stepSize,
             scalingFactor
         );
-
+        // Reset income level and region filter when switching to Income & Race or Race tab
+        if (selectedFilter !== "income") {
+            setSelectedIncomeLevel("all");
+            setSelectedRegion("all");
+        }
         const chartData = {
             datasets: [
                 {
                     label: "Democratic Voters",
                     data: democratData,
-                    backgroundColor: "rgba(0, 0, 255, 0.5)",
-                    borderColor: "rgba(0, 0, 255, 1)",
-                    borderWidth: 1,
+                    backgroundColor: "rgba(0, 0, 255, 1)",
+                    //borderColor: "rgba(0, 0, 255, 1)",
+                    //borderWidth: 1,
+                    pointRadius: 2.5,
                     showLine: false,
                 },
                 {
                     label: "Republican Voters",
                     data: republicanData,
-                    backgroundColor: "rgba(255, 0, 0, 0.5)",
-                    borderColor: "rgba(255, 0, 0, 1)",
-                    borderWidth: 1,
+                    backgroundColor: "rgba(255, 0, 0, 1)",
+                    //borderColor: "rgba(255, 0, 0, 1)",
+                    //borderWidth: 1,
+                    pointRadius: 2.5,
                     showLine: false,
                 },
                 {
@@ -193,7 +228,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                     label: "Democratic Regression Line",
                     data: regressionDataDemocrat,
                     borderColor: "rgba(0, 0, 255, 1)",
-                    borderWidth: 2,
+                    borderWidth: 3,
                     fill: false,
                     pointRadius: 0,
                 },
@@ -202,7 +237,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                     label: "Republican Regression Line",
                     data: regressionDataRepublican,
                     borderColor: "rgba(255, 0, 0, 1)",
-                    borderWidth: 2,
+                    borderWidth: 3,
                     fill: false,
                     pointRadius: 0,
                 },
@@ -215,14 +250,13 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
             } else if (selectedFilter === "race") {
                 return "Voting Trends by Race";
             } else {
-                return "Voting Trends";
+                return "Voting Trends by Income/Race";
             }
         };
         const getXAxisRange = () => {
             if (selectedFilter === "income") {
                 return { min: minX, max: maxX }; // Use the income range
-            }
-            if (selectedFilter === "race") {
+            } else if (selectedFilter === "race") {
                 if (selectedState === "Utah") {
                     switch (selectedRace) {
                         case "black":
@@ -248,6 +282,36 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                             return { min: 40, max: 100 };
                         default:
                             return { min: 0, max: 100 };
+                    }
+                }
+            } else if (selectedFilter === "income&race") {
+                if (selectedState === "Utah") {
+                    switch (selectedRace2) {
+                        case "black":
+                            return { min: 20, max: 120 };
+                        case "asian":
+                            return { min: 0, max: 120 };
+                        case "hispanic":
+                            return { min: 0, max: 120 };
+                        case "non_hispanic":
+                            return { min: 40, max: 175 };
+                        default:
+                            return { min: 0, max: 175 };
+                    }
+                } else if (selectedState === "South Carolina") {
+                    switch (selectedRace2) {
+                        case "white":
+                            return { min: 0, max: 160 };
+                        case "black":
+                            return { min: 20, max: 100 };
+                        case "asian":
+                            return { min: 0, max: 110 };
+                        case "hispanic":
+                            return { min: 0, max: 100 };
+                        case "non_hispanic":
+                            return { min: 40, max: 160 };
+                        default:
+                            return { min: 0, max: 175 };
                     }
                 }
             }
@@ -311,6 +375,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                 title: {
                     display: true,
                     text: getChartTitle(),
+                    color: "#000000",
                     font: {
                         size: 30,
                         weight: "bold",
@@ -325,12 +390,30 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                             } else {
                                 const xValue =
                                     context.parsed.x.toLocaleString();
-                                const yValue = context.parsed.y;
+                                const yValue = context.parsed.y.toFixed(2);
                                 return `${label}: (${xValue}, ${yValue}%)`;
                             }
                         },
                     },
                 },
+            },
+            onClick: (event, elements) => {
+                if (elements.length > 0) {
+                    // Get the clicked point's index
+                    const index = elements[0].index;
+                    const datasetIndex = elements[0].datasetIndex;
+
+                    // Retrieve the clicked dataset and point
+                    const clickedDataset =
+                        scatterChart.data.datasets[datasetIndex];
+                    const clickedPoint = clickedDataset.data[index];
+
+                    // Send the GEOID to the parent component
+                    if (clickedPoint && clickedPoint.geoid) {
+                        onSelectGEOID(clickedPoint.geoid); // Call the callback with GEOID
+                    }
+                    console.log(clickedPoint.geoid);
+                }
             },
         };
 
@@ -354,6 +437,7 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
         selectedIncomeLevel,
         selectedRegion,
         selectedRace,
+        selectedRace2,
     ]);
 
     const getFormattedRaceName = (race) => {
@@ -366,9 +450,14 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
     };
 
     const getXAxisTitle = () => {
-        if (selectedFilter === "income") return "Annual Income Range ($)";
+        if (selectedFilter === "income") return "Annual Household Income ($)";
         if (selectedFilter === "race")
-            return `${getFormattedRaceName(selectedRace)} Percentage`;
+            return `${getFormattedRaceName(selectedRace)} Percentage (%)`;
+        if (selectedFilter === "income&race") {
+            return `Combined ${getFormattedRaceName(
+                selectedRace2
+            )} Percentage and Scaled Income`;
+        }
         return "X-Axis";
     };
 
@@ -415,7 +504,8 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                         <option value="suburban">Suburban</option>
                     </select>
                 </div>
-                <div className="border-2 rounded-xl border-black h-full w-full">
+                {/* <div className="border-2 rounded-xl border-black h-full w-full"> */}
+                <div className="h-full w-full">
                     <canvas ref={chartRef} className="w-full h-full"></canvas>
                 </div>
             </>
@@ -440,12 +530,41 @@ const IncomeVotingScatter = ({ selectedFilter, selectedState }) => {
                         </select>
                     </div>
                 )}
-                <div className="border-2 rounded-xl border-black h-full w-full">
+                {/* <div className="border-2 rounded-xl border-black h-full w-full"> */}
+                <div className="h-full w-full">
                     <canvas ref={chartRef} className="w-full h-full"></canvas>
                 </div>
             </>
         );
-    } else {
+    } else if (selectedFilter === "income&race") {
+        return (
+            <>
+                {/* Dropdown for Race Selection */}
+                <div className="flex items-center mb-4 space-x-4">
+                    <select
+                        value={selectedRace2}
+                        onChange={(e) => setSelectedRace2(e.target.value)}
+                        className="border-2 border-black rounded-md p-2"
+                    >
+                        <option value="white">White</option>
+                        <option value="black">Black</option>
+                        <option value="asian">Asian</option>
+                        <option value="hispanic">Hispanic</option>
+                        <option value="non_hispanic">Non-Hispanic</option>
+                    </select>
+                </div>
+                {/* Chart Container */}
+                <div //</>className="border-2 rounded-xl border-black h-full w-full"
+                    className="h-full w-full"
+                >
+                    <canvas ref={chartRef} className="w-full h-full"></canvas>
+                </div>
+                <p className="mt-4 text-sm text-gray-700 text-center">
+                    Note: The x-axis represents the combined value of the scaled
+                    income and the percentage of the selected race.
+                </p>
+            </>
+        );
     }
 };
 
