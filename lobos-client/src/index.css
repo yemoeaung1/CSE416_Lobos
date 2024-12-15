@@ -211,6 +211,7 @@
   padding: 10px 8px;
   border: 1px solid #ddd;
   text-align: center;
+  word-wrap: break-word;
 }
 
 .congress-table th {
