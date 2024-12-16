@@ -22,32 +22,48 @@ public class EcologicalInferenceService {
 
     public Graph getEcologicalInferenceForState(String state, String filter, String filterOption) {
         System.out.println("Entered Into this function");
-        EcologicalInferenceInfo info = graphRepository.findByState(state);
+         EcologicalInferenceInfo info = graphRepository.findByState(state);
         if (info == null) {
             throw new IllegalArgumentException("State not found: " + state);
         }
 
         Graph graph = new Graph();
         Map<String, Map<String, Object>> filterData = info.getEcologicalInference().get(filter);
-        Map<String, Object> raceData = (Map<String, Object>) filterData.get(filterOption + "_Info");
-
-        // Extract Republican and Democratic data
-        Map<String, Object> republicanData = (Map<String, Object>) raceData.get("Republican");
-        Map<String, Object> democraticData = (Map<String, Object>) raceData.get("Democratic");
-
-        // Extract specific race and non-race data for both parties
-        Map<String, Object> republicanRaceData = (Map<String, Object>) republicanData.get(filterOption);
-        Map<String, Object> republicanNonRaceData = (Map<String, Object>) republicanData.get("Non-" + filterOption);
-        Map<String, Object> democraticRaceData = (Map<String, Object>) democraticData.get(filterOption);
-        Map<String, Object> democraticNonRaceData = (Map<String, Object>) democraticData.get("Non-" + filterOption);
-
-        // Populate the graph with the retrieved data
-        populateGraphWithEI(graph, filter, filterOption, republicanRaceData, republicanNonRaceData, democraticRaceData, democraticNonRaceData);
+        if (filter.equalsIgnoreCase("race")) {
+            populateGraphWithFilter(graph, filter, filterData, filterOption);
+        } 
+        else if (filter.equalsIgnoreCase("income")) {
+            populateGraphWithFilter(graph,filter, filterData, filterOption.replace(" ", "_")); // Convert "High Income" -> High_Income
+        } 
+        else {
+            throw new IllegalArgumentException("Invalid filter: " + filter);
+        }
 
         return graph;
     }
 
-     private void populateGraphWithEI(Graph graph, String filter, String filterOption, Map<String, Object> republicanRaceData, Map<String, Object> republicanNonRaceData, Map<String, Object> democraticRaceData, Map<String, Object> democraticNonRaceData) {
+    private void populateGraphWithFilter(Graph graph, String filter, Map<String, Map<String, Object>> filterData, String filterOption) {
+        Map<String, Object> filterInfo = (Map<String, Object>) filterData.get(filterOption + "_Info");
+
+        if (filterInfo == null) {
+            throw new IllegalArgumentException("Invalid filter option: " + filterOption);
+        }
+
+        // Extract Republican and Democratic data
+        Map<String, Object> republicanData = (Map<String, Object>) filterInfo.get("Republican");
+        Map<String, Object> democraticData = (Map<String, Object>) filterInfo.get("Democratic");
+
+        // Extract specific filter and non-filter data
+        Map<String, Object> republicanFilterData = (Map<String, Object>) republicanData.get(filterOption);
+        Map<String, Object> republicanNonFilterData = (Map<String, Object>) republicanData.get("Non-" + filterOption);
+
+        Map<String, Object> democraticFilterData = (Map<String, Object>) democraticData.get(filterOption);
+        Map<String, Object> democraticNonFilterData = (Map<String, Object>) democraticData.get("Non-" + filterOption);
+
+        populateGraphWithEI(graph, filter, filterOption, republicanFilterData, republicanNonFilterData, democraticFilterData, democraticNonFilterData);
+    }
+
+    private void populateGraphWithEI(Graph graph, String filter, String filterOption, Map<String, Object> republicanRaceData, Map<String, Object> republicanNonRaceData, Map<String, Object> democraticRaceData, Map<String, Object> democraticNonRaceData) {
         graph.setTitle("Ecological Inference: " + filter + " - " + filterOption);
         graph.setGraphType("Line");
 
@@ -60,6 +76,7 @@ public class EcologicalInferenceService {
         DataSet democraticNonRaceDataSet = extractPdfData(democraticNonRaceData, "Democratic - Non-" + filterOption, "rgba(0, 128, 0 , 0.5)");
         
         graph.setDataSets(List.of(republicanRaceDataSet, republicanNonRaceDataSet, democraticRaceDataSet, democraticNonRaceDataSet));
+
         List<Double> xValues = extractXValues(republicanRaceData);
         graph.setLabels(xValues.stream().map(String::valueOf).toList());
         graph.setXLabel("Support Level");
@@ -90,9 +107,7 @@ public class EcologicalInferenceService {
     List<?> rawXValues = (List<?>) ((Map<String, Object>) pdfData.get("pdf_data")).get("x");
 
     // Convert to List<Double> to ensure type safety
-    return rawXValues.stream()
-                     .map(value -> ((Number) value).doubleValue()) // Convert to Double
-                     .toList();
+    return rawXValues.stream().map(value -> ((Number) value).doubleValue()).toList();
     }
 
 
