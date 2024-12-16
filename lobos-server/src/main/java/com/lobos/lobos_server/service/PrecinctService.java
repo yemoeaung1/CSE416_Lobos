@@ -61,8 +61,8 @@ public class PrecinctService {
                     filteredData.put("median_income", precinct.getMedianIncome());
 
                     // Calculate Democratic and Republican vote percentages
-                    int demVotes = precinct.getPresD();
-                    int repVotes = precinct.getPresR();
+                    int demVotes = (int) precinct.getVoteDistribution().get("Democratic");
+                    int repVotes = (int) precinct.getVoteDistribution().get("Republican");
                     int totalVotes = demVotes + repVotes;
                     
                     if (totalVotes > 0) {
@@ -88,12 +88,12 @@ public class PrecinctService {
                     int totalPopulation = precinct.getTotalPopulation();
                     if (totalPopulation > 0) {
                         filteredData.put("total_population", totalPopulation);
-                        int nonWhite = totalPopulation - precinct.getWhite();
-                        double hispanicPercentage = ((double) precinct.getHispanic() / totalPopulation) * 100;
-                        double nonHispanicPercentage = ((double) precinct.getNonHispanic() / totalPopulation) * 100;
-                        double whitePercentage = ((double) precinct.getWhite() / totalPopulation) * 100;
-                        double blackPercentage = ((double) precinct.getBlack() / totalPopulation) * 100;
-                        double asianPercentage = ((double) precinct.getAsian() / totalPopulation) * 100;
+                        int nonWhite = totalPopulation - ((int) precinct.getRaceDistribution().get("White"));
+                        double hispanicPercentage = ((double) ((int) precinct.getRaceDistribution().get("Hispanic or Latino")) / totalPopulation) * 100;
+                        double nonHispanicPercentage = ((double) ((int) precinct.getRaceDistribution().get("Non-Hispanic")) / totalPopulation) * 100;
+                        double whitePercentage = ((double) ((int) precinct.getRaceDistribution().get("White")) / totalPopulation) * 100;
+                        double blackPercentage = ((double) ((int) precinct.getRaceDistribution().get("Black")) / totalPopulation) * 100;
+                        double asianPercentage = ((double) ((int) precinct.getRaceDistribution().get("Asian")) / totalPopulation) * 100;
     
                         // Add regular race percentages for the Race tab
                         filteredData.put("hispanic_percentage", hispanicPercentage);

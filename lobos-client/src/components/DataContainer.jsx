@@ -8,7 +8,7 @@ import SummaryTab from "./DataSummaryComponents/SummaryTab";
 import AnalysisTab from "./DataAnalysisComponents/AnalysisTab";
 import EnsembleTab from "./DataEnsembleComponents/EnsembleTab";
 
-export default function DataContainer({ isLoading, selectedArea, selectedState, hoveredArea, mapView, setMapView, heatmapOpts, setHeatmapOpts, dataTab, setDataTab, setHighlightedDistrict }) {
+export default function DataContainer({ isLoading, selectedArea, setSelectedArea, selectedState, hoveredArea, mapView, setMapView, heatmapOpts, setHeatmapOpts, dataTab, setDataTab, setHighlightedDistrict }) {
     return (
         <div className="data-container">
             <DataTabs
@@ -21,6 +21,7 @@ export default function DataContainer({ isLoading, selectedArea, selectedState, 
                 dataTab={dataTab}
                 isLoading={isLoading}
                 selectedArea={selectedArea}
+                setSelectedArea={setSelectedArea}
                 selectedState={selectedState}
                 hoveredArea={hoveredArea}
                 mapView={mapView}
@@ -75,7 +76,7 @@ function DataTabs({ isLoading, selectedState, dataTab, setDataTab }) {
     );
 }
 
-function DataComponent({ dataTab, isLoading, selectedState, selectedArea, hoveredArea, mapView, setMapView, heatmapOpts, setHeatmapOpts, setHighlightedDistrict }) {
+function DataComponent({ dataTab, isLoading, selectedState, selectedArea, setSelectedArea, hoveredArea, mapView, setMapView, heatmapOpts, setHeatmapOpts, setHighlightedDistrict }) {
     if (selectedState == States.NONE) {
         return (
             <div className="data-component" />
@@ -89,6 +90,7 @@ function DataComponent({ dataTab, isLoading, selectedState, selectedArea, hovere
                     isLoading={isLoading}
                     selectedState={selectedState}
                     selectedArea={selectedArea}
+                    setSelectedArea={setSelectedArea}
                     heatmapOpts={heatmapOpts}
                     setHeatmapOpts={setHeatmapOpts}
                     hoveredArea={hoveredArea}

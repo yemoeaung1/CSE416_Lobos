@@ -5,13 +5,16 @@ import { States, DataFilters, MapViewOptions, HeatMapFilters } from "../../enums
 import GraphContainer from "./GraphInfo";
 import HeatMapInfo from "./HeatMapInfo";
 
-export default function PrecinctSummaryTab({ isLoading, heatmapOpts, setHeatmapOpts, selectedArea, hoveredArea, mapView, setMapView }) {
+export default function PrecinctSummaryTab({ isLoading, heatmapOpts, setHeatmapOpts, selectedState, selectedArea, setSelectedArea, hoveredArea, mapView, setMapView }) {
+  const [initLoad, setInitLoad] = useState(false);
   const [dataSetType, setDataSetType] = useState(DataFilters.PARTY);
   const [legendInfo, setLegendInfo] = useState(null);
 
   useEffect(() => {
     if (mapView != MapViewOptions.PRECINCT)
       setMapView(MapViewOptions.PRECINCT);
+
+    setInitLoad(true);
 
     return () => {
       setHeatmapOpts([HeatMapFilters.NONE]);
@@ -57,6 +60,7 @@ export default function PrecinctSummaryTab({ isLoading, heatmapOpts, setHeatmapO
       />
       <GraphContainer
         selectedArea={selectedArea}
+        selectedState={selectedState}
         mapView={MapViewOptions.PRECINCT}
         dataSetType={dataSetType}
         setDataSetType={setDataSetType}

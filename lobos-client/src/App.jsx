@@ -40,6 +40,7 @@ function App() {
             <DataContainer
                 isLoading={isLoading}
                 selectedArea={selectedArea}
+                setSelectedArea={setSelectedArea}
                 selectedState={selectedState}
                 hoveredArea={hoveredArea}
                 mapView={mapView}

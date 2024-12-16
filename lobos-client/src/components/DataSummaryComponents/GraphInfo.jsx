@@ -4,7 +4,7 @@ import Chart from "chart.js/auto";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { DataFilters, MapViewOptions, States } from "../../enums";
 
-export default function GraphContainer({ selectedArea, mapView, dataSetType, setDataSetType }) {
+export default function GraphContainer({ selectedArea, selectedState, mapView, dataSetType, setDataSetType }) {
   return (
     <>
       <GraphSelection
@@ -20,6 +20,7 @@ export default function GraphContainer({ selectedArea, mapView, dataSetType, set
         mapView={mapView}
         dataSetType={dataSetType}
         selectedArea={selectedArea}
+        selectedState={selectedState}
       />
     </>
   );
@@ -64,7 +65,7 @@ function SelectionLabel({ selectedArea, mapView }){
   )
 }
 
-function BarGraph({ mapView, dataSetType, selectedArea }) {
+function BarGraph({ mapView, dataSetType, selectedArea, selectedState }) {
   const chartRef = useRef(null);
   const [graphData, setGraphData] = useState(null);
 
@@ -72,6 +73,7 @@ function BarGraph({ mapView, dataSetType, selectedArea }) {
     if (selectedArea != States.NONE) {
       axios.get(`http://localhost:8080/api/graph-bar`, {
         params: {
+          state: selectedState,
           area: selectedArea,
           view: mapView,
           filter: dataSetType
