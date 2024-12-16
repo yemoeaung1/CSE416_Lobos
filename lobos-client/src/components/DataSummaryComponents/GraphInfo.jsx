@@ -150,13 +150,7 @@ function BarGraph({ mapView, dataSetType, selectedArea, selectedState }) {
         },
         plugins: {
           legend: {
-            display: "Political Party",
-            position: "top",
-            labels: {
-              font: {
-                size: 16,
-              },
-            },
+            display: false,
           },
           title: {
             display: true,

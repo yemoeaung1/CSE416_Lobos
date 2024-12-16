@@ -113,28 +113,23 @@ public class GraphService {
     }
 
     private void populatePartyData(Graph graph, Map<String, Object> info) {
-        graph.setTitle("Political Party Distribution");
+        graph.setTitle("Voting Distribution");
         graph.setXLabel("Political Party");
         graph.setYLabel("Population");
 
         List<String> labels = List.of("Democrat", "Republican");
-        List<Double> data = new ArrayList<>();
+        List<Double> partyData = new ArrayList<>();
         List<GraphDataSet> dataSets = new ArrayList<>();
 
         int democraticPopulation = (int) info.get("Democratic");
         int republicanPopulation = (int) info.get("Republican");
 
-        // Add population data
-        data.add((double) democraticPopulation);
-        data.add((double) republicanPopulation);
-
-        // Create dataset
-        GraphDataSet partyDataSet = new GraphDataSet();
-        partyDataSet.setLabel("Population by Political Party");
-        partyDataSet.setData(data);
-        partyDataSet.setBackgroundColor("rgba(255, 99, 132, 0.5)");
-        partyDataSet.setBorderColor("black");
-        partyDataSet.setBorderWidth(1);
+        partyData.add((double) democraticPopulation);
+        partyData.add((double) republicanPopulation);
+        
+        GraphDataSet partyDataSet = new GraphDataSet(partyData);
+        partyDataSet.setLabel("");
+        partyDataSet.setBarAttributes(List.of("hsl(232, 70%, 60%)", "hsl(0, 80%, 60%)"), List.of("black"), 2);
 
         dataSets.add(partyDataSet);
 
@@ -159,11 +154,10 @@ public class GraphService {
         }
 
         // Create dataset
-        GraphDataSet raceDataSet = new GraphDataSet();
+        GraphDataSet raceDataSet = new GraphDataSet(data);
         raceDataSet.setLabel("Population by Race");
-        raceDataSet.setData(data);
-        raceDataSet.setBackgroundColor("rgba(0, 0, 255, 0.5)");
-        raceDataSet.setBorderColor("black");
+        raceDataSet.setBackgroundColor(List.of("hsl(280, 70%, 50%)"));
+        raceDataSet.setBorderColor(List.of("black"));
         raceDataSet.setBorderWidth(1);
 
         dataSets.add(raceDataSet);
@@ -194,12 +188,9 @@ public class GraphService {
             data.add(incomeTotal);
         }
 
-        GraphDataSet incomeDataSet = new GraphDataSet();
+        GraphDataSet incomeDataSet = new GraphDataSet(data);
         incomeDataSet.setLabel("Income Bracket");
-        incomeDataSet.setData(data);
-        incomeDataSet.setBackgroundColor("rgba(0, 255, 0, 0.5)");
-        incomeDataSet.setBorderColor("black");
-        incomeDataSet.setBorderWidth(1);
+        incomeDataSet.setBarAttributes(List.of("hsl(120, 50%, 60%)"), List.of("black"), 1);
 
         dataSets.add(incomeDataSet);
 
@@ -224,11 +215,10 @@ public class GraphService {
         }
         
         // Create dataset
-        GraphDataSet regionDataSet = new GraphDataSet();
+        GraphDataSet regionDataSet = new GraphDataSet(data);
         regionDataSet.setLabel("Population by Region");
-        regionDataSet.setData(data);
-        regionDataSet.setBackgroundColor("rgba(0, 0, 255, 0.5)");
-        regionDataSet.setBorderColor("black");
+        regionDataSet.setBackgroundColor(List.of("hsl(150, 75%, 40%)"));
+        regionDataSet.setBorderColor(List.of("black"));
         regionDataSet.setBorderWidth(1);
 
         dataSets.add(regionDataSet);
