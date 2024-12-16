@@ -9,46 +9,44 @@ export default function SummaryTab({ isLoading, selectedState, selectedArea, set
   const [selectedTab, setSelectedTab] = useState(MapViewOptions.STATE);
 
   return (
-    <>
-      <div className='flex flex-col h-full'>
-        <TabSelector isLoading={isLoading} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-        {selectedTab == MapViewOptions.STATE &&
-          <StateSummaryTab
-            selectedState={selectedState}
-            selectedArea={selectedArea}
-            setSelectedArea={setSelectedArea}
-            mapView={mapView}
-            setMapView={setMapView}
-          />
-        }
+    <div className='data-component-container'>
+      <TabSelector isLoading={isLoading} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+      {selectedTab == MapViewOptions.STATE &&
+        <StateSummaryTab
+          selectedState={selectedState}
+          selectedArea={selectedArea}
+          setSelectedArea={setSelectedArea}
+          mapView={mapView}
+          setMapView={setMapView}
+        />
+      }
 
-        {selectedTab == MapViewOptions.DISTRICT &&
-          <DistrictSummaryTab
-            isLoading={isLoading}
-            selectedState={selectedState}
-            selectedArea={selectedArea}
-            setSelectedArea={setSelectedArea}
-            mapView={mapView}
-            setMapView={setMapView}
-            setHighlightedDistrict={setHighlightedDistrict}
-          />
-        }
+      {selectedTab == MapViewOptions.DISTRICT &&
+        <DistrictSummaryTab
+          isLoading={isLoading}
+          selectedState={selectedState}
+          selectedArea={selectedArea}
+          setSelectedArea={setSelectedArea}
+          mapView={mapView}
+          setMapView={setMapView}
+          setHighlightedDistrict={setHighlightedDistrict}
+        />
+      }
 
-        {selectedTab == MapViewOptions.PRECINCT &&
-          <PrecinctSummaryTab
-            isLoading={isLoading}
-            selectedArea={selectedArea}
-            setSelectedArea={setSelectedArea}
-            selectedState={selectedState}
-            heatmapOpts={heatmapOpts}
-            setHeatmapOpts={setHeatmapOpts}
-            hoveredArea={hoveredArea}
-            mapView={mapView}
-            setMapView={setMapView}
-          />
-        }
-      </div>
-    </>
+      {selectedTab == MapViewOptions.PRECINCT &&
+        <PrecinctSummaryTab
+          isLoading={isLoading}
+          selectedArea={selectedArea}
+          setSelectedArea={setSelectedArea}
+          selectedState={selectedState}
+          heatmapOpts={heatmapOpts}
+          setHeatmapOpts={setHeatmapOpts}
+          hoveredArea={hoveredArea}
+          mapView={mapView}
+          setMapView={setMapView}
+        />
+      }
+    </div>
   );
 }
 

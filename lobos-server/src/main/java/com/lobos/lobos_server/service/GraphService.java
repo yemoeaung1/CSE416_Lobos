@@ -45,7 +45,7 @@ public class GraphService {
                 populateRaceData(graph, stateInfo.getData().getRaceDistribution());
                 break;
             case INCOME:
-                populateIncomeData(graph, stateInfo.getData().getIncomeDist());
+                populateIncomeData(graph, stateInfo.getData().getIncomeDist(), " %");
                 break;
             case REGION_TYPE:
                 populateRegionData(graph, stateInfo.getData().getRegionTypeDist());
@@ -76,7 +76,7 @@ public class GraphService {
                     populateRaceData(graph, districtData.getRaceDistribution());
                     break;
                 case INCOME:
-                    populateIncomeData(graph, districtData.getIncomeDist());
+                    populateIncomeData(graph, districtData.getIncomeDist(), "");
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid Filter: " + filter);
@@ -102,7 +102,7 @@ public class GraphService {
                     populateRaceData(graph, precinctData.getRaceDistribution());
                     break;
                 case INCOME:
-                    populateIncomeData(graph, precinctData.getIncomeDist());
+                    populateIncomeData(graph, precinctData.getIncomeDist(), "");
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid Filter: " + filter);
@@ -114,7 +114,6 @@ public class GraphService {
 
     private void populatePartyData(Graph graph, Map<String, Object> info) {
         graph.setTitle("Voting Distribution");
-        graph.setXLabel("Political Party");
         graph.setYLabel("Population");
 
         List<String> labels = List.of("Democrat", "Republican");
@@ -139,7 +138,6 @@ public class GraphService {
 
     private void populateRaceData(Graph graph, Map<String, Object> info) {
         graph.setTitle("Population Distribution by Race");
-        graph.setXLabel("Race");
         graph.setYLabel("Population");
 
         List<String> labels = new ArrayList<>();
@@ -166,10 +164,9 @@ public class GraphService {
         graph.setDataSets(dataSets);
     }
 
-    private void populateIncomeData(Graph graph, Map<String, Object> info) {
+    private void populateIncomeData(Graph graph, Map<String, Object> info, String percentString) {
         graph.setTitle("Distribution by Income Bracket");
-        graph.setXLabel("Income Bracket");
-        graph.setYLabel("Percentage of Population");
+        graph.setYLabel("Population" + percentString);
 
         List<String> labels = new ArrayList<>();
         List<Double> data = new ArrayList<>();
@@ -200,18 +197,23 @@ public class GraphService {
 
     private void populateRegionData(Graph graph, Map<String, Object> info) {
         graph.setTitle("Population Distribution by Region");
-        graph.setXLabel("Region Type");
-        graph.setYLabel("Population");
+        graph.setYLabel("Population %");
 
         List<String> labels = new ArrayList<>();
         List<Double> data = new ArrayList<>();
         List<GraphDataSet> dataSets = new ArrayList<>();
-
+        
+        int totalPopulation = 0;
         for (String regionType : info.keySet()) {
             int regionPopulation = (int) info.get(regionType);
+            totalPopulation += regionPopulation;
 
             labels.add(regionType);
             data.add((double) regionPopulation);
+        }
+
+        for (int i = 0; i < data.size(); i++) {
+            data.set(i, data.get(i) / totalPopulation);
         }
         
         // Create dataset

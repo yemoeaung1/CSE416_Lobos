@@ -119,13 +119,19 @@
   background-color: white;
   box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.3);
 
-  padding: 20px;
   z-index: 1000;
   transition: right 0.8s ease;
 }
 
 .data-component.open {
   right: 0vw;
+}
+
+.data-component-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
 }
 
 .toolbar-item {
@@ -167,6 +173,12 @@
   font-family: 'Montserrat', sans-serif;
 }
 
+/* Data Component Graph Distributions CSS */
+.data-component-graph-container {
+  display: flex;
+  flex-direction: row;
+}
+
 /* State Summary Tab CSS */
 .data-component-info-grid {
   display: grid;
@@ -205,7 +217,7 @@
 
 .congress-table th,
 .congress-table td {
-  padding: 10px 8px;
+  padding: 6px 8px;
   border: 1px solid #ddd;
   text-align: center;
   word-wrap: break-word;
@@ -215,12 +227,12 @@
   color: white;
   background-color: #000000;
 
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
 }
 
 .congress-table td {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .congress-table tr:nth-child(even) {

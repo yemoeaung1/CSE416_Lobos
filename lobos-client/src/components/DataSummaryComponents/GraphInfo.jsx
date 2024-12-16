@@ -6,15 +6,12 @@ import { DataFilters, MapViewOptions, States } from "../../enums";
 
 export default function GraphContainer({ selectedArea, selectedState, mapView, dataSetType, setDataSetType }) {
   return (
-    <>
+    <div className="data-component-graph-container">
       <GraphSelection
         mapView={mapView}
+        selectedArea={selectedArea}
         dataSetType={dataSetType}
         setDataSetType={setDataSetType}
-      />
-      <SelectionLabel 
-        selectedArea={selectedArea}
-        mapView={mapView}
       />
       <BarGraph
         mapView={mapView}
@@ -22,18 +19,18 @@ export default function GraphContainer({ selectedArea, selectedState, mapView, d
         selectedArea={selectedArea}
         selectedState={selectedState}
       />
-    </>
+    </div>
   );
 }
 
-function GraphSelection({ mapView, dataSetType, setDataSetType }) {
+function GraphSelection({ mapView, selectedArea, dataSetType, setDataSetType }) {
   const graphOptions = [DataFilters.PARTY, DataFilters.RACE, DataFilters.INCOME, DataFilters.REGION_TYPE];
 
   if (mapView != MapViewOptions.STATE)
     graphOptions.pop();
 
   return (
-    <div className="data-component-data-graph-selection">
+    <div className="data-component-graph-selection">
       <FormControl>
         <InputLabel id="graph-dropdown-label" sx={{ fontFamily: "Montserrat, san-serif" }}>Graph Options</InputLabel>
         <Select
@@ -53,16 +50,10 @@ function GraphSelection({ mapView, dataSetType, setDataSetType }) {
           ))}
         </Select>
       </FormControl>
+      <div className="averia-serif text-lg pt-2 pb-1 font-bold">{`Selected ${mapView}:`}</div>
+      <div className="averia-serif text-base">{`${selectedArea}`}</div>
     </div>
   );
-}
-
-function SelectionLabel({ selectedArea, mapView }){
-  return (
-    <div className="averia-serif text-lg p-2">
-      {`Selected ${mapView}: ${selectedArea}`}
-    </div>
-  )
 }
 
 function BarGraph({ mapView, dataSetType, selectedArea, selectedState }) {
@@ -80,7 +71,7 @@ function BarGraph({ mapView, dataSetType, selectedArea, selectedState }) {
         }
       })
         .then(response => {
-          const { labels, dataSets, title, xlabel, ylabel } = response.data;
+          const { labels, dataSets, title, ylabel } = response.data;
 
           setGraphData({
             labels,
@@ -92,7 +83,6 @@ function BarGraph({ mapView, dataSetType, selectedArea, selectedState }) {
               borderWidth: dataSet.borderWidth,
             })),
             title: title,
-            xTitle: xlabel,
             yTitle: ylabel,
           });
         })
@@ -100,7 +90,7 @@ function BarGraph({ mapView, dataSetType, selectedArea, selectedState }) {
           console.error("Error Retrieving Info:", error);
         });
     }
-  }, [dataSetType]);
+  }, [dataSetType, selectedArea]);
 
   useEffect(() => {
     if (!graphData) return;
@@ -122,12 +112,14 @@ function BarGraph({ mapView, dataSetType, selectedArea, selectedState }) {
               text: graphData.xTitle,
               font: {
                 size: 20,
+                family: "Montserrat, sans-serif",
               },
               color: "#000000",
             },
             ticks: {
               font: {
-                size: 18,
+                size: 16,
+                family: "Montserrat, sans-serif",
               },
             },
           },
@@ -138,12 +130,14 @@ function BarGraph({ mapView, dataSetType, selectedArea, selectedState }) {
               text: graphData.yTitle,
               font: {
                 size: 20,
+                family: "Montserrat, sans-serif",
               },
               color: "#000000",
             },
             ticks: {
               font: {
-                size: 18,
+                size: 16,
+                family: "Montserrat, sans-serif",
               },
             },
           },
@@ -156,8 +150,9 @@ function BarGraph({ mapView, dataSetType, selectedArea, selectedState }) {
             display: true,
             text: graphData.title,
             font: {
-              size: 28,
+              size: 24,
               weight: "bold",
+              family: "Montserrat, sans-serif",
             },
             color: "#000000",
           },

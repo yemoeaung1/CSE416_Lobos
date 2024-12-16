@@ -71,11 +71,11 @@ function CongressionalTable({ districtInfo, setHighlightedDistrict }) {
                         <th style={{ width: '32px' }}>#</th>
                         <th>Repr. Name</th>
                         <th>Repr. Party</th>
-                        <th style={{ textAlign: 'right' }}>Median HH-Income</th>
-                        <th style={{ textAlign: 'right' }}>Poverty Rate</th>
-                        <th style={{ textAlign: 'right' }}>Region (Urban)</th>
-                        <th style={{ textAlign: 'right' }}>Region (Suburban)</th>
-                        <th style={{ textAlign: 'right' }}>Region (Rural)</th>
+                        <th style={{ textAlign: 'right' }}>Avg Income</th>
+                        <th style={{ textAlign: 'right' }}>Poverty %</th>
+                        <th style={{ textAlign: 'right' }}>Urban %</th>
+                        <th style={{ textAlign: 'right' }}>Suburban %</th>
+                        <th style={{ textAlign: 'right' }}>Rural %</th>
                         <th style={{ textAlign: 'right' }}>Vote Margin</th>
                     </tr>
                 </thead>
@@ -83,7 +83,7 @@ function CongressionalTable({ districtInfo, setHighlightedDistrict }) {
                     {districts.map(([districtName, details]) => (
                         <tr
                             key={districtName}
-                            className={details.Party === 'Democratic' ? 'hover:text-blue-600' : 'hover:text-red-600'}
+                            className={`hover:font-bold hover:text-${details.Party === 'Democratic' ? 'blue-600' : 'red-600'}`}
                             onMouseEnter={() => handleHover(districtName, details["Party"])}
                             onMouseLeave={handleLeave}
                         >
