@@ -79,7 +79,7 @@ export default function PrecinctSummaryTab({ isLoading, heatmapOpts, setHeatmapO
         <GraphContainer
           selectedArea={selectedArea}
           selectedState={selectedState}
-          mapView={MapViewOptions.DISTRICT}
+          mapView={MapViewOptions.PRECINCT}
           dataSetType={dataSetType}
           setDataSetType={setDataSetType}
         />
