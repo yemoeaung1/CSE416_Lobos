@@ -115,6 +115,7 @@
 
   top: 10vh;
   right: -60vw;
+  padding: 20px;
 
   background-color: white;
   box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.3);
@@ -131,7 +132,6 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 20px;
 }
 
 .toolbar-item {
