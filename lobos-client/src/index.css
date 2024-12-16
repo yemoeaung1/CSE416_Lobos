@@ -278,3 +278,27 @@
 .data-component-data-heatmap-selection-top {
   height: 120px;
 }
+
+/* District Plan Pop-up CSS */
+.district-plan-popup {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 60%;
+  left: 50%;
+  
+  width: 75%;
+  height: 75%;
+
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+
+  z-index: 10;
+}
+
+.district-plan-popup-exit{
+  position: absolute;
+
+  z-index: 10;
+}

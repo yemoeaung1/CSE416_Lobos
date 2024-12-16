@@ -3,12 +3,10 @@ package com.lobos.lobos_server;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.lobos.lobos_server.enum_classes.MapViewsEnum;
-import com.lobos.lobos_server.model.Graph;
 import com.lobos.lobos_server.service.GraphService;
 
 @RestController

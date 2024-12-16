@@ -6,10 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 public class DistrictData {
     private String name;
-
     private int total_population;
-    private int total_households;
-    private int households_below_poverty_line;
 
     @Field("Vote Distribution")
     private Map<String, Object> voteDist;
@@ -27,14 +24,6 @@ public class DistrictData {
 
     public int getTotalPopulation(){
         return total_population;
-    }
-
-    public int getTotalHouseholds(){
-        return total_households;
-    }
-
-    public int getHouseholdsBelowPovertyLine(){
-        return households_below_poverty_line;
     }
 
     public Map<String, Object> getVoteDistribution(){

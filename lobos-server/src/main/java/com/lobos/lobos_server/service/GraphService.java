@@ -150,7 +150,7 @@ public class GraphService {
     }
 
     private void populateRaceData(Graph graph, Map<String, Object> info) {
-        graph.setTitle("Population Distribution by Race");
+        graph.setTitle("Race Distribution");
         graph.setYLabel("Population");
 
         List<String> labels = new ArrayList<>();
@@ -178,7 +178,7 @@ public class GraphService {
     }
 
     private void populateIncomeData(Graph graph, Map<String, Object> info, String percentString) {
-        graph.setTitle("Distribution by Income Bracket");
+        graph.setTitle("Income Distribution");
         graph.setYLabel("Population" + percentString);
 
         List<String> labels = new ArrayList<>();
@@ -209,7 +209,7 @@ public class GraphService {
     }
 
     private void populateRegionData(Graph graph, Map<String, Object> info) {
-        graph.setTitle("Population Distribution by Region");
+        graph.setTitle("Region Type Distribution");
         graph.setYLabel("Population %");
 
         List<String> labels = new ArrayList<>();

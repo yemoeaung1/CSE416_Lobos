@@ -48,4 +48,13 @@ public class RegionController {
         Map<String, Object> data = districtService.getDistrictInfo(state);
         return ResponseEntity.ok(data);
     }
+
+    @GetMapping("/district-plan")
+    public ResponseEntity<Map<String, Object>> getDistrictPlan(
+        @RequestParam(required = true) String state,
+        @RequestParam(required = true) String name) {
+
+        Map<String, Object> data = districtService.getDistrictPlan(state, name);
+        return ResponseEntity.ok(data);
+    }
 }
