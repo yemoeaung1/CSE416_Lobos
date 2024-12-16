@@ -1,27 +1,31 @@
 package com.lobos.lobos_server;
 
-import com.lobos.lobos_server.enum_classes.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.lobos.lobos_server.model.Boxplot;
 import com.lobos.lobos_server.model.EnsembleInfo;
 import com.lobos.lobos_server.service.EnsembleInfoService;
-import com.lobos.lobos_server.model.Boxplot;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Arrays;
+import com.lobos.lobos_server.utilities.ColorMapping;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
 public class EnsembleInfoController {
+
     private final EnsembleInfoService ensembleInfoService;
 
     @Autowired
@@ -31,14 +35,13 @@ public class EnsembleInfoController {
 
     @GetMapping("/ensemble-info")
     public EnsembleInfo getEnsembleInfo(@RequestParam String state) {
-        // Map<String, Object> data = getBoxandWhiskerData(state, "white");
         return ensembleInfoService.getEnsembleInfoForState(state);
     }
 
     @GetMapping("/ensemble-data")
-    public ResponseEntity<Map<String, Object>> showSortedBox(String state, String filter) {
+    public ResponseEntity<Map<String, Object>> showSortedBox(String state, String filter, String category) {
         Map<String, Boxplot> sortedDistricts = getBoxandWhiskerData(state, filter);
-        Map<String, Object> data = formatBoxplotData(sortedDistricts);
+        Map<String, Object> data = formatBoxplotData(sortedDistricts, category, filter);
         return ResponseEntity.ok(data);
     }
 
@@ -49,25 +52,17 @@ public class EnsembleInfoController {
         // Get the Boxplot map from the EnsembleInfo using the filter
         Map<String, Map<String, Boxplot>> boxplot = ensembleInfo.getBoxplot();
 
-        if(filter.equals("poverty_rate")) {
+        if (filter.equals("poverty_rate")) {
             filter = "households_below_poverty_line";
         }
+
         Map<String, Boxplot> districtData = boxplot.get(filter);
 
         List<Map.Entry<String, Boxplot>> sortedDistricts = new ArrayList<>(districtData.entrySet());
         sortedDistricts.sort(Comparator.comparing(entry -> entry.getValue().getMedian()));
 
-        // for (Map.Entry<String, Boxplot> district : sortedDistricts) {
-        //     System.out.println("  Inner Key: " + district.getKey());  // Inner map key
-        //     Boxplot boxplotObj = district.getValue();
-            
-        //     // Retrieve and print the median
-        //     Double median = boxplotObj.getMedian();
-        //     System.out.println("Median: " + median);
-        // }
-
         Map<String, Boxplot> sortedDistrictMap = new LinkedHashMap<>();
-            // Iterate through the sorted list and populate the new map
+        // Iterate through the sorted list and populate the new map
         for (Map.Entry<String, Boxplot> district : sortedDistricts) {
             sortedDistrictMap.put(district.getKey(), district.getValue());
         }
@@ -75,11 +70,11 @@ public class EnsembleInfoController {
         return sortedDistrictMap;
     }
 
-    private Map<String, Object> formatBoxplotData(Map<String, Boxplot> sortedDistricts) {
+    private Map<String, Object> formatBoxplotData(Map<String, Boxplot> sortedDistricts, String category, String filter) {
+        ColorMapping color = getColorMappingByCategory(category, filter);
         List<String> labels = new ArrayList<>(sortedDistricts.keySet());
 
         // List<Map<String, Object>> data = new ArrayList<>();
-
         List<Double> currentPlanData = new ArrayList<>();
         List<Map<String, Double>> groupData = new ArrayList<>();
 
@@ -95,9 +90,9 @@ public class EnsembleInfoController {
         }
 
         Map<String, Object> dataSet = new HashMap<>();
-        dataSet.put("label", "Recom Ensemble (5000 plans)");
-        dataSet.put("backgroundColor", "rgba(0,0,255,0.5)");
-        dataSet.put("borderColor", "blue");
+        dataSet.put("label", "Recom Ensemble");
+        dataSet.put("backgroundColor", color.getColor());
+        dataSet.put("borderColor", "black");
         dataSet.put("borderWidth", 1);
         dataSet.put("outlierColor", "#999999");
         dataSet.put("padding", 5);
@@ -119,9 +114,31 @@ public class EnsembleInfoController {
         Map<String, Object> result = new HashMap<>();
         result.put("labels", labels);
         result.put("data", Arrays.asList(currentPlanDataSet, dataSet));
-        result.put("title", "Ensemble Analysis");
+        result.put("title", String.format("Population Distribution Across District Plans"));
 
         return result;
+    }
+
+    private ColorMapping getColorMappingByCategory(String category, String filter) {
+        // Map<String, Object> colors = new HashMap<>();
+
+        switch (category) {
+            case "Income":
+                return new ColorMapping(filter, "hsla(132, 96.70%, 23.50%, 0.70)", 0.2);
+
+            case "Voting":
+                String color = filter.equals("2020_PRES_R") ? "hsla(0, 96.90%, 37.60%, 0.66)" : "hsla(240, 60.00%, 50.00%, 0.66)";
+                return new ColorMapping(filter, color, 0.2);
+
+            case "Demographics":
+                return new ColorMapping("50%+", "hsla(279, 92.30%, 35.90%, 0.74)", 0.2);
+
+            case "Region_Type":
+                return new ColorMapping("Urban", "hsla(66, 30.30%, 60.60%, 0.76)", 0.2);
+
+            default:
+                throw new IllegalArgumentException("Unknown category: " + category);
+        }
     }
 
     // @GetMapping("/ensemble-info")
