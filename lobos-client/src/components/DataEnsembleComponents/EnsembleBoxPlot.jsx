@@ -7,7 +7,7 @@ import axios from "axios";
 Chart.register(BoxPlotController, BoxAndWiskers);
 
 
-const BoxPlotGraph = ({ dataSetType, selectedState }) => {
+const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName }) => {
     const chartRef = useRef(null);
     const [chartInstance, setChartInstance] = useState(null);
     const [dataSet, setDataSet] = useState(null);
@@ -30,7 +30,7 @@ const BoxPlotGraph = ({ dataSetType, selectedState }) => {
             try {
                 // Use selectedState in the API call to fetch the relevant data
                 const response = await axios.get(
-                    `http://localhost:8080/api/ensemble-data?state=${selectedState}&filter=${dataSetType}`
+                    `http://localhost:8080/api/ensemble-data?state=${selectedState}&filter=${dataSetType}&category=${dataCategory}`
                 );
                 console.log(response.data);
                 setDataSet(response.data);
@@ -109,9 +109,9 @@ const BoxPlotGraph = ({ dataSetType, selectedState }) => {
                     },
                     title: {
                         display: true,
-                        text: dataSet.title,
+                        text: `${dataSet.title} (${displayName})`,
                         font: {
-                            size: 28,
+                            size: 24,
                             weight: "bold",
                         },
                         color: "#000000",
@@ -128,9 +128,9 @@ const BoxPlotGraph = ({ dataSetType, selectedState }) => {
     }, [dataSet]);
 
     return (
-        <div className="h-1/2 w-102">
+        <div className="h-24 w-102">
             <div className="flex-1 flex justify-center items-center">
-                <canvas ref={chartRef} className="w-full h-full"></canvas>
+                <canvas ref={chartRef} className="w-10 h-10"></canvas>
             </div>
         </div>
     );

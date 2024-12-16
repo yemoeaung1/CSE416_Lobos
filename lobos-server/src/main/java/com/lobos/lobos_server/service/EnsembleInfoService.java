@@ -1,19 +1,12 @@
 package com.lobos.lobos_server.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 
-import com.lobos.lobos_server.model.Graph;
-import com.lobos.lobos_server.enum_classes.DataFiltersEnum;
-import com.lobos.lobos_server.enum_classes.MapFiltersEnum;
-import com.lobos.lobos_server.model.DataSet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.lobos.lobos_server.model.EnsembleInfo;
 import com.lobos.lobos_server.repository.EnsembleInfoRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class EnsembleInfoService {
