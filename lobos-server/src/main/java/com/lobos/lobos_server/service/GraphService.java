@@ -3,20 +3,21 @@ package com.lobos.lobos_server.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lobos.lobos_server.model.DistrictData;
 import com.lobos.lobos_server.model.DistrictInfo;
 import com.lobos.lobos_server.model.Graph;
 import com.lobos.lobos_server.enum_classes.DataFiltersEnum;
 import com.lobos.lobos_server.model.GraphDataSet;
-
+import com.lobos.lobos_server.model.PrecinctData;
 import com.lobos.lobos_server.model.StateInfo;
 import com.lobos.lobos_server.repository.DistrictInfoRepository;
-import com.lobos.lobos_server.repository.PrecinctInfoRepository;
 import com.lobos.lobos_server.repository.StateInfoRepository;
 
 import com.lobos.lobos_server.model.EcologicalInferenceInfo;
 import com.lobos.lobos_server.repository.GraphRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,78 +25,126 @@ import java.util.Map;
 public class GraphService {
     private final StateInfoRepository stateInfoRepository;
     private final DistrictInfoRepository districtInfoRepository;
-    private final PrecinctInfoRepository precinctInfoRepository;
+    private final PrecinctService precinctService;
 
     @Autowired
     public GraphService(StateInfoRepository stateInfoRepository,
             DistrictInfoRepository districtInfoRepository,
-            PrecinctInfoRepository precinctInfoRepository) {
+            PrecinctService precinctService) {
 
         this.stateInfoRepository = stateInfoRepository;
         this.districtInfoRepository = districtInfoRepository;
-        this.precinctInfoRepository = precinctInfoRepository;
+        this.precinctService = precinctService;
     }
 
-    public Graph getGraphForState(String state, String area, String filter) {
+    public Map<String, Object> getGraphForState(String state, String area, String filter) {
         StateInfo stateInfo = stateInfoRepository.findFirstByState(state);
 
         Graph graph = new Graph("Bar");
-
-        DataFiltersEnum enumFilter = DataFiltersEnum.fromValue(filter);
-
-        switch (enumFilter) {
+        switch (DataFiltersEnum.fromValue(filter)) {
             case PARTY:
-                populatePartyData(graph, stateInfo);
+                populatePartyData(graph, stateInfo.getData().getVoteDistribution());
                 break;
             case RACE:
-                populateRaceData(graph, stateInfo);
+                populateRaceData(graph, stateInfo.getData().getRaceDistribution());
                 break;
             case INCOME:
-                populateIncomeData(graph, stateInfo);
+                populateIncomeData(graph, stateInfo.getData().getIncomeDist(), " %");
                 break;
             case REGION_TYPE:
-                populateRegionData(graph, stateInfo);
+                populateRegionData(graph, stateInfo.getData().getRegionTypeDist());
                 break;
             default:
                 throw new IllegalArgumentException("Invalid Filter: " + filter);
         }
-        return graph;
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("data", graph);
+        data.put("population", (stateInfo != null) ? stateInfo.getData().getTotalPopulation() : null);
+
+        return data;
     }
 
-    public Graph getGraphForDistrict(String state, String area, String filter) {
+    public Map<String, Object> getGraphForDistrict(String state, String area, String filter) {
         DistrictInfo districtInfo = districtInfoRepository.findFirstByState(state);
-        return null;
-    }
+        DistrictData districtData = null;
 
-    public Graph getGraphForPrecinct(String state, String area, String filter) {
-        return null;
-    }
-
-    private void populatePartyData(Graph graph, StateInfo stateInfo) {
-        graph.setTitle("Political Party Distribution");
-        graph.setXLabel("Political Party");
-        graph.setYLabel("Population");
-
-        List<String> labels = List.of("Democratic", "Republican");
-        List<Double> data = new ArrayList<>();
-        List<GraphDataSet> dataSets = new ArrayList<>();
-
-        if (stateInfo.getData().containsKey("Democratic") && stateInfo.getData().containsKey("Republican")) {
-            Object democraticPopulation = stateInfo.getData().get("Democratic");
-            Object republicanPopulation = stateInfo.getData().get("Republican");
-
-            // Add population data
-            data.add(Double.parseDouble(democraticPopulation.toString()));
-            data.add(Double.parseDouble(republicanPopulation.toString()));
+        for (DistrictData data : districtInfo.getDistricts()) {
+            if (data.getName().equals(area))
+                districtData = data;
         }
 
-        // Create dataset
-        GraphDataSet partyDataSet = new GraphDataSet();
-        partyDataSet.setLabel("Population by Political Party");
-        partyDataSet.setData(data);
-        partyDataSet.setBackgroundColor("rgba(255, 99, 132, 0.5)");
-        partyDataSet.setBorderColor("black");
-        partyDataSet.setBorderWidth(1);
+        Graph graph = new Graph("Bar");
+        if (districtData != null) {
+            switch (DataFiltersEnum.fromValue(filter)) {
+                case PARTY:
+                    populatePartyData(graph, districtData.getVoteDistribution());
+                    break;
+                case RACE:
+                    populateRaceData(graph, districtData.getRaceDistribution());
+                    break;
+                case INCOME:
+                    populateIncomeData(graph, districtData.getIncomeDist(), "");
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid Filter: " + filter);
+            }
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("data", graph);
+        data.put("population", (districtData != null) ? districtData.getTotalPopulation() : null);
+
+        return data;
+    }
+
+    public Map<String, Object> getGraphForPrecinct(String state, String area, String filter) {
+        PrecinctData precinctData = null;
+
+        Map<String, PrecinctData> precinctMap = precinctService.fetchPrecinctInfoMapByName(state);
+        precinctData = precinctMap.get(area);
+
+        Graph graph = new Graph("Bar");
+        if (precinctData != null) {
+            switch (DataFiltersEnum.fromValue(filter)) {
+                case PARTY:
+                    populatePartyData(graph, precinctData.getVoteDistribution());
+                    break;
+                case RACE:
+                    populateRaceData(graph, precinctData.getRaceDistribution());
+                    break;
+                case INCOME:
+                    populateIncomeData(graph, precinctData.getIncomeDist(), "");
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid Filter: " + filter);
+            }
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("data", graph);
+        data.put("population", (precinctData != null) ? precinctData.getTotalPopulation() : null);
+
+        return data;
+    }
+
+    private void populatePartyData(Graph graph, Map<String, Object> info) {
+        graph.setTitle("Voting Distribution");
+        graph.setYLabel("Population");
+
+        List<String> labels = List.of("Democrat", "Republican");
+        List<Double> partyData = new ArrayList<>();
+        List<GraphDataSet> dataSets = new ArrayList<>();
+
+        int democraticPopulation = (int) info.get("Democratic");
+        int republicanPopulation = (int) info.get("Republican");
+
+        partyData.add((double) democraticPopulation);
+        partyData.add((double) republicanPopulation);
+        
+        GraphDataSet partyDataSet = new GraphDataSet(partyData);
+        partyDataSet.setLabel("");
+        partyDataSet.setBarAttributes(List.of("hsl(232, 70%, 60%)", "hsl(0, 80%, 60%)"), List.of("black"), 2);
 
         dataSets.add(partyDataSet);
 
@@ -103,35 +152,26 @@ public class GraphService {
         graph.setDataSets(dataSets);
     }
 
-    private void populateRaceData(Graph graph, StateInfo stateInfo) {
+    private void populateRaceData(Graph graph, Map<String, Object> info) {
         graph.setTitle("Population Distribution by Race");
-        graph.setXLabel("Race");
         graph.setYLabel("Population");
 
         List<String> labels = new ArrayList<>();
         List<Double> data = new ArrayList<>();
         List<GraphDataSet> dataSets = new ArrayList<>();
 
-        if (stateInfo.getData().containsKey("Race")) {
-            Map<String, Object> raceData = (Map<String, Object>) stateInfo.getData().get("Race");
+        for (String race : info.keySet()) {
+            int raceCount = (int) info.get(race);
 
-            for (String race : raceData.keySet()) {
-                Map<String, Object> raceDetails = (Map<String, Object>) raceData.get(race);
-                Object estimateObj = raceDetails.get("Estimate");
-
-                if (estimateObj != null) {
-                    labels.add(race);
-                    data.add(Double.parseDouble(estimateObj.toString()));
-                }
-            }
+            labels.add(race);
+            data.add((double) raceCount);
         }
 
         // Create dataset
-        GraphDataSet raceDataSet = new GraphDataSet();
+        GraphDataSet raceDataSet = new GraphDataSet(data);
         raceDataSet.setLabel("Population by Race");
-        raceDataSet.setData(data);
-        raceDataSet.setBackgroundColor("rgba(0, 0, 255, 0.5)");
-        raceDataSet.setBorderColor("black");
+        raceDataSet.setBackgroundColor(List.of("hsl(280, 70%, 50%)"));
+        raceDataSet.setBorderColor(List.of("black"));
         raceDataSet.setBorderWidth(1);
 
         dataSets.add(raceDataSet);
@@ -140,34 +180,30 @@ public class GraphService {
         graph.setDataSets(dataSets);
     }
 
-    private void populateIncomeData(Graph graph, StateInfo stateInfo) {
+    private void populateIncomeData(Graph graph, Map<String, Object> info, String percentString) {
         graph.setTitle("Distribution by Income Bracket");
-        graph.setXLabel("Income Bracket");
-        graph.setYLabel("Percentage of Population");
+        graph.setYLabel("Population" + percentString);
 
         List<String> labels = new ArrayList<>();
         List<Double> data = new ArrayList<>();
         List<GraphDataSet> dataSets = new ArrayList<>();
 
-        if (stateInfo.getData().containsKey("Household Income")) {
-            Map<String, Object> incomeData = (Map<String, Object>) stateInfo.getData().get("Household Income");
+        // Loop through each income bracket
+        for (String incomeBracket : info.keySet()) {
+            double incomeTotal;
+            if(info.get(incomeBracket) instanceof Integer)
+                incomeTotal = (int) info.get(incomeBracket);
+            else
+                incomeTotal = (double) info.get(incomeBracket);
 
-            // Loop through each income bracket
-            for (String incomeBracket : incomeData.keySet()) {
-                Map<String, Object> incomeDetails = (Map<String, Object>) incomeData.get(incomeBracket);
-
-                // Add the bracket and percentage to labels and data
-                labels.add(formatIncomeLabel(incomeBracket));
-                data.add(Double.parseDouble(incomeDetails.get("Percentage").toString()));
-            }
+            // Add the bracket and percentage to labels and data
+            labels.add(formatIncomeLabel(incomeBracket));
+            data.add(incomeTotal);
         }
 
-        GraphDataSet incomeDataSet = new GraphDataSet();
+        GraphDataSet incomeDataSet = new GraphDataSet(data);
         incomeDataSet.setLabel("Income Bracket");
-        incomeDataSet.setData(data);
-        incomeDataSet.setBackgroundColor("rgba(0, 255, 0, 0.5)");
-        incomeDataSet.setBorderColor("black");
-        incomeDataSet.setBorderWidth(1);
+        incomeDataSet.setBarAttributes(List.of("hsl(120, 50%, 60%)"), List.of("black"), 1);
 
         dataSets.add(incomeDataSet);
 
@@ -175,34 +211,32 @@ public class GraphService {
         graph.setDataSets(dataSets);
     }
 
-    private void populateRegionData(Graph graph, StateInfo stateInfo) {
+    private void populateRegionData(Graph graph, Map<String, Object> info) {
         graph.setTitle("Population Distribution by Region");
-        graph.setXLabel("Race");
-        graph.setYLabel("Population");
+        graph.setYLabel("Population %");
 
         List<String> labels = new ArrayList<>();
         List<Double> data = new ArrayList<>();
         List<GraphDataSet> dataSets = new ArrayList<>();
+        
+        int totalPopulation = 0;
+        for (String regionType : info.keySet()) {
+            int regionPopulation = (int) info.get(regionType);
+            totalPopulation += regionPopulation;
 
-        if (stateInfo.getData().containsKey("Region Type Distribution")) {
-            Map<String, Object> regionData = (Map<String, Object>) stateInfo.getData().get("Region Type Distribution");
-
-            for (String regionType : regionData.keySet()) {
-                Object populationObj = regionData.get(regionType);
-
-                if (populationObj != null) {
-                    labels.add(regionType);
-                    data.add(Double.parseDouble(populationObj.toString()));
-                }
-            }
+            labels.add(regionType);
+            data.add((double) regionPopulation);
         }
 
+        for (int i = 0; i < data.size(); i++) {
+            data.set(i, data.get(i) / totalPopulation);
+        }
+        
         // Create dataset
-        GraphDataSet regionDataSet = new GraphDataSet();
+        GraphDataSet regionDataSet = new GraphDataSet(data);
         regionDataSet.setLabel("Population by Region");
-        regionDataSet.setData(data);
-        regionDataSet.setBackgroundColor("rgba(0, 0, 255, 0.5)");
-        regionDataSet.setBorderColor("black");
+        regionDataSet.setBackgroundColor(List.of("hsl(150, 75%, 40%)"));
+        regionDataSet.setBorderColor(List.of("black"));
         regionDataSet.setBorderWidth(1);
 
         dataSets.add(regionDataSet);

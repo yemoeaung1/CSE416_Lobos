@@ -14,11 +14,28 @@ export default function PrecinctSummaryTab({ isLoading, heatmapOpts, setHeatmapO
     if (mapView != MapViewOptions.PRECINCT)
       setMapView(MapViewOptions.PRECINCT);
 
-    setInitLoad(true);
-
     return () => {
       setHeatmapOpts([HeatMapFilters.NONE]);
     };
+  }, []);
+
+
+  useEffect(() => {
+    if (selectedState !== States.NONE) {
+      axios.get(`http://localhost:8080/api/precinct-entry`, {
+        params: {
+          state: selectedState
+        }
+      })
+        .then(response => {
+          setSelectedArea(response.data.name);
+          setInitLoad(true);
+        })
+        .catch(error => {
+          console.error("Error Retrieving Info:", error);
+          setInitLoad(true);
+        });
+    }
   }, []);
 
   useEffect(() => {
@@ -58,13 +75,15 @@ export default function PrecinctSummaryTab({ isLoading, heatmapOpts, setHeatmapO
         legendInfo={legendInfo}
         hoveredArea={hoveredArea}
       />
-      <GraphContainer
-        selectedArea={selectedArea}
-        selectedState={selectedState}
-        mapView={MapViewOptions.PRECINCT}
-        dataSetType={dataSetType}
-        setDataSetType={setDataSetType}
-      />
+      {initLoad &&
+        <GraphContainer
+          selectedArea={selectedArea}
+          selectedState={selectedState}
+          mapView={MapViewOptions.PRECINCT}
+          dataSetType={dataSetType}
+          setDataSetType={setDataSetType}
+        />
+      }
     </>
   );
 }

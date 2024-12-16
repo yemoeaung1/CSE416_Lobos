@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import BoxPlotGraph from './EnsembleBoxPlot';
 import { MapViewOptions } from '../../enums';
+import SplitsBarGraph from './EnsembleBarGraph';
 
 export default function EnsembleTab({ selectedState, mapView, setMapView }) {
   const [selectedTab, setSelectedTab] = useState('table');
@@ -61,7 +62,11 @@ export default function EnsembleTab({ selectedState, mapView, setMapView }) {
       {/* Group Selector */}
       {/* Dropdown for Selected Group */}
       {selectedTab == 'table' &&
-        <EnsembleTable selectedState={selectedState}/>}
+      <>
+              <EnsembleTable selectedState={selectedState}/>
+              <SplitsBarGraph selectedState={selectedState}/>
+              </>
+}
       {selectedTab === 'chart' && (
         <>
           <div className="flex justify-around p-2">

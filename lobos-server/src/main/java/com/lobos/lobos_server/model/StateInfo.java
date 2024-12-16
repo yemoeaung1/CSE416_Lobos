@@ -10,7 +10,7 @@ public class StateInfo {
     @Id
     private String id;
     private String state;
-    private Map<String, Object> data;
+    private StateData data;
 
     public String getId() {
         return id;
@@ -28,11 +28,11 @@ public class StateInfo {
         this.state = state;
     }
 
-    public Map<String, Object> getData() {
+    public StateData getData() {
         return data;
     }
 
-    public void setData(Map<String, Object> data) {
+    public void setData(StateData data) {
         this.data = data;
     }
 }

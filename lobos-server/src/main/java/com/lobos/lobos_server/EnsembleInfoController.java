@@ -33,9 +33,27 @@ public class EnsembleInfoController {
         this.ensembleInfoService = ensembleInfoService;
     }
 
-    @GetMapping("/ensemble-info")
-    public EnsembleInfo getEnsembleInfo(@RequestParam String state) {
-        return ensembleInfoService.getEnsembleInfoForState(state);
+    @GetMapping("/ensemble-splits")
+    public ResponseEntity<Map<String, Object>> getEnsembleInfo(@RequestParam String state) {
+        Map<String, Object> data = new HashMap<>();
+        EnsembleInfo info = ensembleInfoService.getEnsembleInfoForState(state);
+        Map<String, Integer> splits = info.getSplits();
+        List<String> labels = new ArrayList<>(splits.keySet());
+        List<Integer> values = new ArrayList<>(splits.values());
+
+        System.out.println(info.getSplits());
+        data.put("labels",  labels);
+        data.put("dataSets", values);
+        data.put("backgroundColor", "red");
+        data.put("borderColor", "black");
+        data.put("borderWidth", 1);
+        data.put("outlierColor", "#999999");
+        data.put("padding", 5);
+        data.put("itemRadius", 2);
+        data.put("title", String.format("Republican/Democrat Splits In %s After Simulations By District", state));
+
+
+        return ResponseEntity.ok(data);
     }
 
     @GetMapping("/ensemble-data")

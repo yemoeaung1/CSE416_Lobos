@@ -26,7 +26,7 @@ export default function StateSummaryTab({ selectedState, selectedArea, setSelect
                 }
             })
                 .then(response => {
-                    setStateInfo(response.data)
+                    setStateInfo(response.data);
                 })
                 .catch(error => {
                     console.error("Error Retrieving Info:", error);
@@ -38,15 +38,15 @@ export default function StateSummaryTab({ selectedState, selectedArea, setSelect
 
     let stateDetails = isInfoUpdated
         ? {
-            party: stateInfo.data["Political Party"],
-            redistrictingParty: stateInfo.data["Redistricting Party"],
-            population: stateInfo.data["Total Population"],
-            income: stateInfo.data["Median Household Income"],
-            poverty: stateInfo.data["Poverty Rate"],
-            densityMI: stateInfo.data["Population Density (Sq Mi)"],
-            densityKM: stateInfo.data["Population Density (Sq Km)"],
-            districts: stateInfo.data["Total Districts"],
-            precincts: stateInfo.data["Total Precincts"],
+            party: stateInfo.data["party"],
+            redistrictingParty: stateInfo.data["redistrictingParty"],
+            population: stateInfo.data["totalPopulation"],
+            income: stateInfo.data["medianIncome"],
+            poverty: stateInfo.data["povertyRate"],
+            densityMI: stateInfo.data["densityMi"],
+            densityKM: stateInfo.data["densityKm"],
+            districts: stateInfo.data["totalDistricts"],
+            precincts: stateInfo.data["totalPrecincts"],
         }
         : {
             party: "Loading...",
@@ -78,7 +78,7 @@ function StateDetails({ stateDetails }) {
     return (
         <div className="data-component-info-grid">
             <div className="data-component-info-grid-cell montserrat">
-                <div className="font-bold pb-1">Population</div>
+                <div className="font-bold pb-1">Total Population</div>
                 <div>{`${stateDetails.population.toLocaleString()}`}</div>
             </div>
             <div className="data-component-info-grid-cell montserrat">
