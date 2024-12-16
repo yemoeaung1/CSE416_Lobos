@@ -20,6 +20,81 @@ public class EcologicalInferenceService {
         this.graphRepository = graphRepository;
     }
 
+   public Graph getBarGraphForFilter(String state, String filter) {
+        EcologicalInferenceInfo info = graphRepository.findByState(state);
+        if (info == null) {
+            throw new IllegalArgumentException("State not found: " + state);
+        }
+
+        Graph graph = new Graph("bar");
+        List<GraphDataSet> dataSets = new ArrayList<>();
+        List<String> categories = new ArrayList<>();
+
+        Map<String, Map<String, Object>> filterData = info.getEcologicalInference().get(filter);
+
+        // Process all filter options under the selected filter
+        for (String key : filterData.keySet()) {
+            String categoryLabel = key.replace("_Info", ""); // e.g., Rural_Info -> Rural
+            categories.add(categoryLabel);
+
+            Map<String, Object> filterInfo = filterData.get(key);
+            Map<String, Object> republicanData = (Map<String, Object>) filterInfo.get("Republican");
+            Map<String, Object> democraticData = (Map<String, Object>) filterInfo.get("Democratic");
+
+            // Get posterior means for Republican and Democratic
+            double republicanMean = getPosteriorMean(republicanData);
+            double democraticMean = getPosteriorMean(democraticData);
+            System.out.println(republicanData);
+
+            // Add Republican and Democratic data for this category
+            dataSets.add(createGraphDataSet("Republican - " + categoryLabel, republicanMean, "rgba(255, 0, 0, 0.7)"));
+            dataSets.add(createGraphDataSet("Democratic - " + categoryLabel, democraticMean, "rgba(0, 0, 255, 0.7)"));
+        }
+
+        graph.setLabels(categories); // Category labels like Rural, Suburban, etc.
+        graph.setDataSets(dataSets);
+        graph.setXLabel("Categories");
+        graph.setYLabel("Posterior Mean Support Level");
+        graph.setTitle("Ecological Inference - " + filter);
+
+        return graph;
+    }
+
+    private double getPosteriorMean(Map<String, Object> partyData) {
+    if (partyData == null) {
+        return 0.0; // Return default value if party data is missing
+    }
+
+    double totalMean = 0.0;
+    int count = 0;
+
+    // Iterate over all nested entries (e.g., Asian, Non-Asian)
+    for (Map.Entry<String, Object> entry : partyData.entrySet()) {
+        if (entry.getValue() instanceof Map) {
+            Map<String, Object> nestedData = (Map<String, Object>) entry.getValue();
+            Object mean = nestedData.get("posterior_mean");
+
+            if (mean instanceof Number) {
+                totalMean += ((Number) mean).doubleValue();
+                count++;
+            }
+        }
+    }
+
+    // Calculate average posterior mean if multiple nested values exist
+    return count > 0 ? totalMean / count : 0.0;
+}
+
+
+    private GraphDataSet createGraphDataSet(String label, double value, String color) {
+        GraphDataSet dataSet = new GraphDataSet(List.of(value));
+        dataSet.setLabel(label);
+        dataSet.setBackgroundColor(List.of(color));
+        dataSet.setBorderColor(List.of("black"));
+        dataSet.setBorderWidth(1);
+        return dataSet;
+    }
+
     public Graph getEcologicalInferenceForState(String state, String filter, String filterOption) {
         System.out.println("Entered Into this function");
          EcologicalInferenceInfo info = graphRepository.findByState(state);
@@ -35,6 +110,9 @@ public class EcologicalInferenceService {
         else if (filter.equalsIgnoreCase("income")) {
             populateGraphWithFilter(graph,filter, filterData, filterOption.replace(" ", "_"));
         } 
+        else if (filter.equalsIgnoreCase("region")){
+            populateGraphWithFilter(graph, filter, filterData, filterOption);
+        }
         else {
             throw new IllegalArgumentException("Invalid filter: " + filter);
         }
@@ -94,7 +172,7 @@ public class EcologicalInferenceService {
 
         GraphDataSet dataSet = new GraphDataSet(yValues);
         dataSet.setLabel(label);
-        // dataSet.setBackgroundColor(List.of("hsl(280, 70%, 50%)"));
+        dataSet.setBackgroundColor(List.of(color));
         // dataSet.setBorderColor(List.of("black"));
         return dataSet;
     }

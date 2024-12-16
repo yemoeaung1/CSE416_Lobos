@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import LineGraph from "../GraphPlotComponents/LineGraph";
 import axios from "axios";
+import EcologicalInferenceBarGraph from "./EcologicalInferenceBarGraph";
 
 export default function EcologicalInferenceTab({selectedState, filter}){
     const [selectedFilter, setSelectedFilter] = useState("race");
     const [dropdownOptions, setDropdownOptions] = useState([]);
-    const [selectedFilterOption, setSelectedFilterOption] = useState("Medium Income");
+    const [selectedFilterOption, setSelectedFilterOption] = useState("White");
+    const [regionOptions] = useState(["Urban", "Suburban", "Rural"]);
+    const [selectedRegion, setSelectedRegion] = useState("Urban");
     const [republicanGraphData, setRepublicanGraphData] = useState(null);
     const [democraticGraphData, setDemocraticGraphData] = useState(null);
+    const [chartType, setChartType] = useState("line"); //Used Later
 
     useEffect(() => {
         if (filter === "race") {
@@ -23,7 +27,7 @@ export default function EcologicalInferenceTab({selectedState, filter}){
     const fetchGraphData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/ecological-inference?state=${selectedState}&filter=${filter}&filterOption=${selectedFilterOption}`
+          `http://localhost:8080/api/ecological-inference?state=${selectedState}&filter=${"region"}&filterOption=${"Urban"}`
         );
 
         const data = response.data;
@@ -51,8 +55,34 @@ export default function EcologicalInferenceTab({selectedState, filter}){
 
     return(
         <div className="flex flex-col w-full h-full">
-            <DropDownBar dropdownOptions={dropdownOptions} setSelectedFilterOption={setSelectedFilterOption} selectedFilterOption={selectedFilterOption} />
-            {republicanGraphData && (
+            <div className="flex justify-start space-x-4 mb-4">
+            {/* Main Filter Dropdown */}
+            <DropDownBar
+              label="Filter Option"
+              dropdownOptions={dropdownOptions}
+              setSelectedOption={setSelectedFilterOption}
+              selectedOption={selectedFilterOption}
+            />
+
+            {/* Region Dropdown */}
+            <DropDownBar
+              label="Region Type"
+              dropdownOptions={regionOptions}
+              setSelectedOption={setSelectedRegion}
+              selectedOption={selectedRegion}
+            />
+
+            {/* Toggle Button
+            <button
+              className="text-lg font-semibold bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
+              onClick={() => setChartType(chartType === "line" ? "bar" : "line")}
+            >
+              Switch to {chartType === "line" ? "Bar" : "Line"} Graph
+            </button> */}
+
+          </div>
+
+            {/* {republicanGraphData && (
                 <div className="h-1/2 w-full flex justify-center items-center">
                 <LineGraph
                     graphData={republicanGraphData}
@@ -67,7 +97,8 @@ export default function EcologicalInferenceTab({selectedState, filter}){
                     title="Support for Democrat"
                 />
                 </div>
-            )}
+            )} */}
+            <EcologicalInferenceBarGraph/>
         </div>
     )
 }

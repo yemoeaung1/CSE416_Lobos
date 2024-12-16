@@ -60,4 +60,16 @@ public class GraphController {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
+
+     @GetMapping("/ecological-inference/bar")
+    public ResponseEntity<?> getEcologicalInferenceGraph(@RequestParam String state, @RequestParam String filter) {
+        try {
+            Graph graph = ecologicalInferenceService.getBarGraphForFilter(state, filter);
+            return ResponseEntity.ok(graph);
+        } 
+        catch (RuntimeException e) {
+            System.out.println(e);
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
 }

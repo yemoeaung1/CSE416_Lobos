@@ -24,8 +24,8 @@ export default function LineGraph({ graphData, title }) {
           })),
           borderColor: dataset.borderColor,
           borderWidth: dataset.borderWidth,
-          backgroundColor: dataset.borderColor,
-          fill: { target: "origin", above: dataset.borderColor },
+          backgroundColor: dataset.backgroundColor,
+          fill: { target: "origin", above: dataset.backgroundColor },
           tension: 0.5,
           pointRadius: 0
         })),
