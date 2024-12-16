@@ -14,6 +14,7 @@ import com.lobos.lobos_server.repository.DistrictInfoRepository;
 import com.lobos.lobos_server.repository.StateInfoRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class GraphService {
         this.precinctService = precinctService;
     }
 
-    public Graph getGraphForState(String state, String area, String filter) {
+    public Map<String, Object> getGraphForState(String state, String area, String filter) {
         StateInfo stateInfo = stateInfoRepository.findFirstByState(state);
 
         Graph graph = new Graph("Bar");
@@ -54,10 +55,14 @@ public class GraphService {
                 throw new IllegalArgumentException("Invalid Filter: " + filter);
         }
 
-        return graph;
+        Map<String, Object> data = new HashMap<>();
+        data.put("data", graph);
+        data.put("population", (stateInfo != null) ? stateInfo.getData().getTotalPopulation() : null);
+
+        return data;
     }
 
-    public Graph getGraphForDistrict(String state, String area, String filter) {
+    public Map<String, Object> getGraphForDistrict(String state, String area, String filter) {
         DistrictInfo districtInfo = districtInfoRepository.findFirstByState(state);
         DistrictData districtData = null;
 
@@ -83,10 +88,14 @@ public class GraphService {
             }
         }
 
-        return graph;
+        Map<String, Object> data = new HashMap<>();
+        data.put("data", graph);
+        data.put("population", (districtData != null) ? districtData.getTotalPopulation() : null);
+
+        return data;
     }
 
-    public Graph getGraphForPrecinct(String state, String area, String filter) {
+    public Map<String, Object> getGraphForPrecinct(String state, String area, String filter) {
         PrecinctData precinctData = null;
 
         Map<String, PrecinctData> precinctMap = precinctService.fetchPrecinctInfoMapByName(state);
@@ -109,7 +118,11 @@ public class GraphService {
             }
         }
 
-        return graph;
+        Map<String, Object> data = new HashMap<>();
+        data.put("data", graph);
+        data.put("population", (precinctData != null) ? precinctData.getTotalPopulation() : null);
+
+        return data;
     }
 
     private void populatePartyData(Graph graph, Map<String, Object> info) {
