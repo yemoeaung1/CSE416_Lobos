@@ -85,7 +85,7 @@ public class StateController {
 
     private void appendHeatmapOpts(GeoJSON geoJSON, String state, List<String> heatmapOpts){
         try{
-            Map<String, PrecinctData> precinctInfoMap = precinctService.fetchPrecinctInfoMap(state);
+            Map<String, PrecinctData> precinctInfoMap = precinctService.fetchPrecinctInfoMapByGEOID(state);
 
             // Loop through all features in GeoJSON
             for (GeoJSON.Feature feature : geoJSON.getFeatures()) {

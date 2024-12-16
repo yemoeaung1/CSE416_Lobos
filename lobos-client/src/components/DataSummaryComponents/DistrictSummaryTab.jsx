@@ -22,10 +22,7 @@ export default function DistrictSummaryTab({ selectedState, selectedArea, setSel
             })
                 .then(response => {
                     setDistrictInfo(response.data);
-
-                    const [firstKey, firstEntry] = Object.entries(response.data.representativeData)[0];
-                    setSelectedArea(firstKey);
-
+                    setSelectedArea(response.data.data[0].name);
                     setInitLoad(true);
                 })
                 .catch(error => {
@@ -42,13 +39,15 @@ export default function DistrictSummaryTab({ selectedState, selectedArea, setSel
             <div className="flex flex-col items-center justify-center">
                 {isInfoUpdated && <CongressionalTable districtInfo={districtInfo} selectedState={selectedState} setHighlightedDistrict={setHighlightedDistrict} />}
             </div>
-            <GraphContainer
-                selectedArea={selectedArea}
-                selectedState={selectedState}
-                mapView={MapViewOptions.DISTRICT}
-                dataSetType={dataSetType}
-                setDataSetType={setDataSetType}
-            />
+            {initLoad &&
+                <GraphContainer
+                    selectedArea={selectedArea}
+                    selectedState={selectedState}
+                    mapView={MapViewOptions.DISTRICT}
+                    dataSetType={dataSetType}
+                    setDataSetType={setDataSetType}
+                />
+            }
         </>
     )
 }

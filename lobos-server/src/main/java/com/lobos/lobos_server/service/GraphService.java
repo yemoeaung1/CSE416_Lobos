@@ -3,14 +3,14 @@ package com.lobos.lobos_server.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lobos.lobos_server.model.DistrictData;
 import com.lobos.lobos_server.model.DistrictInfo;
 import com.lobos.lobos_server.model.Graph;
 import com.lobos.lobos_server.enum_classes.DataFiltersEnum;
 import com.lobos.lobos_server.model.GraphDataSet;
-
+import com.lobos.lobos_server.model.PrecinctData;
 import com.lobos.lobos_server.model.StateInfo;
 import com.lobos.lobos_server.repository.DistrictInfoRepository;
-import com.lobos.lobos_server.repository.PrecinctInfoRepository;
 import com.lobos.lobos_server.repository.StateInfoRepository;
 
 import java.util.ArrayList;
@@ -21,70 +21,112 @@ import java.util.Map;
 public class GraphService {
     private final StateInfoRepository stateInfoRepository;
     private final DistrictInfoRepository districtInfoRepository;
-    private final PrecinctInfoRepository precinctInfoRepository;
+    private final PrecinctService precinctService;
 
     @Autowired
     public GraphService(StateInfoRepository stateInfoRepository,
             DistrictInfoRepository districtInfoRepository,
-            PrecinctInfoRepository precinctInfoRepository) {
+            PrecinctService precinctService) {
 
         this.stateInfoRepository = stateInfoRepository;
         this.districtInfoRepository = districtInfoRepository;
-        this.precinctInfoRepository = precinctInfoRepository;
+        this.precinctService = precinctService;
     }
 
     public Graph getGraphForState(String state, String area, String filter) {
         StateInfo stateInfo = stateInfoRepository.findFirstByState(state);
 
         Graph graph = new Graph("Bar");
-
-        DataFiltersEnum enumFilter = DataFiltersEnum.fromValue(filter);
-
-        switch (enumFilter) {
+        switch (DataFiltersEnum.fromValue(filter)) {
             case PARTY:
-                populatePartyData(graph, stateInfo);
+                populatePartyData(graph, stateInfo.getData().getVoteDistribution());
                 break;
             case RACE:
-                populateRaceData(graph, stateInfo);
+                populateRaceData(graph, stateInfo.getData().getRaceDistribution());
                 break;
             case INCOME:
-                populateIncomeData(graph, stateInfo);
+                populateIncomeData(graph, stateInfo.getData().getIncomeDist());
                 break;
             case REGION_TYPE:
-                populateRegionData(graph, stateInfo);
+                populateRegionData(graph, stateInfo.getData().getRegionTypeDist());
                 break;
             default:
                 throw new IllegalArgumentException("Invalid Filter: " + filter);
         }
+
         return graph;
     }
 
     public Graph getGraphForDistrict(String state, String area, String filter) {
         DistrictInfo districtInfo = districtInfoRepository.findFirstByState(state);
-        return null;
+        DistrictData districtData = null;
+
+        for (DistrictData data : districtInfo.getDistricts()) {
+            if (data.getName().equals(area))
+                districtData = data;
+        }
+
+        Graph graph = new Graph("Bar");
+        if (districtData != null) {
+            switch (DataFiltersEnum.fromValue(filter)) {
+                case PARTY:
+                    populatePartyData(graph, districtData.getVoteDistribution());
+                    break;
+                case RACE:
+                    populateRaceData(graph, districtData.getRaceDistribution());
+                    break;
+                case INCOME:
+                    populateIncomeData(graph, districtData.getIncomeDist());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid Filter: " + filter);
+            }
+        }
+
+        return graph;
     }
 
     public Graph getGraphForPrecinct(String state, String area, String filter) {
-        return null;
+        PrecinctData precinctData = null;
+
+        Map<String, PrecinctData> precinctMap = precinctService.fetchPrecinctInfoMapByName(state);
+        precinctData = precinctMap.get(area);
+
+        Graph graph = new Graph("Bar");
+        if (precinctData != null) {
+            switch (DataFiltersEnum.fromValue(filter)) {
+                case PARTY:
+                    populatePartyData(graph, precinctData.getVoteDistribution());
+                    break;
+                case RACE:
+                    populateRaceData(graph, precinctData.getRaceDistribution());
+                    break;
+                case INCOME:
+                    populateIncomeData(graph, precinctData.getIncomeDist());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid Filter: " + filter);
+            }
+        }
+
+        return graph;
     }
 
-    private void populatePartyData(Graph graph, StateInfo stateInfo) {
+    private void populatePartyData(Graph graph, Map<String, Object> info) {
         graph.setTitle("Political Party Distribution");
         graph.setXLabel("Political Party");
         graph.setYLabel("Population");
 
-        List<String> labels = List.of("Democratic", "Republican");
+        List<String> labels = List.of("Democrat", "Republican");
         List<Double> data = new ArrayList<>();
         List<GraphDataSet> dataSets = new ArrayList<>();
 
-        if (stateInfo.getData().containsKey("Democratic") && stateInfo.getData().containsKey("Republican")) {
-            Object democraticPopulation = stateInfo.getData().get("Democratic");
-            Object republicanPopulation = stateInfo.getData().get("Republican");
+        int democraticPopulation = (int) info.get("Democratic");
+        int republicanPopulation = (int) info.get("Republican");
 
-            // Add population data
-            data.add(Double.parseDouble(democraticPopulation.toString()));
-            data.add(Double.parseDouble(republicanPopulation.toString()));
-        }
+        // Add population data
+        data.add((double) democraticPopulation);
+        data.add((double) republicanPopulation);
 
         // Create dataset
         GraphDataSet partyDataSet = new GraphDataSet();
@@ -100,7 +142,7 @@ public class GraphService {
         graph.setDataSets(dataSets);
     }
 
-    private void populateRaceData(Graph graph, StateInfo stateInfo) {
+    private void populateRaceData(Graph graph, Map<String, Object> info) {
         graph.setTitle("Population Distribution by Race");
         graph.setXLabel("Race");
         graph.setYLabel("Population");
@@ -109,18 +151,11 @@ public class GraphService {
         List<Double> data = new ArrayList<>();
         List<GraphDataSet> dataSets = new ArrayList<>();
 
-        if (stateInfo.getData().containsKey("Race")) {
-            Map<String, Object> raceData = (Map<String, Object>) stateInfo.getData().get("Race");
+        for (String race : info.keySet()) {
+            int raceCount = (int) info.get(race);
 
-            for (String race : raceData.keySet()) {
-                Map<String, Object> raceDetails = (Map<String, Object>) raceData.get(race);
-                Object estimateObj = raceDetails.get("Estimate");
-
-                if (estimateObj != null) {
-                    labels.add(race);
-                    data.add(Double.parseDouble(estimateObj.toString()));
-                }
-            }
+            labels.add(race);
+            data.add((double) raceCount);
         }
 
         // Create dataset
@@ -137,7 +172,7 @@ public class GraphService {
         graph.setDataSets(dataSets);
     }
 
-    private void populateIncomeData(Graph graph, StateInfo stateInfo) {
+    private void populateIncomeData(Graph graph, Map<String, Object> info) {
         graph.setTitle("Distribution by Income Bracket");
         graph.setXLabel("Income Bracket");
         graph.setYLabel("Percentage of Population");
@@ -146,17 +181,17 @@ public class GraphService {
         List<Double> data = new ArrayList<>();
         List<GraphDataSet> dataSets = new ArrayList<>();
 
-        if (stateInfo.getData().containsKey("Household Income")) {
-            Map<String, Object> incomeData = (Map<String, Object>) stateInfo.getData().get("Household Income");
+        // Loop through each income bracket
+        for (String incomeBracket : info.keySet()) {
+            double incomeTotal;
+            if(info.get(incomeBracket) instanceof Integer)
+                incomeTotal = (int) info.get(incomeBracket);
+            else
+                incomeTotal = (double) info.get(incomeBracket);
 
-            // Loop through each income bracket
-            for (String incomeBracket : incomeData.keySet()) {
-                Map<String, Object> incomeDetails = (Map<String, Object>) incomeData.get(incomeBracket);
-
-                // Add the bracket and percentage to labels and data
-                labels.add(formatIncomeLabel(incomeBracket));
-                data.add(Double.parseDouble(incomeDetails.get("Percentage").toString()));
-            }
+            // Add the bracket and percentage to labels and data
+            labels.add(formatIncomeLabel(incomeBracket));
+            data.add(incomeTotal);
         }
 
         GraphDataSet incomeDataSet = new GraphDataSet();
@@ -172,28 +207,22 @@ public class GraphService {
         graph.setDataSets(dataSets);
     }
 
-    private void populateRegionData(Graph graph, StateInfo stateInfo) {
+    private void populateRegionData(Graph graph, Map<String, Object> info) {
         graph.setTitle("Population Distribution by Region");
-        graph.setXLabel("Race");
+        graph.setXLabel("Region Type");
         graph.setYLabel("Population");
 
         List<String> labels = new ArrayList<>();
         List<Double> data = new ArrayList<>();
         List<GraphDataSet> dataSets = new ArrayList<>();
 
-        if (stateInfo.getData().containsKey("Region Type Distribution")) {
-            Map<String, Object> regionData = (Map<String, Object>) stateInfo.getData().get("Region Type Distribution");
+        for (String regionType : info.keySet()) {
+            int regionPopulation = (int) info.get(regionType);
 
-            for (String regionType : regionData.keySet()) {
-                Object populationObj = regionData.get(regionType);
-
-                if (populationObj != null) {
-                    labels.add(regionType);
-                    data.add(Double.parseDouble(populationObj.toString()));
-                }
-            }
+            labels.add(regionType);
+            data.add((double) regionPopulation);
         }
-
+        
         // Create dataset
         GraphDataSet regionDataSet = new GraphDataSet();
         regionDataSet.setLabel("Population by Region");

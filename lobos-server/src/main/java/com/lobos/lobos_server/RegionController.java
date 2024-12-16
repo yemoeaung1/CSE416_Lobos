@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.lobos.lobos_server.model.PrecinctData;
+import com.lobos.lobos_server.model.PrecinctInfo;
 import com.lobos.lobos_server.service.DistrictService;
 import com.lobos.lobos_server.service.PrecinctService;
 
@@ -28,6 +30,15 @@ public class RegionController {
     @GetMapping("/precinct-data")
     public List<Map<String, Object>> getPrecinctData(@RequestParam String state) {
         return precinctService.getPrecinctDataByState(state);
+    }
+
+    @GetMapping("/precinct-entry")
+    public ResponseEntity<PrecinctData> getPrecinctEntry(
+        @RequestParam(required = true) String state) {
+
+        PrecinctInfo precinctInfo = precinctService.getPrecinctInfo(state);
+
+        return ResponseEntity.ok(precinctInfo.getPrecincts()[0]);
     }
 
     @GetMapping("/district-info")

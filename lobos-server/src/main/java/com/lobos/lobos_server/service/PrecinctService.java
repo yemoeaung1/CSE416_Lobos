@@ -23,12 +23,13 @@ public class PrecinctService {
         this.precinctInfoRepository = precinctInfoRepository;
     }
 
+    @Cacheable(value = "precinct-info-cache", key = "#state")
     public PrecinctInfo getPrecinctInfo(String state){
         return precinctInfoRepository.findFirstByState(state);
     }
 
-    @Cacheable(value = "precinct-info-map-cache", key = "#state")
-    public Map<String, PrecinctData> fetchPrecinctInfoMap(String state){
+    @Cacheable(value = "precinct-info-map-geoid-cache", key = "#state")
+    public Map<String, PrecinctData> fetchPrecinctInfoMapByGEOID(String state){
         PrecinctInfo precinctInfo = precinctInfoRepository.findFirstByState(state);
 
         if(precinctInfo == null)
@@ -37,6 +38,21 @@ public class PrecinctService {
         Map<String, PrecinctData> precinctInfoMap = new HashMap<>();
         for(PrecinctData obj: precinctInfo.getPrecincts()){
             precinctInfoMap.put((String) obj.getGEOID(), obj);
+        }
+
+        return precinctInfoMap;
+    }
+
+    @Cacheable(value = "precinct-info-map-name-cache", key = "#state")
+    public Map<String, PrecinctData> fetchPrecinctInfoMapByName(String state){
+        PrecinctInfo precinctInfo = precinctInfoRepository.findFirstByState(state);
+
+        if(precinctInfo == null)
+            return null;
+
+        Map<String, PrecinctData> precinctInfoMap = new HashMap<>();
+        for(PrecinctData obj: precinctInfo.getPrecincts()){
+            precinctInfoMap.put((String) obj.getName(), obj);
         }
 
         return precinctInfoMap;
