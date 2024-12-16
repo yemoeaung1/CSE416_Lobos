@@ -33,7 +33,7 @@ public class EcologicalInferenceService {
             populateGraphWithFilter(graph, filter, filterData, filterOption);
         } 
         else if (filter.equalsIgnoreCase("income")) {
-            populateGraphWithFilter(graph,filter, filterData, filterOption.replace(" ", "_")); // Convert "High Income" -> High_Income
+            populateGraphWithFilter(graph,filter, filterData, filterOption.replace(" ", "_"));
         } 
         else {
             throw new IllegalArgumentException("Invalid filter: " + filter);
@@ -92,13 +92,10 @@ public class EcologicalInferenceService {
         List<Double> xValues = rawX.stream().map(value -> ((Number) value).doubleValue()).toList();
         List<Double> yValues = rawY.stream().map(value -> ((Number) value).doubleValue()).toList();
 
-        GraphDataSet dataSet = new GraphDataSet();
+        GraphDataSet dataSet = new GraphDataSet(yValues);
         dataSet.setLabel(label);
-        dataSet.setData(yValues);
-        dataSet.setBackgroundColor(color + "20");
-        dataSet.setBorderColor(color);
-        dataSet.setBorderWidth(1);
-
+        // dataSet.setBackgroundColor(List.of("hsl(280, 70%, 50%)"));
+        // dataSet.setBorderColor(List.of("black"));
         return dataSet;
     }
 
