@@ -3,6 +3,7 @@ package com.lobos.lobos_server.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lobos.lobos_server.model.DistrictInfo;
 import com.lobos.lobos_server.model.Graph;
 import com.lobos.lobos_server.enum_classes.DataFiltersEnum;
 import com.lobos.lobos_server.model.GraphDataSet;
@@ -32,7 +33,7 @@ public class GraphService {
         this.precinctInfoRepository = precinctInfoRepository;
     }
 
-    public Graph getGraphForState(String state, String filter) {
+    public Graph getGraphForState(String state, String area, String filter) {
         StateInfo stateInfo = stateInfoRepository.findFirstByState(state);
 
         Graph graph = new Graph("Bar");
@@ -58,11 +59,12 @@ public class GraphService {
         return graph;
     }
 
-    public Graph getGraphForDistrict(String district, String filter) {
+    public Graph getGraphForDistrict(String state, String area, String filter) {
+        DistrictInfo districtInfo = districtInfoRepository.findFirstByState(state);
         return null;
     }
 
-    public Graph getGraphForPrecinct(String precinct, String filter) {
+    public Graph getGraphForPrecinct(String state, String area, String filter) {
         return null;
     }
 

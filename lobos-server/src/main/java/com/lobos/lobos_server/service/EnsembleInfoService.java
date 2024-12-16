@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.lobos.lobos_server.model.Graph;
 import com.lobos.lobos_server.enum_classes.DataFiltersEnum;
 import com.lobos.lobos_server.enum_classes.MapFiltersEnum;
-import com.lobos.lobos_server.model.DataSet;
+import com.lobos.lobos_server.model.GraphDataSet;
 
 import com.lobos.lobos_server.model.EnsembleInfo;
 import com.lobos.lobos_server.repository.EnsembleInfoRepository;

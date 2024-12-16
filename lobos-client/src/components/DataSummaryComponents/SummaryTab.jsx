@@ -5,7 +5,7 @@ import StateSummaryTab from './StateSummaryTab';
 import DistrictSummaryTab from './DistrictSummaryTab';
 import PrecinctSummaryTab from './PrecinctSummaryTab';
 
-export default function SummaryTab({ isLoading, selectedState, selectedArea, heatmapOpts, setHeatmapOpts, hoveredArea, mapView, setMapView, setHighlightedDistrict }) {
+export default function SummaryTab({ isLoading, selectedState, selectedArea, setSelectedArea, heatmapOpts, setHeatmapOpts, hoveredArea, mapView, setMapView, setHighlightedDistrict }) {
   const [selectedTab, setSelectedTab] = useState(MapViewOptions.STATE);
 
   return (
@@ -16,6 +16,7 @@ export default function SummaryTab({ isLoading, selectedState, selectedArea, hea
           <StateSummaryTab
             selectedState={selectedState}
             selectedArea={selectedArea}
+            setSelectedArea={setSelectedArea}
             mapView={mapView}
             setMapView={setMapView}
           />
@@ -26,6 +27,7 @@ export default function SummaryTab({ isLoading, selectedState, selectedArea, hea
             isLoading={isLoading}
             selectedState={selectedState}
             selectedArea={selectedArea}
+            setSelectedArea={setSelectedArea}
             mapView={mapView}
             setMapView={setMapView}
             setHighlightedDistrict={setHighlightedDistrict}
@@ -36,6 +38,8 @@ export default function SummaryTab({ isLoading, selectedState, selectedArea, hea
           <PrecinctSummaryTab
             isLoading={isLoading}
             selectedArea={selectedArea}
+            setSelectedArea={setSelectedArea}
+            selectedState={selectedState}
             heatmapOpts={heatmapOpts}
             setHeatmapOpts={setHeatmapOpts}
             hoveredArea={hoveredArea}

@@ -3,13 +3,19 @@ import { useEffect, useState } from "react";
 import { DataFilters, MapViewOptions, States } from '../../enums';
 import GraphContainer from './GraphInfo';
 
-export default function StateSummaryTab({ selectedState, selectedArea, mapView, setMapView }) {
+export default function StateSummaryTab({ selectedState, selectedArea, setSelectedArea, mapView, setMapView }) {
+    const [initLoad, setInitLoad] = useState(false);
     const [stateInfo, setStateInfo] = useState(null);
     const [dataSetType, setDataSetType] = useState(DataFilters.PARTY)
 
     useEffect(() => {
         if (mapView != MapViewOptions.STATE)
             setMapView(MapViewOptions.STATE);
+
+        if (selectedState != selectedArea)
+            setSelectedArea(selectedState);
+
+        setInitLoad(true);
     }, [])
 
     useEffect(() => {
@@ -59,6 +65,7 @@ export default function StateSummaryTab({ selectedState, selectedArea, mapView, 
             <StateDetails stateDetails={stateDetails} />
             <GraphContainer
                 selectedArea={selectedArea}
+                selectedState={selectedState}
                 mapView={MapViewOptions.STATE}
                 dataSetType={dataSetType}
                 setDataSetType={setDataSetType}

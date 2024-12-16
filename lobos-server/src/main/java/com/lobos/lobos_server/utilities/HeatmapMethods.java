@@ -149,11 +149,11 @@ public class HeatmapMethods {
         int totalPopulation = 0;
 
         if (filter.get(1).equalsIgnoreCase("black"))
-            totalPopulation = info.getBlack();
+            totalPopulation = (int) info.getRaceDistribution().get("Black");
         else if (filter.get(1).equalsIgnoreCase("asian"))
-            totalPopulation = info.getAsian();
+            totalPopulation = (int) info.getRaceDistribution().get("Asian");
         else if (filter.get(1).equalsIgnoreCase("hispanic"))
-            totalPopulation = info.getHispanic();
+            totalPopulation = (int) info.getRaceDistribution().get("Hispanic or Latino");
         else
             return defaultColorMapping;
 
@@ -256,8 +256,8 @@ public class HeatmapMethods {
     }
 
     private static ColorMapping handleElectoralBins(PrecinctData info) {
-        double repSplit = info.getPresR();
-        double demSplit = info.getPresD();
+        double repSplit = (int) info.getVoteDistribution().get("Republican");
+        double demSplit = (int) info.getVoteDistribution().get("Democratic");
         double totalVotes = repSplit + demSplit;
         double voteMargin;
 

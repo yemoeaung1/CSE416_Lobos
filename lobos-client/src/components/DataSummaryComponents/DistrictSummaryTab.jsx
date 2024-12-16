@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { DataFilters, MapViewOptions, States } from '../../enums';
 import GraphContainer from './GraphInfo';
 
-export default function DistrictSummaryTab({ selectedState, selectedArea, mapView, setMapView, setHighlightedDistrict }) {
+export default function DistrictSummaryTab({ selectedState, selectedArea, setSelectedArea, mapView, setMapView, setHighlightedDistrict }) {
+    const [initLoad, setInitLoad] = useState(false);
     const [districtInfo, setDistrictInfo] = useState(null);
     const [dataSetType, setDataSetType] = useState(DataFilters.PARTY);
 
@@ -20,10 +21,16 @@ export default function DistrictSummaryTab({ selectedState, selectedArea, mapVie
                 }
             })
                 .then(response => {
-                    setDistrictInfo(response.data)
+                    setDistrictInfo(response.data);
+
+                    const [firstKey, firstEntry] = Object.entries(response.data.representativeData)[0];
+                    setSelectedArea(firstKey);
+
+                    setInitLoad(true);
                 })
                 .catch(error => {
                     console.error("Error Retrieving Info:", error);
+                    setInitLoad(true);
                 });
         }
     }, []);
@@ -37,6 +44,7 @@ export default function DistrictSummaryTab({ selectedState, selectedArea, mapVie
             </div>
             <GraphContainer
                 selectedArea={selectedArea}
+                selectedState={selectedState}
                 mapView={MapViewOptions.DISTRICT}
                 dataSetType={dataSetType}
                 setDataSetType={setDataSetType}

@@ -22,6 +22,7 @@ public class GraphController {
 
     @GetMapping("/graph-bar")
     public ResponseEntity<?> getBarGraph(
+            @RequestParam(required = true) String state,
             @RequestParam(required = true) String area,
             @RequestParam(required = true) String view,
             @RequestParam(required = true) String filter) {
@@ -29,13 +30,13 @@ public class GraphController {
         Graph graph = null;
 
         if (view.equals(MapViewsEnum.STATE.toString())){
-            graph = graphService.getGraphForState(area, filter);
+            graph = graphService.getGraphForState(state, area, filter);
         }
         else if (view.equals(MapViewsEnum.DISTRICT.toString())){
-            graph = graphService.getGraphForDistrict(area, filter);
+            graph = graphService.getGraphForDistrict(state, area, filter);
         }
         else if (view.equals(MapViewsEnum.PRECINCT.toString())){
-            graph = graphService.getGraphForPrecinct(area, filter);
+            graph = graphService.getGraphForPrecinct(state, area, filter);
         } else {
             return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST) 
