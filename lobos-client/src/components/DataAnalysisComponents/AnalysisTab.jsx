@@ -11,8 +11,6 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
   const [selectedFilter, setSelectedFilter] = useState("race");
   const [dropdownOptions, setDropdownOptions] = useState([]);
   const [selectedDropdownOption, setSelectedDropdownOption] = useState(null);
-  const [republicanGraphData, setRepublicanGraphData] = useState(null);
-  const [democraticGraphData, setDemocraticGraphData] = useState(null);
 
   // Update dropdown options based on selected filter
   useEffect(() => {
@@ -108,26 +106,6 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
         </div>
       </div>
 
-      {/* Dropdown Menu
-      {dropdownOptions.length > 0 && (
-        <div className="mt-4">
-          <select
-            className="text-lg border-2 border-gray-300 rounded-md p-2"
-            value={selectedDropdownOption || ""}
-            onChange={(e) => setSelectedDropdownOption(e.target.value)}
-          >
-            <option value="" disabled>
-              Select an option
-            </option>
-            {dropdownOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </div>
-      )} */}
-
       {/* Chart Display */}
       <div className="h-3/4 w-full mt-5">
         {selectedChart === "precinct-analysis" && (
@@ -138,7 +116,7 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
         )}
         {selectedChart === "ecological-inference" && (
           <>
-            <EcologicalInferenceTab selectedState={selectedState} filter={selectedFilter} filterOption={selectedDropdownOption}/>
+            <EcologicalInferenceTab selectedState={selectedState} filter={selectedFilter}/>
           </>
         )}
       </div>

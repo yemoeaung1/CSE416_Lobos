@@ -34,7 +34,7 @@ export default function LineGraph({ graphData, title }) {
         responsive: true,
         scales: {
           x: {
-            type: "linear", // Explicitly set axis type to linear
+            type: "linear",
             title: {
               display: true,
               text: "Support Level",
@@ -44,8 +44,8 @@ export default function LineGraph({ graphData, title }) {
               color: "#000000",
             },
             ticks: {
-              stepSize: 0.2, // Increment ticks by 0.2
-              callback: (value) => value.toFixed(1), // Format values as one decimal place
+              stepSize: 0.2,
+              callback: (value) => value.toFixed(1),
               font: {
                 size: 14,
               },
@@ -55,11 +55,12 @@ export default function LineGraph({ graphData, title }) {
           },
           y: {
             beginAtZero: true,
+            max: 20,
             title: {
               display: true,
               text: "Probability Density",
               font: {
-                size: 18,
+                size: 16,
               },
               color: "#000000",
             },
@@ -84,7 +85,7 @@ export default function LineGraph({ graphData, title }) {
             display: true,
             text: title,
             font: {
-              size: 24,
+              size: 22,
               weight: "bold",
             },
             color: "#000000",
@@ -101,11 +102,8 @@ export default function LineGraph({ graphData, title }) {
   }, [graphData]);
 
   return (
-    // <div className= "mt-4 flex flex-col w-3/5 border-2 border-gray-800">
-    <div className="flex flex-col border-b-2">
-      <div className="flex-1 flex justify-center items-center">
-        <canvas ref={chartRef}></canvas>
+      <div className="flex-1 flex justify-center items-center w-full h-full">
+        <canvas ref={chartRef} className="w-full h-full"></canvas>
       </div>
-    </div>
   );
 }
