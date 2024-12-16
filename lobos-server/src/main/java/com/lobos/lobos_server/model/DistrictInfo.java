@@ -10,7 +10,8 @@ public class DistrictInfo {
     @Id
     private String id;
     private String state;
-    private Map<String, Object> data;
+    private DistrictData[] districts;
+    private Map<String, Object> representativeData;
 
     public String getId() {
         return id;
@@ -28,11 +29,19 @@ public class DistrictInfo {
         this.state = state;
     }
 
-    public Map<String, Object> getData() {
-        return data;
+    public DistrictData[] getDistricts() {
+        return districts;
     }
 
-    public void setData(Map<String, Object> data) {
-        this.data = data;
+    public void setDistricts(DistrictData[] districts) {
+        this.districts = districts;
+    }
+
+    public Map<String, Object> getRepresentativeData() {
+        return representativeData;
+    }
+
+    public void setRepresentativeData(Map<String, Object> representativeData) {
+        this.representativeData = representativeData;
     }
 }

@@ -3,7 +3,7 @@ package com.lobos.lobos_server.service;
 import org.springframework.stereotype.Service;
 
 import com.lobos.lobos_server.model.Graph;
-import com.lobos.lobos_server.model.DataSet;
+import com.lobos.lobos_server.model.GraphDataSet;
 
 import com.lobos.lobos_server.model.EcologicalInferenceInfo;
 import com.lobos.lobos_server.repository.GraphRepository;
@@ -27,7 +27,7 @@ public class EcologicalInferenceService {
             throw new IllegalArgumentException("State not found: " + state);
         }
 
-        Graph graph = new Graph();
+        Graph graph = new Graph("line");
         Map<String, Map<String, Object>> filterData = info.getEcologicalInference().get(filter);
         if (filter.equalsIgnoreCase("race")) {
             populateGraphWithFilter(graph, filter, filterData, filterOption);
@@ -68,12 +68,12 @@ public class EcologicalInferenceService {
         graph.setGraphType("Line");
 
         // Extract PDF data for Republican (Race and Non-Race)
-        DataSet republicanRaceDataSet = extractPdfData(republicanRaceData, "Republican - " + filterOption, "rgba(255, 0, 0 , 0.5)");
-        DataSet republicanNonRaceDataSet = extractPdfData(republicanNonRaceData, "Republican - Non-" + filterOption, "rgba(0, 128, 0, 0.5)");
+        GraphDataSet republicanRaceDataSet = extractPdfData(republicanRaceData, "Republican - " + filterOption, "rgba(255, 0, 0 , 0.5)");
+        GraphDataSet republicanNonRaceDataSet = extractPdfData(republicanNonRaceData, "Republican - Non-" + filterOption, "rgba(0, 128, 0, 0.5)");
 
         // Extract PDF data for Democratic (Race and Non-Race)
-        DataSet democraticRaceDataSet = extractPdfData(democraticRaceData, "Democratic - " + filterOption, "rgba(0, 0, 255, 0.5)");
-        DataSet democraticNonRaceDataSet = extractPdfData(democraticNonRaceData, "Democratic - Non-" + filterOption, "rgba(0, 128, 0 , 0.5)");
+        GraphDataSet democraticRaceDataSet = extractPdfData(democraticRaceData, "Democratic - " + filterOption, "rgba(0, 0, 255, 0.5)");
+        GraphDataSet democraticNonRaceDataSet = extractPdfData(democraticNonRaceData, "Democratic - Non-" + filterOption, "rgba(0, 128, 0 , 0.5)");
         
         graph.setDataSets(List.of(republicanRaceDataSet, republicanNonRaceDataSet, democraticRaceDataSet, democraticNonRaceDataSet));
 
@@ -83,7 +83,7 @@ public class EcologicalInferenceService {
         graph.setYLabel("Probability Density");
     }
 
-    private DataSet extractPdfData(Map<String, Object> partyData, String label, String color) {
+    private GraphDataSet extractPdfData(Map<String, Object> partyData, String label, String color) {
         Map<String, Object> pdfData = (Map<String, Object>) partyData.get("pdf_data");
         List<?> rawX = (List<?>) pdfData.get("x");
         List<?> rawY = (List<?>) pdfData.get("y");
@@ -92,7 +92,7 @@ public class EcologicalInferenceService {
         List<Double> xValues = rawX.stream().map(value -> ((Number) value).doubleValue()).toList();
         List<Double> yValues = rawY.stream().map(value -> ((Number) value).doubleValue()).toList();
 
-        DataSet dataSet = new DataSet();
+        GraphDataSet dataSet = new GraphDataSet();
         dataSet.setLabel(label);
         dataSet.setData(yValues);
         dataSet.setBackgroundColor(color + "20");

@@ -23,7 +23,7 @@ export default function EcologicalInferenceTab({selectedState, filter}){
     const fetchGraphData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/ecological-inference?state=${selectedState}&filter=${filter}&filterOption=${selectedFilterOption}`
+          `http://localhost:8080/api/ecological-inference?state=${selectedState}&filter=${"race"}&filterOption=${"White"}`
         );
 
         const data = response.data;

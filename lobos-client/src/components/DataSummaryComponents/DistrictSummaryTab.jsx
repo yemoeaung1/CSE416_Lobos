@@ -1,9 +1,12 @@
 import axios from 'axios';
 import { useEffect, useState } from "react";
-import { MapViewOptions, States } from '../../enums';
+import { DataFilters, MapViewOptions, States } from '../../enums';
+import GraphContainer from './GraphInfo';
 
-export default function DistrictSummaryTab({ isLoading, selectedState, mapView, setMapView, districtYear, setDistrictYear, setHighlightedDistrict }) {
+export default function DistrictSummaryTab({ selectedState, selectedArea, setSelectedArea, mapView, setMapView, setHighlightedDistrict }) {
+    const [initLoad, setInitLoad] = useState(false);
     const [districtInfo, setDistrictInfo] = useState(null);
+    const [dataSetType, setDataSetType] = useState(DataFilters.PARTY);
 
     useEffect(() => {
         if (mapView != MapViewOptions.DISTRICT)
@@ -18,10 +21,16 @@ export default function DistrictSummaryTab({ isLoading, selectedState, mapView, 
                 }
             })
                 .then(response => {
-                    setDistrictInfo(response.data)
+                    setDistrictInfo(response.data);
+
+                    const [firstKey, firstEntry] = Object.entries(response.data.representativeData)[0];
+                    setSelectedArea(firstKey);
+
+                    setInitLoad(true);
                 })
                 .catch(error => {
                     console.error("Error Retrieving Info:", error);
+                    setInitLoad(true);
                 });
         }
     }, []);
@@ -30,31 +39,18 @@ export default function DistrictSummaryTab({ isLoading, selectedState, mapView, 
 
     return (
         <>
-            <DistrictPlanButton isLoading={isLoading} districtYear={districtYear} setDistrictYear={setDistrictYear} />
             <div className="flex flex-col items-center justify-center">
                 {isInfoUpdated && <CongressionalTable districtInfo={districtInfo} selectedState={selectedState} setHighlightedDistrict={setHighlightedDistrict} />}
             </div>
+            <GraphContainer
+                selectedArea={selectedArea}
+                selectedState={selectedState}
+                mapView={MapViewOptions.DISTRICT}
+                dataSetType={dataSetType}
+                setDataSetType={setDataSetType}
+            />
         </>
     )
-}
-
-function DistrictPlanButton({ isLoading, districtYear, setDistrictYear }) {
-    return (
-        <div>
-            <div>{`Congressional District Plan (${districtYear})`}</div>
-            <div>{`Change to ${(districtYear == '2020') ? '2022' : '2020'}`}</div>
-            <button
-                disabled={isLoading}
-                style={{
-                    backgroundColor: isLoading ? "gray" : "blue",
-                    color: "white",
-                    cursor: isLoading ? "not-allowed" : "pointer",
-                }}
-                onClick={() => { setDistrictYear((districtYear == '2020') ? '2022' : '2020') }}>
-                Click Me
-            </button>
-        </div>
-    );
 }
 
 function CongressionalTable({ districtInfo, setHighlightedDistrict }) {
@@ -66,7 +62,7 @@ function CongressionalTable({ districtInfo, setHighlightedDistrict }) {
         setHighlightedDistrict({ name: "N/A", party: "N/A" });
     };
 
-    const districts = Object.entries(districtInfo.data);
+    const districts = Object.entries(districtInfo.representativeData);
 
     return (
         <div className="table-container">

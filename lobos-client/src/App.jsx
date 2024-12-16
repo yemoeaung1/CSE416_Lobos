@@ -13,7 +13,6 @@ function App() {
     const [selectedState, setSelectedState] = useState(States.NONE);
 
     const [mapView, setMapView] = useState(MapViewOptions.NONE);
-    const [districtYear, setDistrictYear] = useState('2020');
     const [heatmapOpts, setHeatmapOpts] = useState([HeatMapFilters.NONE]);
     const [highlightedDistrict, setHighlightedDistrict] = useState(0);
 
@@ -41,6 +40,7 @@ function App() {
             <DataContainer
                 isLoading={isLoading}
                 selectedArea={selectedArea}
+                setSelectedArea={setSelectedArea}
                 selectedState={selectedState}
                 hoveredArea={hoveredArea}
                 mapView={mapView}
@@ -49,8 +49,6 @@ function App() {
                 setHeatmapOpts={setHeatmapOpts}
                 dataTab={dataTab}
                 setDataTab={setDataTab}
-                districtYear={districtYear}
-                setDistrictYear={setDistrictYear}
                 setHighlightedDistrict={setHighlightedDistrict}
             />
             <StateMapContainer
@@ -63,7 +61,6 @@ function App() {
                 setSelectedArea={setSelectedArea}
                 selectedArea={selectedArea}
                 heatmapOpts={heatmapOpts}
-                districtYear={districtYear}
                 highlightedDistrict={highlightedDistrict}
             />
         </div>

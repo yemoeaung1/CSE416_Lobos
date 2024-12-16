@@ -2,21 +2,18 @@ package com.lobos.lobos_server.model;
 
 import java.util.List;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection = "graphs")
 public class Graph {
     private String graphType;
     private String title;
     private String xLabel;
     private String yLabel;
     private List<String> labels; // Labels for x-axis (e.g., parties, races, etc.)
-    private List<DataSet> dataSets; // Data sets for the graph
+    private List<GraphDataSet> dataSets;
 
-    public Graph() {
+    public Graph(String graphType) {
+        this.graphType = graphType;
     }
 
-    // Getters and Setters for the graph
     public String getTitle() {
         return title;
     }
@@ -49,11 +46,11 @@ public class Graph {
         this.labels = labels;
     }
 
-    public List<DataSet> getDataSets() {
+    public List<GraphDataSet> getDataSets() {
         return dataSets;
     }
 
-    public void setDataSets(List<DataSet> dataSets) {
+    public void setDataSets(List<GraphDataSet> dataSets) {
         this.dataSets = dataSets;
     }
 
