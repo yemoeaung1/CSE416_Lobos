@@ -14,28 +14,17 @@ public class EnsembleInfo {
     private String state;
     private int num_plans;
     private Map<String, Integer> splits;
-    // private BoxplotGroup boxplot; // Updated type for the nested boxplot structure
     private Map<String, Map<String, Boxplot>> boxplot;
+
     @Field("district_winner_tally")
     private Map<String, List<Integer>> districtWinnerTally;
-    
-    // @Field("boxplot")
-    // private Groups groups;
 
     public String getId() {
         return id;
     }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
+    
     public String getState() {
         return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public int getNumPlans(){
@@ -46,9 +35,6 @@ public class EnsembleInfo {
         return splits;
     }
 
-    // public BoxplotGroup getBoxplot() {
-    //     return boxplot;
-    // }
     public Map<String, Map<String, Boxplot>> getBoxplot() {
         return boxplot;
     }
