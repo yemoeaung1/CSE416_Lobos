@@ -65,13 +65,13 @@ const SplitsBarGraph = ({ selectedState }) => {
                             font: {
                                 size: 20,
                             },
-                        },
-                        ticks: {
-                            font: {
-                                size: 18,
+                            ticks: {
+                                font: {
+                                    size: 18,
+                                },
                             },
+                            color: "#000000",
                         },
-                        color: "#000000",
                     },
                     y: {
                         title: {
@@ -80,14 +80,14 @@ const SplitsBarGraph = ({ selectedState }) => {
                             font: {
                                 size: 20,
                             },
-                        },
-                        ticks: {
-                            font: {
-                                size: 18,
+                            ticks: {
+                                font: {
+                                    size: 18,
+                                },
                             },
+                            beginAtZero: true, // Ensure the y-axis starts at zero
+                            color: "#000000",
                         },
-                        beginAtZero: true, // Ensure the y-axis starts at zero
-                        color: "#000000",
                     },
                 },
                 plugins: {
@@ -103,7 +103,7 @@ const SplitsBarGraph = ({ selectedState }) => {
                         display: true,
                         text: graphData.title, // Chart title
                         font: {
-                            size: 24,
+                            size: 22,
                             weight: "bold",
                         },
                         color: "#000000",

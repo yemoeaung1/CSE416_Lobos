@@ -105,7 +105,7 @@ const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName })
                         display: true,
                         text: `${graphData.title} (${displayName})`,
                         font: {
-                            size: 24,
+                            size: 22,
                             weight: "bold",
                         },
                         color: "#000000",

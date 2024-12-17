@@ -117,7 +117,7 @@ public class EnsembleInfoService {
         data.put("outlierColor", "#999999");
         data.put("padding", 5);
         data.put("itemRadius", 2);
-        data.put("title", String.format("Republican/Democrat Splits In %s After Simulations By District", state));
+        data.put("title", String.format("Republican/Democrat Splits In %s (5000 Plans)", state));
         data.put("xLabel", "Republican/Democrat Splits");
         data.put("yLabel", "Number of Plans");
 
@@ -142,16 +142,16 @@ public class EnsembleInfoService {
         data.put("labels", districtNames);
         data.put("republicanLabel", "Republican Wins");
         data.put("republicanWins", republicanWins);
-        data.put("republicanColor", "red");
+        data.put("republicanColor", "hsl(0, 80%, 60%)");
         data.put("democratLabel", "Democrat Wins");
         data.put("democratWins", democratWins);
-        data.put("democratColor", "blue");
+        data.put("democratColor", "hsl(232, 70%, 60%)");
         data.put("borderColor", "black");
         data.put("borderWidth", 1);
         data.put("outlierColor", "#999999");
         data.put("padding", 5);
         data.put("itemRadius", 2);
-        data.put("title", String.format("Simulated District-Level Wins in %s", state));
+        data.put("title", String.format("Party Wins in %s", state));
         data.put("xLabel", "Districts");
         data.put("yLabel", "Number of Wins");
 

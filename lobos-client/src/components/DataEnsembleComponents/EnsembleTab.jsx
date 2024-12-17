@@ -4,118 +4,23 @@ import { MapViewOptions } from '../../enums';
 import SplitsBarGraph from './EnsembleBarGraph';
 import WinnerTallyChart from './DistrictWinnerTallyChart';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { fieldNamesToDisplay, groupedCategories } from './Constants';
+import DistrictWinCountGraph from './DistrictWinnerTallyChart';
 
 export default function EnsembleTab({ selectedState, mapView, setMapView }) {
-  const [selectedTab, setSelectedTab] = useState('table');
+  const [selectedTab, setSelectedTab] = useState('Summary');
 
   useEffect(() => {
     if (mapView != MapViewOptions.DISTRICT)
       setMapView(MapViewOptions.DISTRICT);
   }, [])
 
-  // Define a mapping for display names
-  const fieldNamesToDisplay = {
-    'non_hispanic': 'Non-Hispanic',
-    'hispanic': 'Hispanic',
-    'white': 'White',
-    'black': 'Black',
-    'asian': 'Asian',
-    'LESS_10K': '< $10K',
-    "10K_15K": '$10K - $15K',
-    "15K_20K": '$15K - $20K',
-    "20K_25K": '$20K - $25K',
-    "25K_30K": '$25K - $30K',
-    "30K_35K": '$30K - $35K',
-    "35K_40K": '$35K - $40K',
-    "40K_45K": '$40K - $45K',
-    "45K_50K": '$45K - $50K',
-    "50K_60K": '$50K - $60K',
-    "60K_75K": '$60K - $75K',
-    "75K_100K": '$75K - $100K',
-    "100K_125K": '$100K - $125K',
-    "125K_150K": '$125K - $150K',
-    "150K_200K": '$150K - $200K',
-    "200K_MORE": '> $200K',
-    "2020_PRES_R": 'Republican Votes (2020)',
-    "2020_PRES_D": 'Democratic Votes (2020)',
-    'POPULATION_RURAL': 'Rural Population',
-    'POPULATION_URBAN': 'Urban Population',
-    'POPULATION_SUBURBAN': 'Suburban Population',
-    'demographics': 'Demographics',
-    'income': 'Income Levels',
-    'regionType': 'Region Type',
-    // 'Voting': 'Voting',
-  }
-
-  const groupedCategories = {
-    demographics: ['non_hispanic', 'hispanic', 'white', 'black', 'asian'],
-    income: ['LESS_10K', '10K_15K', '15K_20K', '20K_25K', '25K_30K', '30K_35K', '35K_40K', '40K_45K', '45K_50K', '50K_60K', '60K_75K', '75K_100K', '100K_125K', '125K_150K', '150K_200K', '200K_MORE'],
-    regionType: ['POPULATION_RURAL', 'POPULATION_URBAN', 'POPULATION_SUBURBAN'],
-    // Voting: ['2020_PRES_R', '2020_PRES_D']
-  };
-
-  const [selectedGroup, setSelectedGroup] = useState(Object.keys(groupedCategories)[0]); // Default to the first group
-  const [selectedCategory, setSelectedCategory] = useState(groupedCategories[selectedGroup][0]); // Default to the first category in the selected group
-
-  console.log({selectedGroup, selectedCategory})
   return (
     <div className='data-component-container'>
       <div className="flex flex-col h-full">
-        {/* <ToggleButtonGroup
-          color="primary"
-          value={alignment}
-          exclusive
-          onChange={handleChange}
-          aria-label="Platform"
-        >
-          <ToggleButton value="web">Web</ToggleButton>
-          <ToggleButton value="android">Android</ToggleButton>
-          <ToggleButton value="ios">iOS</ToggleButton>
-        </ToggleButtonGroup> */}
         <TabSelector selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-        {/* Group Selector */}
-        {/* Dropdown for Selected Group */}
-        {selectedTab == 'table' &&
-          <>
-            <EnsembleTable selectedState={selectedState} />
-            <SplitsBarGraph selectedState={selectedState} />
-            {/* <WinnerTallyChart selectedState={selectedState} /> */}
-          </>
-        }
-        {selectedTab === 'chart' && (
-          <>
-            <div className="flex justify-around p-2">
-              {Object.keys(groupedCategories).map((group, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    setSelectedGroup(group);
-                    setSelectedCategory(groupedCategories[group][0]); // Update default category for the new group
-                  }}
-                  className={`text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl ${selectedGroup === group ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
-                    }`}
-                >
-                  {fieldNamesToDisplay[group]}
-                </button>
-              ))}
-            </div>
-
-            <div className="p-2">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-1/4 p-2 border border-gray-300 rounded"
-              >
-                {groupedCategories[selectedGroup].map((category, index) => (
-                  <option key={index} value={category}>
-                    {fieldNamesToDisplay[category]}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <BoxPlotGraph selectedState={selectedState} dataSetType={selectedCategory} dataCategory={selectedGroup} displayName={fieldNamesToDisplay[selectedCategory]} />
-          </>
-        )}
+        {selectedTab == 'Summary' && <EnsembleSummary selectedState={selectedState} />}
+        {selectedTab === 'Graph' && <EnsembleBoxAndWhiskers selectedState={selectedState} />}
       </div>
     </div>
   );
@@ -146,23 +51,23 @@ function TabSelector({ selectedTab, setSelectedTab }) {
     >
       <div
         style={
-          selectedTab == 'table'
+          selectedTab == 'Summary'
             ? activeTabStyle
             : tabStyle
         }
-        onClick={() => setSelectedTab('table')}
+        onClick={() => setSelectedTab('Summary')}
       >
-        Table
+        Summary
       </div>
       <div
         style={
-          selectedTab == 'chart'
+          selectedTab == 'Graph'
             ? activeTabStyle
             : tabStyle
         }
-        onClick={() => setSelectedTab('chart')}
+        onClick={() => setSelectedTab('Graph')}
       >
-        Chart
+        Box & Whiskers
       </div>
     </nav>
   )
@@ -194,3 +99,78 @@ function EnsembleTable({ selectedState }) {
     </div>
   );
 };
+
+
+function EnsembleSummary({ selectedState }) {
+  const [alignment, setAligment] = useState("splits")
+
+  const handleTabChange = (e, newAlignment) => {
+    if(newAlignment !== null) setAligment(newAlignment);
+  }
+  return (
+    <>
+      <EnsembleTable selectedState={selectedState} />
+      <EnsembleSummaryGraphToggle alignment={alignment} handleChange={handleTabChange} />
+      {alignment === "splits" && <SplitsBarGraph selectedState={selectedState} />}
+      {alignment === "winnerTallyCount" && <DistrictWinCountGraph selectedState={selectedState} />}
+    </>
+  )
+}
+
+function EnsembleSummaryGraphToggle({ alignment, handleChange }) {
+  return (
+    <div className="flex ">
+    <ToggleButtonGroup
+      color="primary"
+      value={alignment}
+      exclusive={true}
+      onChange={handleChange}
+      aria-label="Platform"
+      size="medium"
+    >
+      <ToggleButton value="splits">Splits</ToggleButton>
+      <ToggleButton value="winnerTallyCount">District Winners</ToggleButton>
+    </ToggleButtonGroup>
+    </div>
+  )
+}
+
+function EnsembleBoxAndWhiskers({ selectedState }) {
+  const [selectedGroup, setSelectedGroup] = useState(Object.keys(groupedCategories)[0]); // Default to the first group
+  const [selectedCategory, setSelectedCategory] = useState(groupedCategories[selectedGroup][0]); // Default to the first category in the selected group
+  return (
+    <>
+      <div>Select Filter</div>
+      <div className="flex justify-around p-2">
+        {Object.keys(groupedCategories).map((group, index) => (
+          <button
+            key={index}
+            onClick={() => {
+              setSelectedGroup(group);
+              setSelectedCategory(groupedCategories[group][0]); // Update default category for the new group
+            }}
+            className={`text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl ${selectedGroup === group ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+              }`}
+          >
+            {fieldNamesToDisplay[group]}
+          </button>
+        ))}
+      </div>
+
+      <div className="p-2">
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="w-1/4 p-2 border border-gray-300 rounded"
+        >
+          {groupedCategories[selectedGroup].map((category, index) => (
+            <option key={index} value={category}>
+              {fieldNamesToDisplay[category]}
+            </option>
+          ))}
+        </select>
+      </div>
+      <BoxPlotGraph selectedState={selectedState} dataSetType={selectedCategory} dataCategory={selectedGroup} displayName={fieldNamesToDisplay[selectedCategory]} />
+    </>
+  )
+}
