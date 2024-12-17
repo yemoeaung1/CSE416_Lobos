@@ -44,7 +44,7 @@ export default function LineGraph({ graphData, title }) {
               color: "#000000",
             },
             ticks: {
-              stepSize: 0.2,
+              stepSize: 0.1,
               callback: (value) => value.toFixed(1),
               font: {
                 size: 14,
@@ -55,7 +55,7 @@ export default function LineGraph({ graphData, title }) {
           },
           y: {
             beginAtZero: true,
-            max: 20,
+            // max: 20,
             title: {
               display: true,
               text: "Probability Density",

@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import Chart from "chart.js/auto";
+import { Chart } from "chart.js/auto";
+import "chartjs-chart-error-bars";
 import axios from "axios";
+import { BarWithErrorBarsController, BarWithErrorBar } from 'chartjs-chart-error-bars';
 
-const EcologicalInferenceBarGraph = ({ dataSetType, selectedState }) => {
+Chart.register(BarWithErrorBarsController, BarWithErrorBar,);
+
+const EcologicalInferenceBarGraph = ({ selectedState, filter }) => {
     const chartRef = useRef(null);
     const [graphData, setGraphData] = useState(null);
 
@@ -10,39 +14,50 @@ const EcologicalInferenceBarGraph = ({ dataSetType, selectedState }) => {
         const fetchGraphData = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:8080/api/ecological-inference/bar?state=${"South Carolina"}&filter=${"race"}`
+                    `http://localhost:8080/api/ecological-inference/bar?state=${selectedState}&filter=${"race"}`
                 );
                 console.log(response.data)
                 const { labels, dataSets, title, xlabel, ylabel } = response.data;
 
+                // Transform the dataset to include error bars
+                const transformedDataSets = dataSets.map((dataSet) => ({
+                    label: dataSet.label,
+                    data: dataSet.data.map((value, index) => ({
+                        y: value,
+                        yMin: [0.20968081438677413], // Lower bound of credible interval
+                        yMax: [0.7641440538345341], // Upper bound of credible interval
+                    })),
+                    backgroundColor: dataSet.backgroundColor,
+                    borderColor: dataSet.borderColor,
+                    borderWidth: 1,
+                }));
+
                 setGraphData({
                     labels,
-                    datasets: dataSets.map((dataSet) => ({
-                        label: dataSet.label,
-                        data: dataSet.data,
-                        backgroundColor: dataSet.backgroundColor,
-                        borderColor: dataSet.borderColor,
-                        borderWidth: dataSet.borderWidth,
-                    })),
-                    title: title,
+                    datasets: transformedDataSets,
+                    title,
                     xTitle: xlabel,
                     yTitle: ylabel,
                 });
-                console.log(graphData.datasets)
             } catch (error) {
                 console.error("Error fetching graph data:", error);
             }
         };
         fetchGraphData();
-    }, [dataSetType, selectedState]);
+    }, [selectedState, filter]);
 
     useEffect(() => {
         if (!graphData) return;
 
         const ctx = chartRef.current.getContext("2d");
 
-        const BarChart = new Chart(ctx, {
-            type: "bar",
+        if (chartRef.current.chart) {
+            chartRef.current.chart.destroy();
+        }
+
+        // Create the bar chart with error bars
+        chartRef.current.chart = new Chart(ctx, {
+            type: BarWithErrorBarsController.id,
             data: {
                 labels: graphData.labels,
                 datasets: graphData.datasets,
@@ -54,15 +69,7 @@ const EcologicalInferenceBarGraph = ({ dataSetType, selectedState }) => {
                         title: {
                             display: true,
                             text: graphData.xTitle,
-                            font: {
-                                size: 20,
-                            },
-                            color: "#000000",
-                        },
-                        ticks: {
-                            font: {
-                                size: 18,
-                            },
+                            font: { size: 18 },
                         },
                     },
                     y: {
@@ -70,53 +77,34 @@ const EcologicalInferenceBarGraph = ({ dataSetType, selectedState }) => {
                         title: {
                             display: true,
                             text: graphData.yTitle,
-                            font: {
-                                size: 20,
-                            },
-                            color: "#000000",
-                        },
-                        ticks: {
-                            font: {
-                                size: 18,
-                            },
+                            font: { size: 18 },
                         },
                     },
                 },
                 plugins: {
-                    legend: {
-                        display: "Political Party",
-                        position: "top",
-                        labels: {
-                            font: {
-                                size: 16,
-                            },
-                        },
-                    },
                     title: {
                         display: true,
                         text: graphData.title,
-                        font: {
-                            size: 28,
-                            weight: "bold",
-                        },
-                        color: "#000000",
+                        font: { size: 24, weight: "bold" },
+                    },
+                    legend: {
+                        display: true,
+                        position: "top",
                     },
                 },
             },
         });
 
         return () => {
-            BarChart.destroy();
+            if (chartRef.current.chart) chartRef.current.chart.destroy();
         };
     }, [graphData]);
 
     return (
-        <div className="border-b border-gray-800">
-            <div className="flex-1 flex justify-center items-center">
-                <canvas ref={chartRef} className="w-full h-full"></canvas>
-            </div>
+        <div className="flex justify-center items-center">
+            <canvas ref={chartRef} width="600" height="400"></canvas>
         </div>
     );
 };
 
-export default EcologicalInferenceBarGraph;
+export default EcologicalInferenceBarGraph

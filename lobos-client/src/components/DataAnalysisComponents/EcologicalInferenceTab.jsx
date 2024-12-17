@@ -11,7 +11,7 @@ export default function EcologicalInferenceTab({selectedState, filter}){
     const [selectedRegion, setSelectedRegion] = useState("Urban");
     const [republicanGraphData, setRepublicanGraphData] = useState(null);
     const [democraticGraphData, setDemocraticGraphData] = useState(null);
-    const [chartType, setChartType] = useState("line"); //Used Later
+    const [chartType, setChartType] = useState("line");
 
     useEffect(() => {
         if (filter === "race") {
@@ -27,7 +27,7 @@ export default function EcologicalInferenceTab({selectedState, filter}){
     const fetchGraphData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/ecological-inference?state=${selectedState}&filter=${"region"}&filterOption=${"Urban"}`
+          `http://localhost:8080/api/ecological-inference?state=${selectedState}&filter=${"race"}&filterOption=${"White"}`
         );
 
         const data = response.data;
@@ -55,55 +55,61 @@ export default function EcologicalInferenceTab({selectedState, filter}){
 
     return(
         <div className="flex flex-col w-full h-full">
-            <div className="flex justify-start space-x-4 mb-4">
-            {/* Main Filter Dropdown */}
-            <DropDownBar
-              label="Filter Option"
-              dropdownOptions={dropdownOptions}
-              setSelectedOption={setSelectedFilterOption}
-              selectedOption={selectedFilterOption}
-            />
+            <div className="flex justify-between mb-4">
+        <div className="flex space-x-4">
+          <DropDownBar label="Filter Option"
+            dropdownOptions={dropdownOptions}
+            setSelectedOption={setSelectedFilterOption}
+            selectedOption={selectedFilterOption}
+          />
+          <DropDownBar
+            label="Region Type"
+            dropdownOptions={regionOptions}
+            setSelectedOption={setSelectedRegion}
+            selectedOption={selectedRegion}
+          />
+        </div>
 
-            {/* Region Dropdown */}
-            <DropDownBar
-              label="Region Type"
-              dropdownOptions={regionOptions}
-              setSelectedOption={setSelectedRegion}
-              selectedOption={selectedRegion}
-            />
+        <button
+          className="text-sm font-semibold bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
+          onClick={() => setChartType(chartType === "line" ? "bar" : "line")}
+        >
+          Switch to {chartType === "line" ? "Bar Chart" : "Line Chart"}
+        </button>
+      </div>
 
-            {/* Toggle Button
-            <button
-              className="text-lg font-semibold bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
-              onClick={() => setChartType(chartType === "line" ? "bar" : "line")}
-            >
-              Switch to {chartType === "line" ? "Bar" : "Line"} Graph
-            </button> */}
-
-          </div>
-
-            {/* {republicanGraphData && (
-                <div className="h-1/2 w-full flex justify-center items-center">
-                <LineGraph
-                    graphData={republicanGraphData}
-                    title="Support for Republican"
-                />
-                </div>
-            )}
-            {democraticGraphData && (
-                <div className="h-1/2 w-full flex justify-center items-center">
-                <LineGraph
-                    graphData={democraticGraphData}
-                    title="Support for Democrat"
-                />
-                </div>
-            )} */}
-            <EcologicalInferenceBarGraph/>
+      {chartType === "line" ? (
+        <>
+          {republicanGraphData && (
+            <div className="h-1/2 w-full flex justify-center items-center">
+              <LineGraph
+                graphData={republicanGraphData}
+                title="Support for Republican"
+              />
+            </div>
+          )}
+          {democraticGraphData && (
+            <div className="h-1/2 w-full flex justify-center items-center">
+              <LineGraph
+                graphData={democraticGraphData}
+                title="Support for Democrat"
+              />
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="h-full w-full flex justify-center items-center">
+          <EcologicalInferenceBarGraph
+            dataSetType={"race"}
+            selectedState={selectedState}
+          />
+        </div>
+      )}
         </div>
     )
 }
 
-function DropDownBar({dropdownOptions, setSelectedFilterOption, selectedFilterOption}){
+function DropDownBar({label, dropdownOptions, setSelectedFilterOption, selectedFilterOption}){
     return(
         <div>
             <div className="mb-4 flex justify-start items-center">

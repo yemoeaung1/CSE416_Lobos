@@ -109,6 +109,7 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                         Income & Race
                     </button>
                 </div>
+                {selectedChart === "precinct-analysis" && (
                 <FormControlLabel
                     control={
                         <Checkbox
@@ -120,7 +121,10 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                     label="Show Table"
                     className="ml-4"
                 />
+              )}
+
             </div>
+            
 
       {/* Chart Display */}
       <div
