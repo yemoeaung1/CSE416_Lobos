@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.lobos.lobos_server.model.DistrictInfo;
 import com.lobos.lobos_server.model.PrecinctData;
 import com.lobos.lobos_server.model.PrecinctInfo;
 import com.lobos.lobos_server.service.DistrictService;
 import com.lobos.lobos_server.service.PrecinctService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +47,13 @@ public class RegionController {
     public ResponseEntity<Map<String, Object>> getDistrictInfo(
         @RequestParam(required = true) String state) {
 
-        Map<String, Object> data = districtService.getDistrictInfo(state);
+        DistrictInfo info = districtService.getDistrictInfo(state);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("state", info.getState());
+        data.put("data", info.getDistricts());
+        data.put("representativeData", info.getRepresentativeData());
+
         return ResponseEntity.ok(data);
     }
 

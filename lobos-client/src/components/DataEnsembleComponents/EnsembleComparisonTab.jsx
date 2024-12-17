@@ -55,7 +55,10 @@ function DistrictPlanSelection({ selectedPlan, setSelectedPlan, setShowPlan }) {
                 <Select
                     labelId="district-plan-dropdown-label"
                     value={selectedPlan}
-                    onChange={(event) => setSelectedPlan(event.target.value)}
+                    onChange={(event) => {
+                        setSelectedPlan(event.target.value);
+                        setShowPlan(false);
+                    }}
                     label="District Plans"
                     sx={{
                         fontFamily: "Montserrat, san-serif",
@@ -90,9 +93,7 @@ function DistrictPlanSelection({ selectedPlan, setSelectedPlan, setShowPlan }) {
 }
 
 function DistrictPlanSummary({ planSummary }) {
-    return (
-        <></>
-    );
+    return;
 }
 
 function DistrictPlanPopup({ planGeoJSON, setShowPlan }) {
@@ -107,6 +108,9 @@ function DistrictPlanPopup({ planGeoJSON, setShowPlan }) {
 }
 
 function DistrictPlanMap({ planGeoJSON }) {
+    if(planGeoJSON === null || planGeoJSON.geoJSON === null || planGeoJSON.properties === null)
+        return;
+
     const onEachFeature = (feature, layer) => {
         let originalColor = "#FFFFFF";
 

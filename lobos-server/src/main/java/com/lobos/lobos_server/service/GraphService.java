@@ -10,8 +10,6 @@ import com.lobos.lobos_server.enum_classes.DataFiltersEnum;
 import com.lobos.lobos_server.model.GraphDataSet;
 import com.lobos.lobos_server.model.PrecinctData;
 import com.lobos.lobos_server.model.StateInfo;
-import com.lobos.lobos_server.repository.DistrictInfoRepository;
-import com.lobos.lobos_server.repository.StateInfoRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,22 +18,22 @@ import java.util.Map;
 
 @Service
 public class GraphService {
-    private final StateInfoRepository stateInfoRepository;
-    private final DistrictInfoRepository districtInfoRepository;
+    private final StateService stateService;
+    private final DistrictService districtService;
     private final PrecinctService precinctService;
 
     @Autowired
-    public GraphService(StateInfoRepository stateInfoRepository,
-            DistrictInfoRepository districtInfoRepository,
+    public GraphService(StateService stateService,
+            DistrictService districtService,
             PrecinctService precinctService) {
 
-        this.stateInfoRepository = stateInfoRepository;
-        this.districtInfoRepository = districtInfoRepository;
+        this.stateService = stateService;
+        this.districtService = districtService;
         this.precinctService = precinctService;
     }
 
     public Map<String, Object> getGraphForState(String state, String area, String filter) {
-        StateInfo stateInfo = stateInfoRepository.findFirstByState(state);
+        StateInfo stateInfo = stateService.getStateInfo(state);
 
         Graph graph = new Graph("Bar");
         switch (DataFiltersEnum.fromValue(filter)) {
@@ -66,7 +64,7 @@ public class GraphService {
     }
 
     public Map<String, Object> getGraphForDistrict(String state, String area, String filter) {
-        DistrictInfo districtInfo = districtInfoRepository.findFirstByState(state);
+        DistrictInfo districtInfo = districtService.getDistrictInfo(state);
         DistrictData districtData = null;
 
         for (DistrictData data : districtInfo.getDistricts()) {

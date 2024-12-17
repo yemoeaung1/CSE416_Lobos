@@ -24,20 +24,18 @@ public class DistrictService {
     }
 
     @Cacheable(value = "district-info-cache", key = "#state")
-    public Map<String, Object> getDistrictInfo(String state){
+    public DistrictInfo getDistrictInfo(String state){
         DistrictInfo districtInfo = districtInfoRepository.findFirstByState(state);
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("state", districtInfo.getState());
-        data.put("data", districtInfo.getDistricts());
-        data.put("representativeData", districtInfo.getRepresentativeData());
-
-        return data;
+        return districtInfo;
     }
 
     @Cacheable(value = "district-plan-cache", key = "#state + #name")
     public Map<String, Object> getDistrictPlan(String state, String name){
         DistrictPlanInfo districtPlanInfo = districtPlanRepository.findFirstByStateAndName(state, name);
+
+        if(districtPlanInfo == null)
+            return null;
 
         Map<String, Object> data = new HashMap<>();
         data.put("data", districtPlanInfo.getData());

@@ -58,6 +58,7 @@ public class PrecinctService {
         return precinctInfoMap;
     }
     
+    @Cacheable(value = "precinct-data-cache", key = "#state")
     public List<Map<String, Object>> getPrecinctDataByState(String state) {
         PrecinctInfo precinctInfo = precinctInfoRepository.findFirstByState(state);
 
