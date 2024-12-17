@@ -11,6 +11,7 @@ import com.lobos.lobos_server.repository.GraphRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 @Service
 public class EcologicalInferenceService {
@@ -42,17 +43,23 @@ public class EcologicalInferenceService {
             Map<String, Object> democraticData = (Map<String, Object>) filterInfo.get("Democratic");
 
             // Get posterior means for Republican and Democratic
-            double republicanMean = getPosteriorMean(republicanData);
-            double democraticMean = getPosteriorMean(democraticData);
-            System.out.println(republicanData);
+            Map<String, Object> republicanResult = getPosteriorMean(republicanData);
+            Map<String, Object> democraticResult = getPosteriorMean(democraticData);
+
+            double republicanMean = (double) republicanResult.get("posterior_mean");
+            List<Double> republicanInterval = (List<Double>) republicanResult.get("credible_interval");
+
+            double democraticMean = (double) democraticResult.get("posterior_mean");
+            List<Double> democraticInterval = (List<Double>) democraticResult.get("credible_interval");
 
             // Add Republican and Democratic data for this category
-            dataSets.add(createGraphDataSet("Republican - " + categoryLabel, republicanMean, "rgba(255, 0, 0, 0.7)"));
-            dataSets.add(createGraphDataSet("Democratic - " + categoryLabel, democraticMean, "rgba(0, 0, 255, 0.7)"));
-        }
+            dataSets.add(createGraphDataSet("Republican - " + categoryLabel, republicanMean, republicanInterval, "rgba(255, 0, 0, 0.7)"));
+            dataSets.add(createGraphDataSet("Democratic - " + categoryLabel, democraticMean, democraticInterval, "rgba(0, 0, 255, 0.7)"));
+        }  
 
-        graph.setLabels(categories); // Category labels like Rural, Suburban, etc.
+        // Set the data in the graph object
         graph.setDataSets(dataSets);
+        graph.setLabels(categories);
         graph.setXLabel("Categories");
         graph.setYLabel("Posterior Mean Support Level");
         graph.setTitle("Ecological Inference - " + filter);
@@ -60,38 +67,42 @@ public class EcologicalInferenceService {
         return graph;
     }
 
-    private double getPosteriorMean(Map<String, Object> partyData) {
-    if (partyData == null) {
-        return 0.0; // Return default value if party data is missing
-    }
+    private Map<String, Object> getPosteriorMean(Map<String, Object> partyData) {
+        Map<String, Object> result = new HashMap<>();
+        double totalMean = 0.0;
+        int count = 0;
+        List<Double> credibleInterval = null;
 
-    double totalMean = 0.0;
-    int count = 0;
+        // Iterate through nested entries (e.g., Asian, Non-Asian)
+        for (Map.Entry<String, Object> entry : partyData.entrySet()) {
+            if (entry.getValue() instanceof Map) {
+                Map<String, Object> nestedData = (Map<String, Object>) entry.getValue();
 
-    // Iterate over all nested entries (e.g., Asian, Non-Asian)
-    for (Map.Entry<String, Object> entry : partyData.entrySet()) {
-        if (entry.getValue() instanceof Map) {
-            Map<String, Object> nestedData = (Map<String, Object>) entry.getValue();
-            Object mean = nestedData.get("posterior_mean");
+                Object mean = nestedData.get("posterior_mean");
+                if (mean instanceof Number) {
+                    totalMean += ((Number) mean).doubleValue();
+                    count++;
+                }
 
-            if (mean instanceof Number) {
-                totalMean += ((Number) mean).doubleValue();
-                count++;
+                if (credibleInterval == null) {
+                    credibleInterval = (List<Double>) nestedData.get("credible_interval");
+                }
             }
         }
+
+        result.put("posterior_mean", count > 0 ? totalMean / count : 0.0);
+        result.put("credible_interval", credibleInterval != null ? credibleInterval : List.of(0.0, 0.0));
+        return result;
     }
 
-    // Calculate average posterior mean if multiple nested values exist
-    return count > 0 ? totalMean / count : 0.0;
-}
 
-
-    private GraphDataSet createGraphDataSet(String label, double value, String color) {
+    private GraphDataSet createGraphDataSet(String label, double value, List<Double> credibleInterval, String color) {
         GraphDataSet dataSet = new GraphDataSet(List.of(value));
         dataSet.setLabel(label);
         dataSet.setBackgroundColor(List.of(color));
         dataSet.setBorderColor(List.of("black"));
         dataSet.setBorderWidth(1);
+        dataSet.setErrorBars(credibleInterval);
         return dataSet;
     }
 

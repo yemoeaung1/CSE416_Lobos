@@ -9,6 +9,7 @@ public class GraphDataSet {
     private List<String> backgroundColor; 
     private List<String> borderColor; 
     private int borderWidth;
+    private List<Double> errorBars;
 
     public GraphDataSet(List<Double> data){
         this.data = data;
@@ -58,5 +59,13 @@ public class GraphDataSet {
         this.backgroundColor = backgroundColor;
         this.borderColor = borderColor;
         this.borderWidth = borderWidth;
+    }
+    
+    public void setErrorBars(List<Double> errorBars) {
+        this.errorBars = errorBars;
+    }
+
+    public List<Double> getErrorBars() {
+        return errorBars;
     }
 }
