@@ -64,7 +64,7 @@ export default function GraphContainer({ selectedArea, selectedState, mapView, d
 function GraphSelection({ mapView, selectedArea, dataSetType, setDataSetType, populationData }) {
   const graphOptions = [DataFilters.PARTY, DataFilters.RACE, DataFilters.INCOME, DataFilters.REGION_TYPE];
 
-  if (mapView != MapViewOptions.STATE)
+  if (mapView === MapViewOptions.PRECINCT)
     graphOptions.pop();
 
   return (

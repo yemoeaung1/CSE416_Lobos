@@ -83,6 +83,9 @@ public class GraphService {
                 case INCOME:
                     populateIncomeData(graph, districtData.getIncomeDist(), "");
                     break;
+                case REGION_TYPE:
+                    populateRegionData(graph, districtData.getRegionTypeDist());
+                    break;
                 default:
                     throw new IllegalArgumentException("Invalid Filter: " + filter);
             }
@@ -216,17 +219,13 @@ public class GraphService {
         List<Double> data = new ArrayList<>();
         List<GraphDataSet> dataSets = new ArrayList<>();
         
-        int totalPopulation = 0;
         for (String regionType : info.keySet()) {
-            int regionPopulation = (int) info.get(regionType);
-            totalPopulation += regionPopulation;
+            if(!regionType.equalsIgnoreCase("Total")){
+                double regionPopulation = (double) info.get(regionType);
 
-            labels.add(regionType);
-            data.add((double) regionPopulation);
-        }
-
-        for (int i = 0; i < data.size(); i++) {
-            data.set(i, data.get(i) / totalPopulation);
+                labels.add(regionType);
+                data.add((double) regionPopulation);
+            }
         }
         
         // Create dataset

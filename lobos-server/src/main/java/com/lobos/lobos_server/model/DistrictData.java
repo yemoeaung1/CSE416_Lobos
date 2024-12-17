@@ -17,7 +17,9 @@ public class DistrictData {
     @Field("Income Distribution")
     private Map<String, Object> incomeDist;
 
-    
+    @Field("Region Type Distribution")
+    private Map<String, Object> regionTypeDist;
+
     public String getName(){
         return name;
     }
@@ -36,6 +38,10 @@ public class DistrictData {
 
     public Map<String, Object> getIncomeDist(){
         return incomeDist;
+    }
+
+    public Map<String, Object> getRegionTypeDist(){
+        return regionTypeDist;
     }
 }
 
