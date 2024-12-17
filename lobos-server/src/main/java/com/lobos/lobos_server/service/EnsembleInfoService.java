@@ -151,9 +151,9 @@ public class EnsembleInfoService {
         data.put("outlierColor", "#999999");
         data.put("padding", 5);
         data.put("itemRadius", 2);
-        data.put("chartTitle", String.format("Simulated District-Level Wins in %s", state));
-        data.put("xAxisLabel", "Districts");
-        data.put("yAxisLabel", "Number of Wins");
+        data.put("title", String.format("Simulated District-Level Wins in %s", state));
+        data.put("xLabel", "Districts");
+        data.put("yLabel", "Number of Wins");
 
         return data;
     }
