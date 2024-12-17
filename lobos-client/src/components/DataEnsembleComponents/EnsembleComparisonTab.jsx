@@ -97,7 +97,7 @@ function DistrictPlanSummary({ planSummary }) {
 
 function DistrictPlanPopup({ planGeoJSON, setShowPlan }) {
     return (
-        <div className="district-plan-popup">
+        <div className="district-plan-popup flex flex-end">
             <IconButton className="district-plan-popup-exit" size="small" component="span" onClick={() => { setShowPlan(false) }}>
                 <CloseIcon />
             </IconButton>

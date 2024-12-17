@@ -24,7 +24,7 @@
 }
 
 .layer-switch {
-  z-index: 10000;
+  z-index: 1000;
   pointer-events: none;
 }
 
@@ -281,6 +281,10 @@
 
 /* District Plan Pop-up CSS */
 .district-plan-popup {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+
   position: absolute;
   transform: translate(-50%, -50%);
   top: 60%;
@@ -300,7 +304,7 @@
 .district-plan-popup-exit{
   position: absolute;
 
-  z-index: 10;
+  z-index: 2000;
 }
 
 .district-plan-map {
