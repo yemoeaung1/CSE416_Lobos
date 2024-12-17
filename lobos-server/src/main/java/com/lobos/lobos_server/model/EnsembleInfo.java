@@ -1,8 +1,10 @@
 package com.lobos.lobos_server.model;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.util.Map;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "ensemble-info")
@@ -14,6 +16,8 @@ public class EnsembleInfo {
     private Map<String, Integer> splits;
     // private BoxplotGroup boxplot; // Updated type for the nested boxplot structure
     private Map<String, Map<String, Boxplot>> boxplot;
+    @Field("district_winner_tally")
+    private Map<String, List<Integer>> districtWinnerTally;
     
     // @Field("boxplot")
     // private Groups groups;
@@ -47,5 +51,9 @@ public class EnsembleInfo {
     // }
     public Map<String, Map<String, Boxplot>> getBoxplot() {
         return boxplot;
+    }
+
+    public Map<String, List<Integer>>  getDistrictWinnerTally() {
+        return districtWinnerTally;
     }
 }

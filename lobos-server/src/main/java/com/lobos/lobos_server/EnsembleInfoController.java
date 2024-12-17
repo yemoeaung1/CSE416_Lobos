@@ -51,6 +51,8 @@ public class EnsembleInfoController {
         data.put("padding", 5);
         data.put("itemRadius", 2);
         data.put("title", String.format("Republican/Democrat Splits In %s After Simulations By District", state));
+        data.put("xLabel", "Republican/Democrat Splits");
+        data.put("yLabel", "Number of Plans");
 
 
         return ResponseEntity.ok(data);
@@ -159,9 +161,43 @@ public class EnsembleInfoController {
         }
     }
 
-    // @GetMapping("/ensemble-info")
-    // public ResponseEntity<List<EnsembleInfo>> getAllEnsembleInfo() {
-    //     List<EnsembleInfo> ensembleInfoList = ensembleInfoService.getAllEnsembleInfo();
-    //     return ResponseEntity.ok(ensembleInfoList); // Returns the list as a response with 200 OK status
-    // }
+    @GetMapping("/ensemble-info")
+    public ResponseEntity<List<EnsembleInfo>> getAllEnsembleInfo() {
+        List<EnsembleInfo> ensembleInfoList = ensembleInfoService.getAllEnsembleInfo();
+        return ResponseEntity.ok(ensembleInfoList); // Returns the list as a response with 200 OK status
+    }
+
+    @GetMapping("/ensemble-tally")
+    public ResponseEntity<Map<String, Object>> getEnsembleTally(@RequestParam String state) {
+        Map<String, Object> data = new HashMap<>();
+        EnsembleInfo info = ensembleInfoService.getEnsembleInfoForState(state);
+        Map<String, List<Integer>> tally = info.getDistrictWinnerTally();
+        List<String> districtLabels = new ArrayList<>(tally.keySet());
+        List<Integer> republicanTally = new ArrayList<>();
+        List<Integer> democratTally = new ArrayList<>();
+
+        for (List<Integer> valuelist : tally.values()) {
+            republicanTally.add(valuelist.get(0));
+            democratTally.add(valuelist.get(1));
+        }   
+        
+        data.put("labels", districtLabels);
+        data.put("label1", "Republican Wins");
+        data.put("republicanData", republicanTally);
+        data.put("backgroundColor1", "red");
+        data.put("label2", "Democrat Wins");
+        data.put("democratData", democratTally);
+        data.put("backgroundColor2", "blue");
+        data.put("borderColor", "black");
+        data.put("borderWidth", 1);
+        data.put("outlierColor", "#999999");
+        data.put("padding", 5);
+        data.put("itemRadius", 2);
+        data.put("title", String.format("Tally of District Winners After Simulation in %s by District", state));
+        data.put("xLabel", "Tally of District Winners");
+        data.put("yLabel", "Number of Plans");
+
+
+        return ResponseEntity.ok(data);
+    }
 }
