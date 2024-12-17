@@ -302,3 +302,7 @@
 
   z-index: 10;
 }
+
+.district-plan-map {
+  border-radius: 8px;
+}

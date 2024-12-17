@@ -44,7 +44,9 @@ export default function EnsembleComparisonTab({ selectedState }) {
 }
 
 function DistrictPlanSelection({ selectedPlan, setSelectedPlan, setShowPlan }) {
-    const districtPlans = ["None", "District Plan 1", "District Plan 2", "District Plan 3", "District Plan 4", "District Plan 5"]
+    const districtPlans = ["None", "Test District Plan", "District Plan 1", "District Plan 2", "District Plan 3", "District Plan 4", "District Plan 5"]
+
+    const isDisabled = (selectedPlan === 'None');
 
     return (
         <Box display="flex" alignItems="center">
@@ -75,9 +77,10 @@ function DistrictPlanSelection({ selectedPlan, setSelectedPlan, setShowPlan }) {
                         fontSize: "1.0rem",
                         fontFamily: "Montserrat, san-serif",
                         fontWeight: "bold",
-                        backgroundColor: "primary.main",
-                        color: "grey.200"
+                        backgroundColor: (!isDisabled) ? "primary.main" : "grey.200",
+                        color: (!isDisabled) ? "grey.200" : "primary.main",
                     }}
+                    disabled={isDisabled}
                 >
                     Compare Plans
                 </Button>
@@ -129,6 +132,7 @@ function DistrictPlanMap({ planGeoJSON }) {
     return (
         <>
             <MapContainer
+                className="district-plan-map"
                 preferCanvas={true}
                 maxBoundsViscosity={1}
                 center={planGeoJSON.properties.CENTER}
