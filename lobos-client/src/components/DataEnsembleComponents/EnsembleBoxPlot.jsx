@@ -10,13 +10,9 @@ Chart.register(BoxPlotController, BoxAndWiskers);
 const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName }) => {
     const chartRef = useRef(null);
     const [chartInstance, setChartInstance] = useState(null);
-    const [dataSet, setDataSet] = useState(null);
+    const [graphData, setDataSet] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
-    // console.log(selectedState);
-    // console.log(dataSet);
-    // console.log(dataSetType);
 
     useEffect(() => {
         if (selectedState === States.NONE) {
@@ -30,7 +26,7 @@ const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName })
             try {
                 // Use selectedState in the API call to fetch the relevant data
                 const response = await axios.get(
-                    `http://localhost:8080/api/ensemble-data?state=${selectedState}&filter=${dataSetType}&category=${dataCategory}`
+                    `http://localhost:8080/api/ensemble/boxplot-data?state=${selectedState}&filter=${dataSetType}&category=${dataCategory}`
                 );
                 console.log(response.data);
                 setDataSet(response.data);
@@ -44,31 +40,29 @@ const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName })
     }, [selectedState, dataSetType]);
 
     useEffect(() => {
-        if (loading || error || !dataSet) {
+        if (loading || error || !graphData) {
             return; // Do not proceed if data is still loading, if there's an error, or if there's no data
         }
         
         const ctx = chartRef.current.getContext("2d");
-
-
-
-        const boxplotData = {
-            labels: dataSet.labels,
-            datasets: [
-                ...dataSet.data
-            ],
-        };
-
+        
         const BoxPlot = new Chart(ctx, {
             type: "boxplot",
-            data: boxplotData,
+            data: {
+                labels: graphData.labels,
+                // xLabels: graphData.xLabels,
+                // yLabels: graphData.yLabels,
+                datasets: [
+                    ...graphData.data
+                ]
+            },
             options: {
                 responsive: true,
                 scales: {
                     x: {
                         title: {
                             display: true,
-                            text: "Districts",
+                            text: graphData.xLabel,
                             font: {
                                 size: 20,
                             },
@@ -83,7 +77,7 @@ const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName })
                     y: {
                         title: {
                             display: true,
-                            text: "Percentage",
+                            text: graphData.yLabel,
                             font: {
                                 size: 20,
                             },
@@ -109,9 +103,9 @@ const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName })
                     },
                     title: {
                         display: true,
-                        text: `${dataSet.title} (${displayName})`,
+                        text: `${graphData.title} (${displayName})`,
                         font: {
-                            size: 24,
+                            size: 22,
                             weight: "bold",
                         },
                         color: "#000000",
@@ -125,7 +119,7 @@ const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName })
         return () => {
             BoxPlot.destroy();
         };
-    }, [dataSet]);
+    }, [graphData]);
 
     return (
         <div className="h-24 w-102">

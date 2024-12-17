@@ -1,21 +1,21 @@
 package com.lobos.lobos_server.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.lobos.lobos_server.model.DistrictData;
-import com.lobos.lobos_server.model.DistrictInfo;
-import com.lobos.lobos_server.model.DistrictPlanInfo;
-import com.lobos.lobos_server.model.Graph;
-import com.lobos.lobos_server.enum_classes.DataFiltersEnum;
-import com.lobos.lobos_server.model.GraphDataSet;
-import com.lobos.lobos_server.model.PrecinctData;
-import com.lobos.lobos_server.model.StateInfo;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.lobos.lobos_server.enum_classes.DataFiltersEnum;
+import com.lobos.lobos_server.model.DistrictData;
+import com.lobos.lobos_server.model.DistrictInfo;
+import com.lobos.lobos_server.model.DistrictPlanInfo;
+import com.lobos.lobos_server.model.Graph;
+import com.lobos.lobos_server.model.GraphDataSet;
+import com.lobos.lobos_server.model.PrecinctData;
+import com.lobos.lobos_server.model.StateInfo;
 
 @Service
 public class GraphService {
