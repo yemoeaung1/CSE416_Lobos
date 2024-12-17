@@ -22,12 +22,13 @@ public class HeatmapMethods {
 
     static {
         demoBins = new ArrayList<>();
-        demoBins.add(new ColorMapping("50%+", "hsl(280, 80%, 20%)", 0.8));
-        demoBins.add(new ColorMapping("25%-50%", "hsl(280, 60%, 30%)", 0.8));
-        demoBins.add(new ColorMapping("10%-25%", "hsl(280, 60%, 45%)", 0.8));
-        demoBins.add(new ColorMapping("5%-10%", "hsl(280, 60%, 60%)", 0.8));
-        demoBins.add(new ColorMapping("2.5%-5%", "hsl(280, 50%, 75%)", 0.8));
-        demoBins.add(new ColorMapping("0%-2.5%", "hsl(280, 40%, 90%)", 0.8));
+        demoBins.add(new ColorMapping("50%+", "hsl(280, 90%, 15%)", 0.8));
+        demoBins.add(new ColorMapping("25%-50%", "hsl(280, 75%, 25%)", 0.8));
+        demoBins.add(new ColorMapping("20%-25%", "hsl(280, 65%, 35%)", 0.8));
+        demoBins.add(new ColorMapping("15%-20%", "hsl(280, 60%, 50%)", 0.8));
+        demoBins.add(new ColorMapping("10%-15%", "hsl(280, 60%, 70%)", 0.8));
+        demoBins.add(new ColorMapping("5%-10%", "hsl(280, 50%, 80%)", 0.8));
+        demoBins.add(new ColorMapping("0%-5%", "hsl(280, 40%, 90%)", 0.8));
 
         ecoBins = new ArrayList<>();
         ecoBins.add(new ColorMapping("$200K+", "hsl(160, 50%, 20%)", 1));
@@ -77,18 +78,18 @@ public class HeatmapMethods {
         ecoPolBins.add(new ColorMapping("D-$0K-$15K", "hsl(240, 35%, 85%)", 0.4));
 
         electoralBins = new ArrayList<>();
-        electoralBins.add(new ColorMapping("R-50%+", "hsl(0, 90%, 20%)", 1));
-        electoralBins.add(new ColorMapping("R-30%-50%", "hsl(0, 80%, 30%)", 0.9));
-        electoralBins.add(new ColorMapping("R-20%-30%", "hsl(0, 60%, 50%)", 0.8));
-        electoralBins.add(new ColorMapping("R-10%-20%", "hsl(0, 50%, 60%)", 0.7));
-        electoralBins.add(new ColorMapping("R-5%-10%", "hsl(0, 50%, 70%)", 0.6));
-        electoralBins.add(new ColorMapping("R-0%-5%", "hsl(0, 40%, 80%)", 0.5));
-        electoralBins.add(new ColorMapping("D-50%+", "hsl(240, 90%, 20%)", 1));
-        electoralBins.add(new ColorMapping("D-30%-50%", "hsl(240, 80%, 30%)", 0.9));
-        electoralBins.add(new ColorMapping("D-20%-30%", "hsl(240, 60%, 50%)", 0.8));
-        electoralBins.add(new ColorMapping("D-10%-20%", "hsl(240, 50%, 60%)", 0.7));
-        electoralBins.add(new ColorMapping("D-5%-10%", "hsl(240, 50%, 70%)", 0.6));
-        electoralBins.add(new ColorMapping("D-0%-5%", "hsl(240, 40%, 80%)", 0.5));
+        electoralBins.add(new ColorMapping("R-50%+", "hsl(0, 80%, 25%)", 1));
+        electoralBins.add(new ColorMapping("R-40%-50%", "hsl(0, 70%, 35%)", 0.85));
+        electoralBins.add(new ColorMapping("R-30%-40%", "hsl(0, 60%, 40%)", 0.7));
+        electoralBins.add(new ColorMapping("R-20%-30%", "hsl(0, 50%, 55%)", 0.6));
+        electoralBins.add(new ColorMapping("R-10%-20%", "hsl(0, 50%, 70%)", 0.5));
+        electoralBins.add(new ColorMapping("R-0%-10%", "hsl(0, 30%, 80%)", 0.4));
+        electoralBins.add(new ColorMapping("D-50%+", "hsl(240, 80%, 25%)", 1));
+        electoralBins.add(new ColorMapping("D-40%-50%", "hsl(240, 70%, 35%)", 0.85));
+        electoralBins.add(new ColorMapping("D-30%-40%", "hsl(240, 60%, 40%)", 0.7));
+        electoralBins.add(new ColorMapping("D-20%-30%", "hsl(240, 50%, 55%)", 0.6));
+        electoralBins.add(new ColorMapping("D-10%-20%", "hsl(240, 50%, 70%)", 0.5));
+        electoralBins.add(new ColorMapping("D-0%-10%", "hsl(240, 30%, 80%)", 0.4));
     }
 
     @Cacheable(value = "", key = "#filters[0]")
@@ -163,14 +164,16 @@ public class HeatmapMethods {
             return demoBins.get(0);
         else if (percentage >= 0.25)
             return demoBins.get(1);
-        else if (percentage >= 0.10)
+        else if (percentage >= 0.2)
             return demoBins.get(2);
-        else if (percentage >= 0.05)
+        else if (percentage >= 0.15)
             return demoBins.get(3);
-        else if (percentage >= 0.025)
+        else if (percentage >= 0.10)
             return demoBins.get(4);
-        else
+        else if (percentage >= 0.05)
             return demoBins.get(5);
+        else
+            return demoBins.get(6);
     }
 
     private static ColorMapping handleEcoBins(PrecinctData info) {
@@ -269,13 +272,13 @@ public class HeatmapMethods {
 
         if (voteMargin > 0.5)
             return electoralBins.get(offset + 0);
-        else if (voteMargin > 0.3)
+        else if (voteMargin > 0.4)
             return electoralBins.get(offset + 1);
-        else if (voteMargin > 0.2)
+        else if (voteMargin > 0.3)
             return electoralBins.get(offset + 2);
-        else if (voteMargin > 0.1)
+        else if (voteMargin > 0.2)
             return electoralBins.get(offset + 3);
-        else if (voteMargin > 0.05)
+        else if (voteMargin > 0.1)
             return electoralBins.get(offset + 4);
         else
             return electoralBins.get(offset + 5);

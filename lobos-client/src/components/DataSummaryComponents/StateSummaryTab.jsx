@@ -78,7 +78,7 @@ function StateDetails({ stateDetails }) {
     return (
         <div className="data-component-info-grid">
             <div className="data-component-info-grid-cell montserrat">
-                <div className="font-bold pb-1">Population</div>
+                <div className="font-bold pb-1">Total Population</div>
                 <div>{`${stateDetails.population.toLocaleString()}`}</div>
             </div>
             <div className="data-component-info-grid-cell montserrat">

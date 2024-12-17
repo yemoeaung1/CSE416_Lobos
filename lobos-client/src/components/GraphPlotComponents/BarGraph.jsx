@@ -1,42 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
-import axios from "axios";
 
-const BarGraph = ({ dataSetType, selectedState }) => {
+function BarGraph({ graphData }) {
     const chartRef = useRef(null);
-    const [graphData, setGraphData] = useState(null);
-
-    useEffect(() => {
-        const fetchGraphData = async () => {
-            try {
-                console.log(dataSetType);
-                const response = await axios.get(
-                    `http://localhost:8080/api/bar?state=${selectedState}&filter=${dataSetType}`
-                );
-                const { labels, dataSets, title, xlabel, ylabel } =
-                    response.data;
-                console.log(response.data);
-                console.log(xlabel);
-
-                setGraphData({
-                    labels,
-                    datasets: dataSets.map((dataSet) => ({
-                        label: dataSet.label,
-                        data: dataSet.data,
-                        backgroundColor: dataSet.backgroundColor,
-                        borderColor: dataSet.borderColor,
-                        borderWidth: dataSet.borderWidth,
-                    })),
-                    title: title,
-                    xTitle: xlabel,
-                    yTitle: ylabel,
-                });
-            } catch (error) {
-                console.error("Error fetching graph data:", error);
-            }
-        };
-        fetchGraphData();
-    }, [dataSetType, selectedState]);
 
     useEffect(() => {
         if (!graphData) return;
@@ -58,12 +24,14 @@ const BarGraph = ({ dataSetType, selectedState }) => {
                             text: graphData.xTitle,
                             font: {
                                 size: 20,
+                                family: "Montserrat, sans-serif",
                             },
                             color: "#000000",
                         },
                         ticks: {
                             font: {
-                                size: 18,
+                                size: 16,
+                                family: "Montserrat, sans-serif",
                             },
                         },
                     },
@@ -74,32 +42,29 @@ const BarGraph = ({ dataSetType, selectedState }) => {
                             text: graphData.yTitle,
                             font: {
                                 size: 20,
+                                family: "Montserrat, sans-serif",
                             },
                             color: "#000000",
                         },
                         ticks: {
                             font: {
-                                size: 18,
+                                size: 16,
+                                family: "Montserrat, sans-serif",
                             },
                         },
                     },
                 },
                 plugins: {
                     legend: {
-                        display: "Political Party",
-                        position: "top",
-                        labels: {
-                            font: {
-                                size: 16,
-                            },
-                        },
+                        display: false,
                     },
                     title: {
                         display: true,
                         text: graphData.title,
                         font: {
-                            size: 28,
+                            size: 24,
                             weight: "bold",
+                            family: "Montserrat, sans-serif",
                         },
                         color: "#000000",
                     },
@@ -113,10 +78,8 @@ const BarGraph = ({ dataSetType, selectedState }) => {
     }, [graphData]);
 
     return (
-        <div className=" border-2 border-gray-800 rounded-xl shadow-xl">
-            <div className="flex-1 flex justify-center items-center">
-                <canvas ref={chartRef} className="w-full h-full"></canvas>
-            </div>
+        <div className="flex-1">
+            <canvas ref={chartRef} className="w-full h-full"></canvas>
         </div>
     );
 };
