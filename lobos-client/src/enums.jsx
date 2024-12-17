@@ -20,6 +20,7 @@ const MapViewOptions = Object.freeze({
 const DataFilters = Object.freeze({
     PARTY: "Party",
     RACE: "Race",
+    MINORITY: "Minority Group",
     INCOME: "Income",
     REGION_TYPE: "Region Type",
 })
