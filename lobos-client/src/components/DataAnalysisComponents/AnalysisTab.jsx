@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter";
 import PrecinctDataTable from "../GraphPlotComponents/PrecinctDataTable";
+import VoteShareSeatShareGraph from "../GraphPlotComponents/VoteShareSeatShareGraph";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { MapViewOptions } from "../../enums";
+import { Tooltip } from "@mui/material";
 
 export default function AnalysisTab({ selectedState, mapView, setMapView }) {
     const [selectedChart, setSelectedChart] = useState("precinct-analysis");
@@ -10,6 +12,9 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
     const [showTable, setShowTable] = useState(false); // For toggling the table
     const [selectedGEOID, setSelectedGEOID] = useState(null); // GEOID of selected point
     const [precinctData, setPrecinctData] = useState([]); // Store fetched precinct data
+    const [selectedAdditionalView, setSelectedAdditionalView] = useState(null);
+    // Check if curve graph option should be disabled
+    const isCurveDisabled = selectedState === "Utah";
 
     useEffect(() => {
         if (mapView != MapViewOptions.PRECINCT)
@@ -97,23 +102,62 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                         Income & Race
                     </button>
                 </div>
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            checked={showTable}
-                            onChange={(e) => setShowTable(e.target.checked)}
-                            color="primary"
-                        />
-                    }
-                    label="Show Table"
-                    className="ml-4"
-                />
+                <div className="flex items-center space-x-4 ml-4">
+                    <button
+                        onClick={() => {
+                            setSelectedAdditionalView(
+                                selectedAdditionalView === "table"
+                                    ? null
+                                    : "table"
+                            ),
+                                (setShowTable = true);
+                        }}
+                        className={`text-sm font-semibold p-2 rounded-md ${
+                            selectedAdditionalView === "table"
+                                ? "bg-blue-500 text-white"
+                                : "bg-gray-200 hover:bg-gray-300"
+                        }`}
+                    >
+                        Show Table
+                    </button>
+                    <Tooltip
+                        title={
+                            isCurveDisabled
+                                ? "Curve graph is disabled for this state."
+                                : ""
+                        }
+                        placement="top"
+                        arrow
+                    >
+                        <span>
+                            <button
+                                onClick={() =>
+                                    setSelectedAdditionalView(
+                                        selectedAdditionalView === "curve"
+                                            ? null
+                                            : "curve"
+                                    )
+                                }
+                                className={`text-sm font-semibold p-2 rounded-md ${
+                                    selectedAdditionalView === "curve"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-gray-200 hover:bg-gray-300"
+                                }`}
+                                disabled={isCurveDisabled}
+                            >
+                                Show Curve Graph
+                            </button>
+                        </span>
+                    </Tooltip>
+                </div>
             </div>
 
             {/* Chart Display */}
             <div
                 className={`transition-all duration-300 ${
-                    showTable && selectedChart === "precinct-analysis"
+                    (selectedAdditionalView === "table" ||
+                        selectedAdditionalView === "curve") &&
+                    selectedChart === "precinct-analysis"
                         ? "h-2/4"
                         : "h-3/4"
                 } w-full mt-5`}
@@ -137,19 +181,34 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                 )}
             </div>
             {/* Table Display */}
-            {selectedChart === "precinct-analysis" && showTable && (
-                <div
-                    className="flex-grow w-full overflow-auto mt-6"
-                    style={{
-                        paddingTop: "20px", // Additional spacing above the table
-                    }}
-                >
-                    <PrecinctDataTable
-                        precinctData={precinctData}
-                        selectedGEOID={selectedGEOID}
-                    />
-                </div>
-            )}
+            {selectedChart === "precinct-analysis" &&
+                selectedAdditionalView === "table" && (
+                    <div
+                        className="flex-grow w-full overflow-hidden mt-6"
+                        style={{
+                            paddingTop: "20px", // Additional spacing above the table
+                        }}
+                    >
+                        <PrecinctDataTable
+                            precinctData={precinctData}
+                            selectedGEOID={selectedGEOID}
+                        />
+                    </div>
+                )}
+            {selectedChart === "precinct-analysis" &&
+                selectedAdditionalView === "curve" &&
+                !isCurveDisabled && (
+                    <div
+                        className="flex-grow w-full overflow-hidden mt-6"
+                        style={{
+                            paddingTop: "20px", // Additional spacing above the table
+                        }}
+                    >
+                        <VoteShareSeatShareGraph
+                            selectedState={selectedState}
+                        />
+                    </div>
+                )}
         </div>
     );
 }

@@ -48,4 +48,13 @@ public class RegionController {
         Map<String, Object> data = districtService.getDistrictInfo(state);
         return ResponseEntity.ok(data);
     }
+
+    @GetMapping("/vote-seat-curve")
+    public ResponseEntity<List<Map<String, Object>>> getVoteSeatShareCurve(
+        @RequestParam String state) {
+        
+        List<Map<String, Object>> curveData = districtService.getVoteShareSeatShareCurve(state);        
+        return ResponseEntity.ok(curveData);
+    }
+
 }
