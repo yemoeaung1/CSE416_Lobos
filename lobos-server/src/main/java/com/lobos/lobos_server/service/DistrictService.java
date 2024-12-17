@@ -1,8 +1,5 @@
 package com.lobos.lobos_server.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -31,17 +28,9 @@ public class DistrictService {
     }
 
     @Cacheable(value = "district-plan-cache", key = "#state + #name")
-    public Map<String, Object> getDistrictPlan(String state, String name){
+    public DistrictPlanInfo getDistrictPlan(String state, String name){
         DistrictPlanInfo districtPlanInfo = districtPlanRepository.findFirstByStateAndName(state, name);
 
-        if(districtPlanInfo == null)
-            return null;
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("data", districtPlanInfo.getData());
-        data.put("geoJSON", districtPlanInfo.getGeoJSON());
-        data.put("properties", districtPlanInfo.getProperties());
-
-        return data;
+        return districtPlanInfo;
     }
 }
