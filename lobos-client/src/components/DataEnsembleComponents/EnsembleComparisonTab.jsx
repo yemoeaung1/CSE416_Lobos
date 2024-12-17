@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MapContainer, GeoJSON } from "react-leaflet";
 import Color from "color";
 import { IconButton, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
@@ -17,6 +17,15 @@ export default function EnsembleComparisonTab({ selectedState }) {
     const [planGeoJSON, setPlanGeoJSON] = useState(null);
     const [planGraphData, setPlanGraphData] = useState(null);
     const [planPopulationData, setPlanPopulationData] = useState(0);
+
+    const [fullMapView, setFullMapView] = useState(false);
+    const mapRef = useRef();
+
+    useEffect(() => {
+        if (mapRef.current) {
+            mapRef.current.invalidateSize();
+        }
+    }, [fullMapView]);
 
     useEffect(() => {
         if (selectedState !== States.NONE && selectedPlan !== 'None') {
@@ -97,6 +106,9 @@ export default function EnsembleComparisonTab({ selectedState }) {
                 setSelectedDist={setSelectedDist}
                 planGeoJSON={planGeoJSON}
                 setSelectedDistrict={setSelectedDistrict}
+                fullMapView={fullMapView}
+                setFullMapView={setFullMapView}
+                mapRef={mapRef}
             />
         </>
     );
@@ -130,38 +142,44 @@ function DistrictPlanSelection({ selectedState, selectedPlan, setSelectedPlan, r
     );
 }
 
-function DistrictPlanContent({ planGraphData, planPopulationData, selectedDistrict, selectedDist, setSelectedDist, planGeoJSON, setSelectedDistrict }) {
+function DistrictPlanContent({ planGraphData, planPopulationData, selectedDistrict, selectedDist, setSelectedDist, planGeoJSON, setSelectedDistrict, fullMapView, setFullMapView, mapRef }) {
     return (
-        <div className="flex flex-row">
+        <div className="flex flex-row h-full">
             <DistrictPlanPopup
                 planGeoJSON={planGeoJSON}
                 setSelectedDistrict={setSelectedDistrict}
+                fullMapView={fullMapView}
+                setFullMapView={setFullMapView}
+                mapRef={mapRef}
             />
-            <DistrictPlanSummary
-                planGraphData={planGraphData}
-                planPopulationData={planPopulationData}
-                selectedDistrict={selectedDistrict}
-                selectedDist={selectedDist}
-                setSelectedDist={setSelectedDist}
-            />
+            {!fullMapView &&
+                < DistrictPlanSummary
+                    planGraphData={planGraphData}
+                    planPopulationData={planPopulationData}
+                    selectedDistrict={selectedDistrict}
+                    selectedDist={selectedDist}
+                    setSelectedDist={setSelectedDist}
+                />
+            }
         </div>
     );
 }
-function DistrictPlanPopup({ planGeoJSON, setSelectedDistrict }) {
+function DistrictPlanPopup({ planGeoJSON, setSelectedDistrict, fullMapView, setFullMapView, mapRef }) {
     if (!planGeoJSON)
         return;
 
     return (
-        <div className="district-plan-popup">
-            <IconButton className="district-plan-popup-exit" size="small" component="span" onClick={() => {  }}>
-                <FullscreenIcon />
+        <div className={`district-plan-popup ${(fullMapView) ? "full-view" : "half-view"}`}>
+            <IconButton className="district-plan-popup-expand" size="small" component="span" onClick={() => { setFullMapView(!fullMapView) }}>
+                {!fullMapView && <FullscreenIcon />}
+                {fullMapView && <FullscreenExitIcon />}
             </IconButton>
-            <DistrictPlanMap planGeoJSON={planGeoJSON} setSelectedDistrict={setSelectedDistrict} />
+            <DistrictPlanMap planGeoJSON={planGeoJSON} setSelectedDistrict={setSelectedDistrict} mapRef={mapRef} />
         </div>
     );
 }
 
-function DistrictPlanMap({ planGeoJSON, setSelectedDistrict }) {
+function DistrictPlanMap({ planGeoJSON, setSelectedDistrict, mapRef }) {
     if (planGeoJSON === null || planGeoJSON.geoJSON === null || planGeoJSON.properties === null)
         return;
 
@@ -201,6 +219,7 @@ function DistrictPlanMap({ planGeoJSON, setSelectedDistrict }) {
                 zoom={planGeoJSON.properties.CURRENT_ZOOM}
                 minZoom={planGeoJSON.properties.MIN_ZOOM}
                 maxZoom={planGeoJSON.properties.MAX_ZOOM}
+                ref={mapRef}
             >
                 <GeoJSON
                     key={JSON.stringify(planGeoJSON.geoJSON)}
