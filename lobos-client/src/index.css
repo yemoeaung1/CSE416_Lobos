@@ -281,18 +281,13 @@
 
 /* District Plan Pop-up CSS */
 .district-plan-popup {
+  position: relative;
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
 
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 60%;
-  left: 50%;
+  height: 100%;
   
-  width: 75%;
-  height: 75%;
-
   padding: 10px;
   border: 2px solid black;
   border-radius: 8px;
@@ -301,12 +296,31 @@
   z-index: 10;
 }
 
-.district-plan-popup-exit{
+.district-plan-popup.half-view {
+  width: 38%;
+  margin-right: 2%;
+}
+
+.district-plan-popup.full-view {
+  width: 100%;
+}
+
+.district-plan-popup-expand {
   position: absolute;
 
   z-index: 2000;
 }
 
 .district-plan-map {
+  width: 100%;
+  height: 100%;
   border-radius: 8px;
+}
+
+.district-plan-summary {
+  display: flex;
+  flex-direction: column;
+
+  width: 60%;
+  height: 100%;
 }

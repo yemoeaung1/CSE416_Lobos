@@ -5,13 +5,12 @@ import org.springframework.stereotype.Service;
 
 import com.lobos.lobos_server.model.DistrictData;
 import com.lobos.lobos_server.model.DistrictInfo;
+import com.lobos.lobos_server.model.DistrictPlanInfo;
 import com.lobos.lobos_server.model.Graph;
 import com.lobos.lobos_server.enum_classes.DataFiltersEnum;
 import com.lobos.lobos_server.model.GraphDataSet;
 import com.lobos.lobos_server.model.PrecinctData;
 import com.lobos.lobos_server.model.StateInfo;
-import com.lobos.lobos_server.repository.DistrictInfoRepository;
-import com.lobos.lobos_server.repository.StateInfoRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,22 +19,22 @@ import java.util.Map;
 
 @Service
 public class GraphService {
-    private final StateInfoRepository stateInfoRepository;
-    private final DistrictInfoRepository districtInfoRepository;
+    private final StateService stateService;
+    private final DistrictService districtService;
     private final PrecinctService precinctService;
 
     @Autowired
-    public GraphService(StateInfoRepository stateInfoRepository,
-            DistrictInfoRepository districtInfoRepository,
+    public GraphService(StateService stateService,
+            DistrictService districtService,
             PrecinctService precinctService) {
 
-        this.stateInfoRepository = stateInfoRepository;
-        this.districtInfoRepository = districtInfoRepository;
+        this.stateService = stateService;
+        this.districtService = districtService;
         this.precinctService = precinctService;
     }
 
     public Map<String, Object> getGraphForState(String state, String area, String filter) {
-        StateInfo stateInfo = stateInfoRepository.findFirstByState(state);
+        StateInfo stateInfo = stateService.getStateInfo(state);
 
         Graph graph = new Graph("Bar");
         switch (DataFiltersEnum.fromValue(filter)) {
@@ -66,7 +65,7 @@ public class GraphService {
     }
 
     public Map<String, Object> getGraphForDistrict(String state, String area, String filter) {
-        DistrictInfo districtInfo = districtInfoRepository.findFirstByState(state);
+        DistrictInfo districtInfo = districtService.getDistrictInfo(state);
         DistrictData districtData = null;
 
         for (DistrictData data : districtInfo.getDistricts()) {
@@ -133,6 +132,45 @@ public class GraphService {
         Map<String, Object> data = new HashMap<>();
         data.put("data", graph);
         data.put("population", (precinctData != null) ? precinctData.getTotalPopulation() : null);
+
+        return data;
+    }
+
+    public Map<String, Object> getGraphForDistrictPlan(String state, String name, String area, String filter) {
+        DistrictPlanInfo districtPlanInfo = districtService.getDistrictPlan(state, name);
+        DistrictData districtData = null;
+
+        for (DistrictData data : districtPlanInfo.getData()) {
+            if (data.getName().equals(area))
+                districtData = data;
+        }
+
+        Graph graph = new Graph("Bar");
+        if (districtData != null) {
+            switch (DataFiltersEnum.fromValue(filter)) {
+                case PARTY:
+                    populatePartyData(graph, districtData.getVoteDistribution());
+                    break;
+                case RACE:
+                    populateRaceData(graph, districtData.getRaceDistribution());
+                    break;
+                case MINORITY:
+                    populateMinorityGroupData(graph, districtData.getRaceDistribution());
+                    break;
+                case INCOME:
+                    populateIncomeData(graph, districtData.getIncomeDist(), "");
+                    break;
+                case REGION_TYPE:
+                    populateRegionData(graph, districtData.getRegionTypeDist());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid Filter: " + filter);
+            }
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("data", graph);
+        data.put("population", (districtData != null) ? districtData.getTotalPopulation() : null);
 
         return data;
     }

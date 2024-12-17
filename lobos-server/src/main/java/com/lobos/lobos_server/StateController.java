@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.lobos.lobos_server.model.PrecinctData;
+import com.lobos.lobos_server.model.StateInfo;
 import com.lobos.lobos_server.model.StateMapConfig;
 import com.lobos.lobos_server.service.PrecinctService;
 import com.lobos.lobos_server.service.StateService;
@@ -51,7 +52,12 @@ public class StateController {
     public ResponseEntity<Map<String, Object>> getStateInfo(
             @RequestParam(required = true) String state) {
 
-        Map<String, Object> data = stateService.getStateInfo(state);
+        StateInfo info = stateService.getStateInfo(state);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("state", info.getState());
+        data.put("data", info.getData());
+
         return ResponseEntity.ok(data);
     }
 

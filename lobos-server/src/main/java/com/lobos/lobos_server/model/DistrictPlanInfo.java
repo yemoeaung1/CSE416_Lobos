@@ -61,7 +61,7 @@ public class DistrictPlanInfo {
         return properties;
     }
 
-    public void setRepresentativeData(Map<String, Object> properties) {
+    public void setProperties(Map<String, Object> properties) {
         this.properties = properties;
     }
 }

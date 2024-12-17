@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter";
 import PrecinctDataTable from "../GraphPlotComponents/PrecinctDataTable";
+import VoteShareSeatShareGraph from "../GraphPlotComponents/VoteShareSeatShareGraph";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { MapViewOptions } from "../../enums";
+import { Tooltip } from "@mui/material";
 
 export default function AnalysisTab({ selectedState, mapView, setMapView }) {
     const [selectedChart, setSelectedChart] = useState("precinct-analysis");
@@ -10,6 +12,9 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
     const [showTable, setShowTable] = useState(false); // For toggling the table
     const [selectedGEOID, setSelectedGEOID] = useState(null); // GEOID of selected point
     const [precinctData, setPrecinctData] = useState([]); // Store fetched precinct data
+    const [selectedAdditionalView, setSelectedAdditionalView] = useState(null);
+    // Check if curve graph option should be disabled
+    const isCurveDisabled = selectedState === "Utah";
 
     useEffect(() => {
         if (mapView != MapViewOptions.PRECINCT)
@@ -64,82 +69,123 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                     </div>
                 </nav>
 
-                {/* Filter Buttons */}
-                <div className="flex items-center">
-                    <div className="flex-grow">
-                        <button
-                            className={
-                                selectedFilter === "income"
-                                    ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                    : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
-                            }
-                            onClick={() => setSelectedFilter("income")}
-                        >
-                            Income
-                        </button>
-                        <button
-                            className={
-                                selectedFilter === "race"
-                                    ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                    : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
-                            }
-                            onClick={() => setSelectedFilter("race")}
-                        >
-                            Racial/Ethnic
-                        </button>
-                        <button
-                            className={
-                                selectedFilter === "income&race"
-                                    ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                    : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
-                            }
-                            onClick={() => setSelectedFilter("income&race")}
-                        >
-                            Income & Race
-                        </button>
-                    </div>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={showTable}
-                                onChange={(e) => setShowTable(e.target.checked)}
-                                color="primary"
-                            />
+            {/* Filter Buttons */}
+            <div className="flex items-center">
+                <div className="flex-grow">
+                    <button
+                        className={
+                            selectedFilter === "income"
+                                ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                                : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
                         }
-                        label="Show Table"
-                        className="ml-4"
-                    />
+                        onClick={() => setSelectedFilter("income")}
+                    >
+                        Income
+                    </button>
+                    <button
+                        className={
+                            selectedFilter === "race"
+                                ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                                : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                        }
+                        onClick={() => setSelectedFilter("race")}
+                    >
+                        Racial/Ethnic
+                    </button>
+                    <button
+                        className={
+                            selectedFilter === "income&race"
+                                ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
+                                : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                        }
+                        onClick={() => setSelectedFilter("income&race")}
+                    >
+                        Income & Race
+                    </button>
                 </div>
+                <div className="flex items-center space-x-4 ml-4">
+                    <button
+                        onClick={() => {
+                            setSelectedAdditionalView(
+                                selectedAdditionalView === "table"
+                                    ? null
+                                    : "table"
+                            ),
+                                (setShowTable = true);
+                        }}
+                        className={`text-sm font-semibold p-2 rounded-md ${
+                            selectedAdditionalView === "table"
+                                ? "bg-blue-500 text-white"
+                                : "bg-gray-200 hover:bg-gray-300"
+                        }`}
+                    >
+                        Show Table
+                    </button>
+                    <Tooltip
+                        title={
+                            isCurveDisabled
+                                ? "Curve graph is disabled for this state."
+                                : ""
+                        }
+                        placement="top"
+                        arrow
+                    >
+                        <span>
+                            <button
+                                onClick={() =>
+                                    setSelectedAdditionalView(
+                                        selectedAdditionalView === "curve"
+                                            ? null
+                                            : "curve"
+                                    )
+                                }
+                                className={`text-sm font-semibold p-2 rounded-md ${
+                                    selectedAdditionalView === "curve"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-gray-200 hover:bg-gray-300"
+                                }`}
+                                disabled={isCurveDisabled}
+                            >
+                                Show Curve Graph
+                            </button>
+                        </span>
+                    </Tooltip>
+                </div>
+            </div>
 
-                {/* Chart Display */}
-                <div
-                    className={`transition-all duration-300 ${showTable && selectedChart === "precinct-analysis"
-                            ? "h-2/4"
-                            : "h-3/4"
-                        } w-full mt-5`}
-                    style={{
-                        paddingBottom: showTable ? "10px" : "10px", // Add extra space when the table is shown
-                    }}
-                >
-                    {selectedChart === "precinct-analysis" && (
-                        <IncomeVotingScatter
-                            selectedState={selectedState}
-                            selectedFilter={selectedFilter}
-                            onSelectGEOID={setSelectedGEOID} // Get selected GEOID from scatter plot
-                            onPrecinctDataFetched={setPrecinctData} // Get precinct data
-                        />
-                    )}
-                    {selectedChart === "ecological-inference" && (
-                        <div>
-                            {/* Replace with the other chart component */}
-                            Ecological Inference Chart Component (to be added here)
-                        </div>
-                    )}
-                </div>
-                {/* Table Display */}
-                {selectedChart === "precinct-analysis" && showTable && (
+            {/* Chart Display */}
+            <div
+                className={`transition-all duration-300 ${
+                    (selectedAdditionalView === "table" ||
+                        selectedAdditionalView === "curve") &&
+                    selectedChart === "precinct-analysis"
+                        ? "h-2/4"
+                        : "h-3/4"
+                } w-full mt-5`}
+                style={{
+                    paddingBottom: showTable ? "10px" : "10px", // Add extra space when the table is shown
+                }}
+            >
+                {selectedChart === "precinct-analysis" && (
+                    <IncomeVotingScatter
+                        selectedState={selectedState}
+                        selectedFilter={selectedFilter}
+                        onSelectGEOID={setSelectedGEOID} // Get selected GEOID from scatter plot
+                        onPrecinctDataFetched={setPrecinctData} // Get precinct data
+                    />
+                )}
+                {selectedChart === "ecological-inference" && (
+                    <div>
+                        {/* Replace with the other chart component */}
+                        Ecological Inference Chart Component (to be added here)
+                    </div>
+                )}
+            </div>
+            {/* Table Display */}
+            {selectedChart === "precinct-analysis" &&
+                selectedAdditionalView === "table" && (
                     <div
-                        className="flex-grow w-full overflow-auto mt-6"
+                        className="flex-grow w-full overflow-hidden mt-6"
                         style={{
                             paddingTop: "20px", // Additional spacing above the table
                         }}
@@ -150,7 +196,20 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                         />
                     </div>
                 )}
-            </div>
+            {selectedChart === "precinct-analysis" &&
+                selectedAdditionalView === "curve" &&
+                !isCurveDisabled && (
+                    <div
+                        className="flex-grow w-full overflow-hidden mt-6"
+                        style={{
+                            paddingTop: "20px", // Additional spacing above the table
+                        }}
+                    >
+                        <VoteShareSeatShareGraph
+                            selectedState={selectedState}
+                        />
+                    </div>
+                )}
         </div>
     );
 }
