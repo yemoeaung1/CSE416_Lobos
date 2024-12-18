@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import BoxPlotGraph from './EnsembleBoxPlot';
 import { MapViewOptions } from '../../enums';
-import SplitsBarGraph from './EnsembleBarGraph';
-import WinnerTallyChart from './DistrictWinnerTallyChart';
+import SplitsBarGraph from './SplitsBarGraph';
 import { FormControl, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { fieldNamesToDisplay, groupedCategories } from './Constants';
-import DistrictWinCountGraph from './DistrictWinnerTallyChart';
+import DistrictWinCountGraph from './DistrictWinCountGraph';
+import EnsembleComparisonTab from './EnsembleComparisonTab';
 
 export default function EnsembleTab({ selectedState, mapView, setMapView }) {
   const [selectedTab, setSelectedTab] = useState('Summary');
@@ -19,7 +19,8 @@ export default function EnsembleTab({ selectedState, mapView, setMapView }) {
     <div className='data-component-container'>
       <div className="flex flex-col h-full">
         <TabSelector selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-        {selectedTab == 'Summary' && <EnsembleSummary selectedState={selectedState} />}
+        {selectedTab === 'Summary' && <EnsembleSummary selectedState={selectedState} />}
+        {selectedTab === 'Compare Plans' && <EnsembleComparisonTab selectedState={selectedState} />}
         {selectedTab === 'Graph' && <EnsembleBoxAndWhiskers selectedState={selectedState} />}
       </div>
     </div>
@@ -68,6 +69,16 @@ function TabSelector({ selectedTab, setSelectedTab }) {
         onClick={() => setSelectedTab('Graph')}
       >
         Boxplot Analysis
+      </div>
+      <div
+        style={
+          selectedTab == 'Compare Plans'
+            ? activeTabStyle
+            : tabStyle
+        }
+        onClick={() => setSelectedTab('Compare Plans')}
+      >
+        Compare Plans
       </div>
     </nav>
   )
@@ -140,8 +151,8 @@ function EnsembleBoxAndWhiskers({ selectedState }) {
   const [selectedCategory, setSelectedCategory] = useState(groupedCategories[selectedGroup][0]); // Default to the first category in the selected group
   return (
     <>
-      <div className='w-full flex flex-row'>
-        <div className="flex justify-around p-2 w-2/3">
+      <div className='w-full flex flex-row h-16'>
+        <div className="flex w-2/3 p-2 flex-row gap-4">
           {Object.keys(groupedCategories).map((group, index) => (
             <button
               key={index}
@@ -149,7 +160,7 @@ function EnsembleBoxAndWhiskers({ selectedState }) {
                 setSelectedGroup(group);
                 setSelectedCategory(groupedCategories[group][0]); // Update default category for the new group
               }}
-              className={`text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl ${selectedGroup === group ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+              className={`h-8 text-lg font-semibold border-2 border-black rounded-xl px-4 pb-1 bg-blue-400 shadow-2xl ${selectedGroup === group ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
                 }`}
             >
               {fieldNamesToDisplay[group]}
@@ -157,7 +168,7 @@ function EnsembleBoxAndWhiskers({ selectedState }) {
           ))}
         </div>
         <div className="p-2 w-1/3">
-        <CategoryDropdown categories={groupedCategories[selectedGroup]} setSelectedCategory={setSelectedCategory} selectedGroup={selectedGroup} selectedCategory={selectedCategory} />
+          <CategoryDropdown categories={groupedCategories[selectedGroup]} setSelectedCategory={setSelectedCategory} selectedGroup={selectedGroup} selectedCategory={selectedCategory} />
         </div>
       </div>
       <BoxPlotGraph selectedState={selectedState} dataSetType={selectedCategory} dataCategory={selectedGroup} displayName={fieldNamesToDisplay[selectedCategory]} />
@@ -172,28 +183,27 @@ function CategoryDropdown({ categories, setSelectedCategory, selectedGroup, sele
 
   return (
     <div>
-    <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">{selectedGroup.charAt(0).toUpperCase() + selectedGroup.slice(1)}</InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={selectedCategory}
-        label={selectedGroup.charAt(0).toUpperCase() + selectedGroup.slice(1)}
-        onChange={handleChange}
-        MenuProps={{
-          PaperProps: {
-            style: {
-              maxHeight: 48 * 4.5, // Each item is ~48px. Adjust the multiplier for number of items.
-              // width: 250,
-            },
-          }
-        }}
-      >
-        {categories.map((category, index) => (
-          <MenuItem value={category}>{fieldNamesToDisplay[category]}</MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">{selectedGroup.charAt(0).toUpperCase() + selectedGroup.slice(1)}</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={selectedCategory}
+          label={selectedGroup.charAt(0).toUpperCase() + selectedGroup.slice(1)}
+          onChange={handleChange}
+          MenuProps={{
+            PaperProps: {
+              style: {
+                maxHeight: 48 * 4.5
+              },
+            }
+          }}
+        >
+          {categories.map((category, index) => (
+            <MenuItem value={category}>{fieldNamesToDisplay[category]}</MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </div>
   )
 }
