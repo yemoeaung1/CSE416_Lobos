@@ -25,13 +25,15 @@ export default function GinglesTab({ selectedState }) {
                 isCurveDisabled={isCurveDisabled}
             />
 
-            <GinglesChart
-                selectedAdditionalView={selectedAdditionalView}
-                selectedState={selectedState}
-                selectedFilter={selectedFilter}
-                setSelectedGEOID={setSelectedGEOID}
-                setPrecinctData={setPrecinctData}
-            />
+            {selectedAdditionalView !== "curve" &&
+                <GinglesChart
+                    selectedAdditionalView={selectedAdditionalView}
+                    selectedState={selectedState}
+                    selectedFilter={selectedFilter}
+                    setSelectedGEOID={setSelectedGEOID}
+                    setPrecinctData={setPrecinctData}
+                />
+            }
 
             {selectedAdditionalView === "table" && (
                 <GinglesTable
