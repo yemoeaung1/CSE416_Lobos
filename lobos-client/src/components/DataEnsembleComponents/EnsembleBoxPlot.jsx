@@ -43,9 +43,9 @@ const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName })
         if (loading || error || !graphData) {
             return; // Do not proceed if data is still loading, if there's an error, or if there's no data
         }
-        
+
         const ctx = chartRef.current.getContext("2d");
-        
+
         const BoxPlot = new Chart(ctx, {
             type: "boxplot",
             data: {
@@ -65,10 +65,12 @@ const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName })
                             text: graphData.xLabel,
                             font: {
                                 size: 20,
+                                family: "Montserrat, sans-serif",
                             },
                             ticks: {
                                 font: {
                                     size: 18,
+                                    family: "Montserrat, sans-serif",
                                 },
                             },
                             color: "#000000",
@@ -80,10 +82,12 @@ const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName })
                             text: graphData.yLabel,
                             font: {
                                 size: 20,
+                                family: "Montserrat, sans-serif",
                             },
                             ticks: {
                                 font: {
                                     size: 18,
+                                    family: "Montserrat, sans-serif",
                                 },
                                 color: "#000000",
                             },
@@ -98,6 +102,7 @@ const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName })
                         labels: {
                             font: {
                                 size: 16,
+                                family: "Montserrat, sans-serif",
                             },
                         },
                     },
@@ -107,6 +112,7 @@ const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName })
                         font: {
                             size: 22,
                             weight: "bold",
+                            family: "Montserrat, sans-serif",
                         },
                         color: "#000000",
                     },
@@ -122,9 +128,9 @@ const BoxPlotGraph = ({ dataSetType, selectedState, dataCategory, displayName })
     }, [graphData]);
 
     return (
-        <div className="h-24 w-102">
-            <div className="flex-1 flex justify-center items-center">
-                <canvas ref={chartRef} className="w-10 h-10"></canvas>
+        <div className="w-full h-full my-8">
+            <div className="flex-1 flex w-5/6 h-5/6 mx-auto my-auto">
+                <canvas ref={chartRef}></canvas>
             </div>
         </div>
     );

@@ -71,10 +71,12 @@ const DistrictWinCountGraph = ({ selectedState }) => {
               text: graphData.xLabel,
               font: {
                 size: 20,
+                family: "Montserrat, sans-serif",
               },
               ticks: {
                 font: {
                   size: 18,
+                  family: "Montserrat, sans-serif",
                 },
               },
               color: "#000000",
@@ -86,10 +88,12 @@ const DistrictWinCountGraph = ({ selectedState }) => {
               text: graphData.yLabel,
               font: {
                 size: 20,
+                family: "Montserrat, sans-serif",
               },
               ticks: {
                 font: {
                   size: 18,
+                  family: "Montserrat, sans-serif",
                 },
               },
               beginAtZero: true, // Ensure the y-axis starts at zero
@@ -103,6 +107,7 @@ const DistrictWinCountGraph = ({ selectedState }) => {
             labels: {
               font: {
                 size: 16,
+                family: "Montserrat, sans-serif",
               },
             },
           },
@@ -112,6 +117,7 @@ const DistrictWinCountGraph = ({ selectedState }) => {
             font: {
               size: 22,
               weight: "bold",
+              family: "Montserrat, sans-serif",
             },
             color: "#000000",
           },
@@ -127,8 +133,10 @@ const DistrictWinCountGraph = ({ selectedState }) => {
   }, [graphData]);
 
   return (
-    <div className="flex-1 flex justify-center items-center">
-      <canvas ref={chartRef} className="w-full h-full"></canvas>
+    <div className="w-full h-full my-8">
+      <div className="flex-1 flex w-5/6 h-5/6 mx-auto my-auto">
+        <canvas ref={chartRef}></canvas>
+      </div>
     </div>
   );
 };

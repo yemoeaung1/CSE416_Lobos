@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import BoxPlotGraph from './EnsembleBoxPlot';
 import { MapViewOptions } from '../../enums';
 import SplitsBarGraph from './EnsembleBarGraph';
-import WinnerTallyChart from './DistrictWinnerTallyChart';
 import { FormControl, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { fieldNamesToDisplay, groupedCategories } from './Constants';
 import DistrictWinCountGraph from './DistrictWinnerTallyChart';
@@ -140,8 +139,8 @@ function EnsembleBoxAndWhiskers({ selectedState }) {
   const [selectedCategory, setSelectedCategory] = useState(groupedCategories[selectedGroup][0]); // Default to the first category in the selected group
   return (
     <>
-      <div className='w-full flex flex-row'>
-        <div className="flex justify-around p-2 w-2/3">
+      <div className='w-full flex flex-row h-16'>
+        <div className="flex w-2/3 p-2 flex-row gap-4">
           {Object.keys(groupedCategories).map((group, index) => (
             <button
               key={index}
@@ -149,7 +148,7 @@ function EnsembleBoxAndWhiskers({ selectedState }) {
                 setSelectedGroup(group);
                 setSelectedCategory(groupedCategories[group][0]); // Update default category for the new group
               }}
-              className={`text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl ${selectedGroup === group ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+              className={`h-8 text-lg font-semibold border-2 border-black rounded-xl px-4 pb-1 bg-blue-400 shadow-2xl ${selectedGroup === group ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
                 }`}
             >
               {fieldNamesToDisplay[group]}
