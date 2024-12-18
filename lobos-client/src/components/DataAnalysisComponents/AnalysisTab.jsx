@@ -55,6 +55,7 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
     };
 
     return (
+      <div className=".data-component-container">
             <div className="flex flex-col h-full">
                 {/* Tab Selector */}
                 <nav
@@ -188,7 +189,7 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                     {selectedChart === "ecological-inference" && (
                         <div>
                             {/* Replace with the other chart component */}
-                            Ecological Inference Chart Component (to be added here)
+                            <EcologicalInferenceTab selectedState={selectedState}/>
                         </div>
                     )}
                 </div>
