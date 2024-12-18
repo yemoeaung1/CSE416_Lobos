@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import BoxPlotGraph from './EnsembleBoxPlot';
 import { MapViewOptions } from '../../enums';
-import SplitsBarGraph from './EnsembleBarGraph';
+import SplitsBarGraph from './SplitsBarGraph';
 import { FormControl, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { fieldNamesToDisplay, groupedCategories } from './Constants';
-import DistrictWinCountGraph from './DistrictWinnerTallyChart';
+import DistrictWinCountGraph from './DistrictWinCountGraph';
+import EnsembleComparisonTab from './EnsembleComparisonTab';
 
 export default function EnsembleTab({ selectedState, mapView, setMapView }) {
   const [selectedTab, setSelectedTab] = useState('Summary');
@@ -18,7 +19,8 @@ export default function EnsembleTab({ selectedState, mapView, setMapView }) {
     <div className='data-component-container'>
       <div className="flex flex-col h-full">
         <TabSelector selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-        {selectedTab == 'Summary' && <EnsembleSummary selectedState={selectedState} />}
+        {selectedTab === 'Summary' && <EnsembleSummary selectedState={selectedState} />}
+        {selectedTab === 'Compare Plans' && <EnsembleComparisonTab selectedState={selectedState} />}
         {selectedTab === 'Graph' && <EnsembleBoxAndWhiskers selectedState={selectedState} />}
       </div>
     </div>
@@ -67,6 +69,16 @@ function TabSelector({ selectedTab, setSelectedTab }) {
         onClick={() => setSelectedTab('Graph')}
       >
         Boxplot Analysis
+      </div>
+      <div
+        style={
+          selectedTab == 'Compare Plans'
+            ? activeTabStyle
+            : tabStyle
+        }
+        onClick={() => setSelectedTab('Compare Plans')}
+      >
+        Compare Plans
       </div>
     </nav>
   )
@@ -156,7 +168,7 @@ function EnsembleBoxAndWhiskers({ selectedState }) {
           ))}
         </div>
         <div className="p-2 w-1/3">
-        <CategoryDropdown categories={groupedCategories[selectedGroup]} setSelectedCategory={setSelectedCategory} selectedGroup={selectedGroup} selectedCategory={selectedCategory} />
+          <CategoryDropdown categories={groupedCategories[selectedGroup]} setSelectedCategory={setSelectedCategory} selectedGroup={selectedGroup} selectedCategory={selectedCategory} />
         </div>
       </div>
       <BoxPlotGraph selectedState={selectedState} dataSetType={selectedCategory} dataCategory={selectedGroup} displayName={fieldNamesToDisplay[selectedCategory]} />
@@ -171,28 +183,27 @@ function CategoryDropdown({ categories, setSelectedCategory, selectedGroup, sele
 
   return (
     <div>
-    <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">{selectedGroup.charAt(0).toUpperCase() + selectedGroup.slice(1)}</InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={selectedCategory}
-        label={selectedGroup.charAt(0).toUpperCase() + selectedGroup.slice(1)}
-        onChange={handleChange}
-        MenuProps={{
-          PaperProps: {
-            style: {
-              maxHeight: 48 * 4.5, // Each item is ~48px. Adjust the multiplier for number of items.
-              // width: 250,
-            },
-          }
-        }}
-      >
-        {categories.map((category, index) => (
-          <MenuItem value={category}>{fieldNamesToDisplay[category]}</MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">{selectedGroup.charAt(0).toUpperCase() + selectedGroup.slice(1)}</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={selectedCategory}
+          label={selectedGroup.charAt(0).toUpperCase() + selectedGroup.slice(1)}
+          onChange={handleChange}
+          MenuProps={{
+            PaperProps: {
+              style: {
+                maxHeight: 48 * 4.5
+              },
+            }
+          }}
+        >
+          {categories.map((category, index) => (
+            <MenuItem value={category}>{fieldNamesToDisplay[category]}</MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </div>
   )
 }
