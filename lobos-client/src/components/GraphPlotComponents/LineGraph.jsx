@@ -42,6 +42,7 @@ export default function LineGraph({ graphData, title }) {
               text: "Support Level",
               font: {
                 size: 20,
+                family: "Montserrat, sans-serif"
               },
               color: "#000000",
             },
@@ -50,6 +51,7 @@ export default function LineGraph({ graphData, title }) {
               callback: (value) => value.toFixed(1),
               font: {
                 size: 14,
+                family: "Montserrat, sans-serif"
               },
             },
             min: 0.0,
@@ -57,18 +59,19 @@ export default function LineGraph({ graphData, title }) {
           },
           y: {
             beginAtZero: true,
-            // max: 20,
             title: {
               display: true,
               text: "Probability Density",
               font: {
                 size: 16,
+                family: "Montserrat, sans-serif"
               },
               color: "#000000",
             },
             ticks: {
               font: {
                 size: 18,
+                family: "Montserrat, sans-serif"
               },
             },
           },
@@ -80,6 +83,7 @@ export default function LineGraph({ graphData, title }) {
             labels: {
               font: {
                 size: 16,
+                family: "Montserrat, sans-serif"
               },
             },
           },
@@ -89,6 +93,7 @@ export default function LineGraph({ graphData, title }) {
             font: {
               size: 22,
               weight: "bold",
+              family: "Montserrat, sans-serif"
             },
             color: "#000000",
           },

@@ -43,7 +43,7 @@ const EcologicalInferenceBarGraph = ({ selectedState, filter }) => {
                     title,
                     xTitle: xlabel,
                     yTitle: ylabel,
-                    errorBars: true, // Add this flag to indicate it includes error bars
+                    errorBars: true,
                 });
         
             } catch (error) {
@@ -75,7 +75,7 @@ const EcologicalInferenceBarGraph = ({ selectedState, filter }) => {
                         title: {
                             display: true,
                             text: graphData.xTitle,
-                            font: { size: 18 },
+                            font: { size: 18, family: "Montserrat, sans-serif"},
                         },
                     },
                     y: {
@@ -83,7 +83,7 @@ const EcologicalInferenceBarGraph = ({ selectedState, filter }) => {
                         title: {
                             display: true,
                             text: graphData.yTitle,
-                            font: { size: 18 },
+                            font: { size: 18 , family: "Montserrat, sans-serif"},
                         },
                     },
                 },
@@ -91,7 +91,7 @@ const EcologicalInferenceBarGraph = ({ selectedState, filter }) => {
                     title: {
                         display: true,
                         text: graphData.title,
-                        font: { size: 24, weight: "bold" },
+                        font: { size: 24, weight: "bold", family: "Montserrat, sans-serif"},
                     },
                     legend: {
                         display: true,

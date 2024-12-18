@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import LineGraph from "../GraphPlotComponents/LineGraph";
 import axios from "axios";
 import EcologicalInferenceBarGraph from "./EcologicalInferenceBarGraph";
+import { createCustomDropdown } from "../UtilityComponents/CustomDropdown";
+import { Box, ButtonGroup, Button} from "@mui/material";
 
 export default function EcologicalInferenceTab({ selectedState }) {
   const [filter, setFilter] = useState("race");
   const [dropdownOptions, setDropdownOptions] = useState([]);
-  const [selectedFilterOption1, setSelectedFilterOption1] = useState(null);
-  const [selectedFilterOption2, setSelectedFilterOption2] = useState(null);
+  const [selectedFilterOption1, setSelectedFilterOption1] = useState("");
+  const [selectedFilterOption2, setSelectedFilterOption2] = useState("");
   const [graphData1, setGraphData1] = useState({republican: null, democratic: null,});
   const [graphData2, setGraphData2] = useState({republican: null, democratic: null,});
   const [chartType, setChartType] = useState("line");
@@ -22,12 +24,13 @@ export default function EcologicalInferenceTab({ selectedState }) {
       options = ["Urban", "Suburban", "Rural"];
     }
     setDropdownOptions(options);
-
+    
     if (options.length > 0) {
       setSelectedFilterOption1(options[0]);
       setSelectedFilterOption2(options[0]);
     }
   }, [filter]);
+
 
   useEffect(() => {
     const fetchGraphData = async (filterOption, setGraphData) => {
@@ -56,45 +59,40 @@ export default function EcologicalInferenceTab({ selectedState }) {
       }
     };
 
-    if (selectedFilterOption1)
-      fetchGraphData(selectedFilterOption1, setGraphData1);
-    if (selectedFilterOption2)
-      fetchGraphData(selectedFilterOption2, setGraphData2);
+    if (selectedFilterOption1) fetchGraphData(selectedFilterOption1, setGraphData1);
+    if (selectedFilterOption2) fetchGraphData(selectedFilterOption2, setGraphData2);
   }, [selectedState, filter, selectedFilterOption1, selectedFilterOption2]);
 
   return (
     <div className="flex flex-col w-full h-full">
-      <ButtonGroup filter={filter} setFilter={setFilter}/>
-
       <div className="flex justify-between mb-4">
-        <div className="flex space-x-4">
+        <EcologicalTypeSelection selectedFilter={filter} setSelectedFilter={setFilter}/>
+        <Button className="mr-8"
+            sx={{
+            textTransform: 'none',
+            padding: "4px 8px",
+            minHeight: "24px",
+            fontSize: "1.0rem",
+            fontFamily: "Montserrat, san-serif",
+            color: "#37474f",
+            "&:hover": {
+                backgroundColor: "grey.300",
+            },
+          }}
+          onClick={() => setChartType(chartType === "line" ? "bar" : "line")}>
+              Click for {chartType === "line" ? "Bar Chart" : "Line Chart"}
+        </Button> 
+        
+      </div>
+      <div className="flex justify-between space-x-4 mb-4">
           {chartType === "line" && (
             <>
-              <DropDownBar
-                label="First Option"
-                dropdownOptions={dropdownOptions}
-                setSelectedOption={setSelectedFilterOption1}
-                selectedOption={selectedFilterOption1}
-              />
-              <DropDownBar
-                label="Second Option"
-                dropdownOptions={dropdownOptions}
-                setSelectedOption={setSelectedFilterOption2}
-                selectedOption={selectedFilterOption2}
-              />
-            </>
+              {createCustomDropdown("First Option", "first-option", selectedFilterOption1, setSelectedFilterOption1, dropdownOptions.map((option) => ({ text: option, value: option })))}      
+              {createCustomDropdown("Second Option", "first-option", selectedFilterOption2, setSelectedFilterOption1, dropdownOptions.map((option) => ({ text: option, value: option }))
+)}                    
+          </>
           )}
         </div>
-
-        <button
-          className={
-            "text-md font-semibold border-2 border-black rounded-xl pl-4 pr-4 hover:bg-blue-200 h-12"
-          }
-          onClick={() => setChartType(chartType === "line" ? "bar" : "line")}
-        >
-          Switch to {chartType === "line" ? "Bar Chart" : "Line Chart"}
-        </button>
-      </div>
 
       {chartType === "line" ? (
             <>
@@ -139,57 +137,54 @@ export default function EcologicalInferenceTab({ selectedState }) {
   );
 }
 
-function DropDownBar({
-  label,
-  dropdownOptions,
-  setSelectedOption,
-  selectedOption,
-}) {
+function EcologicalTypeSelection({ selectedFilter, setSelectedFilter }) {
+  const filterOptions = [
+      { text: "Income", value: "income" },
+      { text: "Racial/Ethnic", value: "race" },
+      { text: "Region", value: "region" }
+  ]
+
   return (
-    <div>
-      <label className="block font-bold mb-1">{label}</label>
-      <select
-        className="border-2 border-black rounded-md p-2 text-lg w-60"
-        value={selectedOption}
-        onChange={(e) => setSelectedOption(e.target.value)}
-      >
-        {dropdownOptions.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
+      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2, marginBottom: "4px"}}>
+          <ButtonGroup
+              variant="contained"
+              aria-label="linked button group"
+              orientation="horizontal"
+          >
+              {filterOptions.map((element) => (
+                  <EcologicalTypeButton
+                      key={element}
+                      selectedElement={selectedFilter}
+                      setSelectedElement={setSelectedFilter}
+                      buttonType={element}
+                  />
+              ))}
+          </ButtonGroup>
+      </Box>
   );
 }
 
-function ButtonGroup({ filter, setFilter }) {
+function EcologicalTypeButton({ selectedElement, setSelectedElement, buttonType }) {
+  const isButtonSelected = (selectedElement === buttonType.value);
+
   return (
-    <div className="flex space-x-4 mb-4">
-      <button
-        className={`text-md font-semibold border-2 border-black rounded-xl pl-4 pr-4 hover:bg-blue-200 h-10 ${
-          filter === "race" ? "bg-blue-500 text-white" : ""
-        }`}
-        onClick={() => setFilter("race")}
+      <Button
+          onClick={() => setSelectedElement(buttonType.value)}
+          sx={{
+              textTransform: 'none',
+              padding: "4px 12px",
+              minHeight: "32px",
+              fontSize: "1.0rem",
+              fontFamily: "Montserrat, san-serif",
+              backgroundColor: isButtonSelected ? "primary.main" : "grey.200",
+              color: isButtonSelected ? "grey.200" : "primary.main",
+              transition: "all 0.3s ease-in-out",
+              "&:hover": {
+                  backgroundColor: isButtonSelected ? "primary.dark" : "grey.300",
+              },
+          }}
       >
-        Race
-      </button>
-      <button
-        className={`text-sm font-semibold border-2 border-black rounded-xl pl-4 pr-4 hover:bg-blue-200 h-10  ${
-          filter === "income" ? "bg-blue-500 text-white" : ""
-        }`}
-        onClick={() => setFilter("income")}
-      >
-        Income
-      </button>
-      <button
-        className={`text-sm font-semibold border-2 border-black rounded-xl pl-4 pr-4 hover:bg-blue-200 h-10  ${
-          filter === "region" ? "bg-blue-500 text-white" : ""
-        }`}
-        onClick={() => setFilter("region")}
-      >
-        Region
-      </button>
-    </div>
+          {buttonType.text}
+      </Button>
   );
 }
