@@ -3,6 +3,7 @@ import Chart from "chart.js/auto";
 import regression from "regression";
 import axios from "axios";
 import { States } from "../../enums";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 const IncomeVotingScatter = ({
     selectedFilter,
@@ -340,8 +341,9 @@ const IncomeVotingScatter = ({
                     //max: selectedFilter === "race" ? 100 : maxX, // Set to 100 for race
                     ticks: {
                         callback: function (value) {
-                            return `${value.toLocaleString()}${selectedFilter === "race" ? "%" : ""
-                                }`;
+                            return `${value.toLocaleString()}${
+                                selectedFilter === "race" ? "%" : ""
+                            }`;
                         },
                         font: {
                             size: 12,
@@ -484,37 +486,97 @@ const IncomeVotingScatter = ({
         return <div>Error: {error}</div>;
     }
 
+    const dropdownStyles = {
+        formControl: { minWidth: "130px" },
+        inputLabel: { fontSize: "0.8rem", top: "1px" },
+        select: {
+            fontSize: ".9rem",
+            padding: "0px 8px",
+            height: "32px",
+            lineHeight: "1.2",
+        },
+        menuItem: { fontSize: "0.85rem" },
+    };
+
     if (selectedFilter === "income") {
         return (
             <>
                 <div className="flex items-center mb-4 space-x-4">
                     {/* Dropdown for Income Filter */}
-                    <select
-                        value={selectedIncomeLevel}
-                        onChange={(e) => setSelectedIncomeLevel(e.target.value)}
-                        className="border-2 border-black rounded-md p-1"
-                    >
-                        <option value="all">All Incomes</option>
-                        <option value="low">Low Income (Below $50,000)</option>
-                        <option value="medium">
-                            Medium Income ($50,000 - $100,000)
-                        </option>
-                        <option value="high">
-                            High Income (Above $100,000)
-                        </option>
-                    </select>
+                    <FormControl sx={dropdownStyles.formControl} size="small">
+                        <InputLabel
+                            id="income-dropdown-label"
+                            sx={dropdownStyles.inputLabel}
+                        >
+                            Income Range
+                        </InputLabel>
+                        <Select
+                            labelId="income-dropdown-label"
+                            value={selectedIncomeLevel}
+                            onChange={(e) =>
+                                setSelectedIncomeLevel(e.target.value)
+                            }
+                            label="Income Range"
+                            sx={dropdownStyles.select}
+                        >
+                            <MenuItem value="all" sx={dropdownStyles.menuItem}>
+                                All Incomes
+                            </MenuItem>
+                            <MenuItem value="low" sx={dropdownStyles.menuItem}>
+                                Low Income (Below $50,000)
+                            </MenuItem>
+                            <MenuItem
+                                value="medium"
+                                sx={dropdownStyles.menuItem}
+                            >
+                                Medium Income ($50,000 - $100,000)
+                            </MenuItem>
+                            <MenuItem value="high" sx={dropdownStyles.menuItem}>
+                                High Income (Above $100,000)
+                            </MenuItem>
+                        </Select>
+                    </FormControl>
+
                     {/* Dropdown for Region Type Filter */}
-                    <select
-                        value={selectedRegion}
-                        onChange={(e) => setSelectedRegion(e.target.value)}
-                        className="border-2 border-black rounded-md p-1"
-                    >
-                        <option value="all">All Regions</option>
-                        <option value="rural">Rural</option>
-                        <option value="urban">Urban</option>
-                        <option value="suburban">Suburban</option>
-                    </select>
+                    <FormControl sx={dropdownStyles.formControl} size="small">
+                        <InputLabel
+                            id="region-dropdown-label"
+                            sx={dropdownStyles.inputLabel}
+                        >
+                            Region Filter
+                        </InputLabel>
+                        <Select
+                            labelId="region-dropdown-label"
+                            value={selectedRegion}
+                            onChange={(e) => setSelectedRegion(e.target.value)}
+                            label="Region Filter"
+                            sx={dropdownStyles.select}
+                        >
+                            <MenuItem value="all" sx={dropdownStyles.menuItem}>
+                                All Regions
+                            </MenuItem>
+                            <MenuItem
+                                value="rural"
+                                sx={dropdownStyles.menuItem}
+                            >
+                                Rural
+                            </MenuItem>
+                            <MenuItem
+                                value="urban"
+                                sx={dropdownStyles.menuItem}
+                            >
+                                Urban
+                            </MenuItem>
+                            <MenuItem
+                                value="suburban"
+                                sx={dropdownStyles.menuItem}
+                            >
+                                Suburban
+                            </MenuItem>
+                        </Select>
+                    </FormControl>
                 </div>
+
                 {/* <div className="border-2 rounded-xl border-black h-full w-full"> */}
                 <div className="h-full w-full">
                     <canvas ref={chartRef} className="w-full h-full"></canvas>
@@ -526,20 +588,52 @@ const IncomeVotingScatter = ({
             <>
                 {/* Render race dropdown if selected filter is race */}
                 {selectedFilter === "race" && (
-                    <div className="mb-4">
-                        <select
-                            id="raceFilter"
+                    <FormControl sx={dropdownStyles.formControl} size="small">
+                        <InputLabel
+                            id="race-dropdown-label"
+                            sx={dropdownStyles.inputLabel}
+                        >
+                            Select Race
+                        </InputLabel>
+                        <Select
+                            labelId="race-dropdown-label"
                             value={selectedRace}
                             onChange={(e) => setSelectedRace(e.target.value)}
-                            className="border-2 border-black rounded-md p-1"
+                            label="Race Filter"
+                            sx={dropdownStyles.select}
                         >
-                            <option value="white">White</option>
-                            <option value="black">Black</option>
-                            <option value="asian">Asian</option>
-                            <option value="hispanic">Hispanic</option>
-                            <option value="non_hispanic">Non-Hispanic</option>
-                        </select>
-                    </div>
+                            <MenuItem
+                                value="white"
+                                sx={dropdownStyles.menuItem}
+                            >
+                                White
+                            </MenuItem>
+                            <MenuItem
+                                value="black"
+                                sx={dropdownStyles.menuItem}
+                            >
+                                Black
+                            </MenuItem>
+                            <MenuItem
+                                value="asian"
+                                sx={dropdownStyles.menuItem}
+                            >
+                                Asian
+                            </MenuItem>
+                            <MenuItem
+                                value="hispanic"
+                                sx={dropdownStyles.menuItem}
+                            >
+                                Hispanic
+                            </MenuItem>
+                            <MenuItem
+                                value="non_hispanic"
+                                sx={dropdownStyles.menuItem}
+                            >
+                                Non-Hispanic
+                            </MenuItem>
+                        </Select>
+                    </FormControl>
                 )}
                 {/* <div className="border-2 rounded-xl border-black h-full w-full"> */}
                 <div className="h-full w-full">
@@ -551,19 +645,41 @@ const IncomeVotingScatter = ({
         return (
             <>
                 {/* Dropdown for Race Selection */}
-                <div className="flex items-center mb-4 space-x-4">
-                    <select
+                <FormControl sx={dropdownStyles.formControl} size="small">
+                    <InputLabel
+                        id="race2-dropdown-label"
+                        sx={dropdownStyles.inputLabel}
+                    >
+                        Select Race
+                    </InputLabel>
+                    <Select
+                        labelId="race2-dropdown-label"
                         value={selectedRace2}
                         onChange={(e) => setSelectedRace2(e.target.value)}
-                        className="border-2 border-black rounded-md p-1"
+                        label="Race Filter"
+                        sx={dropdownStyles.select}
                     >
-                        <option value="white">White</option>
-                        <option value="black">Black</option>
-                        <option value="asian">Asian</option>
-                        <option value="hispanic">Hispanic</option>
-                        <option value="non_hispanic">Non-Hispanic</option>
-                    </select>
-                </div>
+                        <MenuItem value="white" sx={dropdownStyles.menuItem}>
+                            White
+                        </MenuItem>
+                        <MenuItem value="black" sx={dropdownStyles.menuItem}>
+                            Black
+                        </MenuItem>
+                        <MenuItem value="asian" sx={dropdownStyles.menuItem}>
+                            Asian
+                        </MenuItem>
+                        <MenuItem value="hispanic" sx={dropdownStyles.menuItem}>
+                            Hispanic
+                        </MenuItem>
+                        <MenuItem
+                            value="non_hispanic"
+                            sx={dropdownStyles.menuItem}
+                        >
+                            Non-Hispanic
+                        </MenuItem>
+                    </Select>
+                </FormControl>
+
                 {/* Chart Container */}
                 <div //</>className="border-2 rounded-xl border-black h-full w-full"
                     className="h-full w-full"
