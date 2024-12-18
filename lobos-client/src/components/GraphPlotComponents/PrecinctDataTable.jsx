@@ -39,7 +39,7 @@ const PrecinctDataTable = ({ precinctData, selectedGEOID }) => {
     };
 
     return (
-        <div className="mt-5">
+        <div className="mt-2">
             <table className="gingles-table montserrat ">
                 <thead>
                     <tr>
