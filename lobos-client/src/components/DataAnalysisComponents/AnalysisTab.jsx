@@ -37,23 +37,22 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
             setMapView(MapViewOptions.PRECINCT);
     }, []);
 
-  // Define styles for tabs
-  const tabStyle = {
-    cursor: "pointer",
-    paddingBottom: "8px",
-    marginRight: "16px",
-    fontWeight: "bold",
-    fontSize: "20px", // Bigger font size
-    transition: "color 0.3s ease",
-    color: "#6b7280", // Default gray color
-    borderBottom: "2px solid transparent",
-  };
+    // Define styles for tabs
+    const tabStyle = {
+        cursor: "pointer",
+        paddingBottom: "4px",
+        marginRight: "8px",
+        fontSize: "16px",
+        transition: "color 0.3s ease",
+        color: "#6b7280",
+        borderBottom: "2px solid transparent",
+    };
 
-  const activeTabStyle = {
-    ...tabStyle,
-    color: "#2563eb", // Active blue color
-    borderBottom: "4px solid #2563eb", // Active bottom border
-  };
+    const activeTabStyle = {
+        ...tabStyle,
+        color: "#2563eb",
+        borderBottom: "4px solid #2563eb",
+    };
 
     return (
             <div className="flex flex-col h-full">
@@ -84,149 +83,145 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                     </div>
                 </nav>
 
-            {/* Filter Buttons */}
-            {selectedChart === "precinct-analysis" && (
-              <div className="flex items-center">
-                <div className="flex-grow">
-                    <button
-                        className={
-                            selectedFilter === "income"
-                                ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
-                        }
-                        onClick={() => setSelectedFilter("income")}
-                    >
-                        Income
-                    </button>
-                    <button
-                        className={
-                            selectedFilter === "race"
-                                ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
-                        }
-                        onClick={() => setSelectedFilter("race")}
-                    >
-                        Racial/Ethnic
-                    </button>
-                    <button
-                        className={
-                            selectedFilter === "income&race"
-                                ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
-                        }
-                        onClick={() => setSelectedFilter("income&race")}
-                    >
-                        Income & Race
-                    </button>
-                </div>
-                <div className="flex items-center space-x-4 ml-4">
-                    <button
-                        onClick={() => {
-                            setSelectedAdditionalView(
-                                selectedAdditionalView === "table"
-                                    ? null
-                                    : "table"
-                            ),
-                                (setShowTable = true);
-                        }}
-                        className={`text-sm font-semibold p-2 rounded-md ${
-                            selectedAdditionalView === "table"
+                {/* Filter Buttons */}
+                <div className="flex items-center">
+                    <div className="flex-grow">
+                        <button
+                            className={
+                                selectedFilter === "income"
+                                    ? "font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-2 pr-2 bg-blue-400 shadow-2xl text-white"
+                                    : "font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-2 pr-2 hover:bg-blue-200 shadow-2xl"
+                            }
+                            onClick={() => setSelectedFilter("income")}
+                        >
+                            Income
+                        </button>
+                        <button
+                            className={
+                                selectedFilter === "race"
+                                    ? "font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-2 pr-2 bg-blue-400 shadow-2xl text-white"
+                                    : "font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-2 pr-2 hover:bg-blue-200 shadow-2xl"
+                            }
+                            onClick={() => setSelectedFilter("race")}
+                        >
+                            Racial/Ethnic
+                        </button>
+                        <button
+                            className={
+                                selectedFilter === "income&race"
+                                    ? "font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-2 pr-2 bg-blue-400 shadow-2xl text-white"
+                                    : "font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-2 pr-2 hover:bg-blue-200 shadow-2xl"
+                            }
+                            onClick={() => setSelectedFilter("income&race")}
+                        >
+                            Income & Race
+                        </button>
+                    </div>
+                    <div className="flex items-center space-x-4 ml-4">
+                        <button
+                            onClick={() => {
+                                setSelectedAdditionalView(
+                                    selectedAdditionalView === "table"
+                                        ? null
+                                        : "table"
+                                ),
+                                    (setShowTable(true));
+                            }}
+                            className={`text-sm font-semibold p-2 rounded-md ${selectedAdditionalView === "table"
                                 ? "bg-blue-500 text-white"
                                 : "bg-gray-200 hover:bg-gray-300"
-                        }`}
-                    >
-                        Show Table
-                    </button>
-                    <Tooltip
-                        title={
-                            isCurveDisabled
-                                ? "Curve graph is disabled for this state."
-                                : ""
-                        }
-                        placement="top"
-                        arrow
-                    >
-                        <span>
-                            <button
-                                onClick={() =>
-                                    setSelectedAdditionalView(
-                                        selectedAdditionalView === "curve"
-                                            ? null
-                                            : "curve"
-                                    )
-                                }
-                                className={`text-sm font-semibold p-2 rounded-md ${
-                                    selectedAdditionalView === "curve"
+                                }`}
+                        >
+                            Show Table
+                        </button>
+                        <Tooltip
+                            title={
+                                isCurveDisabled
+                                    ? "Curve graph is disabled for this state."
+                                    : ""
+                            }
+                            placement="top"
+                            arrow
+                        >
+                            <span>
+                                <button
+                                    onClick={() =>
+                                        setSelectedAdditionalView(
+                                            selectedAdditionalView === "curve"
+                                                ? null
+                                                : "curve"
+                                        )
+                                    }
+                                    className={`text-sm font-semibold p-2 rounded-md ${selectedAdditionalView === "curve"
                                         ? "bg-blue-500 text-white"
                                         : "bg-gray-200 hover:bg-gray-300"
-                                }`}
-                                disabled={isCurveDisabled}
-                            >
-                                Show Curve Graph
-                            </button>
-                        </span>
-                    </Tooltip>
+                                        }`}
+                                    disabled={isCurveDisabled}
+                                >
+                                    Show Curve Graph
+                                </button>
+                            </span>
+                        </Tooltip>
+                    </div>
                 </div>
-            </div>
 
-            )}
-            
-      {/* Chart Display */}
-      <div
-                className={`transition-all duration-300 ${
-                    (selectedAdditionalView === "table" ||
+                {/* Chart Display */}
+                <div
+                    className={`transition-all duration-300 ${(selectedAdditionalView === "table" ||
                         selectedAdditionalView === "curve") &&
-                    selectedChart === "precinct-analysis"
+                        selectedChart === "precinct-analysis"
                         ? "h-2/4"
                         : "h-3/4"
-                } w-full mt-5`}
-                style={{
-                    paddingBottom: showTable ? "10px" : "10px", // Add extra space when the table is shown
-                }}
-            >
-        {selectedChart === "precinct-analysis" && (
-          <IncomeVotingScatter
-            selectedState={selectedState}
-            selectedFilter={selectedFilter}
-            onSelectGEOID={setSelectedGEOID} // Get selected GEOID from scatter plot
-            onPrecinctDataFetched={setPrecinctData} // Get precinct data
-          />
-        )}
-        {selectedChart === "ecological-inference" && (
-          <>
-            <EcologicalInferenceTab selectedState={selectedState}/>
-          </>
-        )}
-      </div>
-            {/* Table Display */}
-            {selectedChart === "precinct-analysis" &&
-                selectedAdditionalView === "table" && (
-                    <div
-                        className="flex-grow w-full overflow-hidden mt-6"
-                        style={{
-                            paddingTop: "20px", // Additional spacing above the table
-                        }}
-                    >
-                        <PrecinctDataTable
-                            precinctData={precinctData}
-                            selectedGEOID={selectedGEOID}
-                        />
-                    </div>
-                )}
-            {selectedChart === "precinct-analysis" &&
-                selectedAdditionalView === "curve" &&
-                !isCurveDisabled && (
-                    <div
-                        className="flex-grow w-full overflow-hidden mt-6"
-                        style={{
-                            paddingTop: "20px", // Additional spacing above the table
-                        }}
-                    >
-                        <VoteShareSeatShareGraph
+                        } w-full mt-5`}
+                    style={{
+                        paddingBottom: showTable ? "10px" : "10px", // Add extra space when the table is shown
+                    }}
+                >
+                    {selectedChart === "precinct-analysis" && (
+                        <IncomeVotingScatter
                             selectedState={selectedState}
+                            selectedFilter={selectedFilter}
+                            onSelectGEOID={setSelectedGEOID} // Get selected GEOID from scatter plot
+                            onPrecinctDataFetched={setPrecinctData} // Get precinct data
                         />
-                    </div>
-                )}
+                    )}
+                    {selectedChart === "ecological-inference" && (
+                        <div>
+                            {/* Replace with the other chart component */}
+                            Ecological Inference Chart Component (to be added here)
+                        </div>
+                    )}
+                </div>
+                {/* Table Display */}
+                {selectedChart === "precinct-analysis" &&
+                    selectedAdditionalView === "table" && (
+                        <div
+                            className="flex-grow w-full overflow-hidden mt-6"
+                            style={{
+                                paddingTop: "20px", // Additional spacing above the table
+                            }}
+                        >
+                            <PrecinctDataTable
+                                precinctData={precinctData}
+                                selectedGEOID={selectedGEOID}
+                            />
+                        </div>
+                    )}
+                {selectedChart === "precinct-analysis" &&
+                    selectedAdditionalView === "curve" &&
+                    !isCurveDisabled && (
+                        <div
+                            className="flex-grow w-full overflow-hidden mt-6"
+                            style={{
+                                paddingTop: "20px", // Additional spacing above the table
+                            }}
+                        >
+                            <VoteShareSeatShareGraph
+                                selectedState={selectedState}
+                            />
+                        </div>
+                    )}
+            </div>
         </div>
     );
 }
