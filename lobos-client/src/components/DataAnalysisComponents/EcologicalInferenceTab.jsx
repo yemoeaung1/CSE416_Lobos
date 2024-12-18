@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import LineGraph from "../GraphPlotComponents/LineGraph";
 import axios from "axios";
 import EcologicalInferenceBarGraph from "./EcologicalInferenceBarGraph";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 export default function EcologicalInferenceTab({ selectedState }) {
   const [filter, setFilter] = useState("race");
@@ -150,7 +151,7 @@ function DropDownBar({
       <label className="block font-bold mb-1">{label}</label>
       <select
         className="border-2 border-black rounded-md p-2 text-lg w-60"
-        value={selectedOption}
+        value={selectedOption || ""}
         onChange={(e) => setSelectedOption(e.target.value)}
       >
         {dropdownOptions.map((option) => (

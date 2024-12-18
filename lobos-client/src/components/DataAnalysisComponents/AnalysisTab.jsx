@@ -83,9 +83,9 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                         Ecological Inference
                     </div>
                 </nav>
-
-                {/* Filter Buttons */}
-                <div className="flex items-center">
+                {selectedChart === "precinct-analysis" && (
+                  <>
+                  <div className="flex items-center">
                     <div className="flex-grow">
                         <button
                             className={
@@ -165,6 +165,10 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                         </Tooltip>
                     </div>
                 </div>
+                  </>
+                )}
+                {/* Filter Buttons */}
+                
 
                 {/* Chart Display */}
                 <div
