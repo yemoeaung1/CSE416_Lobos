@@ -211,7 +211,7 @@ const IncomeVotingScatter = ({
                     backgroundColor: "rgba(0, 0, 255, 1)",
                     //borderColor: "rgba(0, 0, 255, 1)",
                     //borderWidth: 1,
-                    pointRadius: 2.5,
+                    pointRadius: 2,
                     showLine: false,
                 },
                 {
@@ -220,7 +220,7 @@ const IncomeVotingScatter = ({
                     backgroundColor: "rgba(255, 0, 0, 1)",
                     //borderColor: "rgba(255, 0, 0, 1)",
                     //borderWidth: 1,
-                    pointRadius: 2.5,
+                    pointRadius: 2,
                     showLine: false,
                 },
                 {
@@ -329,9 +329,10 @@ const IncomeVotingScatter = ({
                         display: true,
                         text: getXAxisTitle(),
                         font: {
-                            size: 18,
+                            size: 16,
                             weight: "bold",
                             color: "#000000",
+                            family: "Montserrat, san-serif",
                         },
                     },
                     ...getXAxisRange(),
@@ -339,11 +340,13 @@ const IncomeVotingScatter = ({
                     //max: selectedFilter === "race" ? 100 : maxX, // Set to 100 for race
                     ticks: {
                         callback: function (value) {
-                            return `${value.toLocaleString()}${
-                                selectedFilter === "race" ? "%" : ""
-                            }`;
+                            return `${value.toLocaleString()}${selectedFilter === "race" ? "%" : ""
+                                }`;
                         },
-                        font: { size: 14 },
+                        font: {
+                            size: 12,
+                            family: "Montserrat, san-serif",
+                        },
                     },
                 },
                 y: {
@@ -355,7 +358,8 @@ const IncomeVotingScatter = ({
                         text: "Percentage of Voters",
                         font: {
                             weight: "bold",
-                            size: 18,
+                            size: 16,
+                            family: "Montserrat, san-serif",
                         },
                     },
                     ticks: {
@@ -363,7 +367,8 @@ const IncomeVotingScatter = ({
                             return `${value}%`;
                         },
                         font: {
-                            size: 14,
+                            size: 12,
+                            family: "Montserrat, san-serif",
                         },
                     },
                 },
@@ -371,14 +376,20 @@ const IncomeVotingScatter = ({
             plugins: {
                 legend: {
                     position: "top",
+                    labels: {
+                        font: {
+                            family: "Montserrat, san-serif",
+                        },
+                    },
                 },
                 title: {
                     display: true,
                     text: getChartTitle(),
                     color: "#000000",
                     font: {
-                        size: 30,
+                        size: 24,
                         weight: "bold",
+                        family: "Montserrat, san-serif",
                     },
                 },
                 tooltip: {
@@ -481,7 +492,7 @@ const IncomeVotingScatter = ({
                     <select
                         value={selectedIncomeLevel}
                         onChange={(e) => setSelectedIncomeLevel(e.target.value)}
-                        className="border-2 border-black rounded-md p-2"
+                        className="border-2 border-black rounded-md p-1"
                     >
                         <option value="all">All Incomes</option>
                         <option value="low">Low Income (Below $50,000)</option>
@@ -496,7 +507,7 @@ const IncomeVotingScatter = ({
                     <select
                         value={selectedRegion}
                         onChange={(e) => setSelectedRegion(e.target.value)}
-                        className="border-2 border-black rounded-md p-2"
+                        className="border-2 border-black rounded-md p-1"
                     >
                         <option value="all">All Regions</option>
                         <option value="rural">Rural</option>
@@ -520,7 +531,7 @@ const IncomeVotingScatter = ({
                             id="raceFilter"
                             value={selectedRace}
                             onChange={(e) => setSelectedRace(e.target.value)}
-                            className="border-2 border-black rounded-md p-2"
+                            className="border-2 border-black rounded-md p-1"
                         >
                             <option value="white">White</option>
                             <option value="black">Black</option>
@@ -544,7 +555,7 @@ const IncomeVotingScatter = ({
                     <select
                         value={selectedRace2}
                         onChange={(e) => setSelectedRace2(e.target.value)}
-                        className="border-2 border-black rounded-md p-2"
+                        className="border-2 border-black rounded-md p-1"
                     >
                         <option value="white">White</option>
                         <option value="black">Black</option>

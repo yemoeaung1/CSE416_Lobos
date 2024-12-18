@@ -68,7 +68,7 @@ function TabSelector({ selectedTab, setSelectedTab }) {
         }
         onClick={() => setSelectedTab('Graph')}
       >
-        Boxplot Analysis
+        Box Plot Analysis
       </div>
       <div
         style={

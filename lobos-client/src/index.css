@@ -324,3 +324,45 @@
   width: 60%;
   height: 100%;
 }
+
+/* Gingles CSS */
+.gingles-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
+}
+
+.gingles-table th,
+.gingles-table td {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.gingles-table th {
+  color: white;
+  background-color: #000000;
+
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.gingles-table td {
+  font-size: 12px;
+}
+
+.gingles-table-button {
+  font-size: 12px;
+  padding: 2px 8px;
+
+  border-radius: 8px;
+}
+
+.gingles-table-button:hover {
+  background-color: #f0f0f0;
+}
+
+.gingles-table-page-num {
+  font-size: 12px;
+}

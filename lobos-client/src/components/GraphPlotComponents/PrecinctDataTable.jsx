@@ -40,30 +40,16 @@ const PrecinctDataTable = ({ precinctData, selectedGEOID }) => {
 
     return (
         <div className="mt-5">
-            <table className="w-full border-collapse border border-gray-300">
+            <table className="gingles-table montserrat ">
                 <thead>
-                    <tr className="bg-gray-200">
-                        <th className="border border-gray-300 p-2 text-right">
-                            #
-                        </th>
-                        <th className="border border-gray-300 p-2">
-                            Total Population
-                        </th>
-                        <th className="border border-gray-300 p-2 text-center">
-                            Region Type
-                        </th>
-                        <th className="border border-gray-300 p-2">
-                            Non-White Population
-                        </th>
-                        <th className="border border-gray-300 p-2">
-                            Median Income
-                        </th>
-                        <th className="border border-gray-300 p-2">
-                            Republican Votes
-                        </th>
-                        <th className="border border-gray-300 p-2">
-                            Democratic Votes
-                        </th>
+                    <tr>
+                        <th style={{ width: '56px' }}>#</th>
+                        <th>Region Type</th>
+                        <th>Total Population</th>
+                        <th>Non-White Population</th>
+                        <th>Republican Votes</th>
+                        <th>Democratic Votes</th>
+                        <th>Median Income</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,15 +62,8 @@ const PrecinctDataTable = ({ precinctData, selectedGEOID }) => {
                         >
                             <td
                                 className="border border-gray-300 p-2 text-right"
-                                style={{ textAlign: "right" }}
                             >
                                 {startIndex + index + 1}
-                            </td>
-                            <td
-                                style={{ textAlign: "right" }}
-                                className="border border-gray-300 p-2"
-                            >
-                                {precinct.total_population}
                             </td>
                             <td className="border border-gray-300 p-2 text-center">
                                 {precinct.region_type}
@@ -93,13 +72,13 @@ const PrecinctDataTable = ({ precinctData, selectedGEOID }) => {
                                 style={{ textAlign: "right" }}
                                 className="border border-gray-300 p-2"
                             >
-                                {precinct.non_white.toLocaleString()}
+                                {precinct.total_population.toLocaleString()}
                             </td>
                             <td
                                 style={{ textAlign: "right" }}
                                 className="border border-gray-300 p-2"
                             >
-                                ${precinct.median_income.toLocaleString()}
+                                {precinct.non_white.toLocaleString()}
                             </td>
                             <td
                                 style={{ textAlign: "right" }}
@@ -113,29 +92,35 @@ const PrecinctDataTable = ({ precinctData, selectedGEOID }) => {
                             >
                                 {precinct.democrat_votes.toLocaleString()}
                             </td>
+                            <td
+                                style={{ textAlign: "right" }}
+                                className="border border-gray-300 p-2"
+                            >
+                                ${precinct.median_income.toLocaleString()}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
             {/* Pagination Controls */}
-            <div className="flex justify-between items-center mt-4">
+            <div className="flex justify-between items-center mt-2 montserrat">
                 <button
-                    className="bg-gray-300 p-2 rounded-md hover:bg-gray-400"
+                    className="gingles-table-button"
                     onClick={handlePrevPage}
                     disabled={currentPage === 1}
                 >
-                    Prev
+                    {"< Prev"}
                 </button>
-                <span className="text-sm">
+                <span className="gingles-table-page-num">
                     Page {currentPage} of {totalPages}
                 </span>
                 <button
-                    className="bg-gray-300 p-2 rounded-md hover:bg-gray-400"
+                    className="gingles-table-button"
                     onClick={handleNextPage}
                     disabled={currentPage === totalPages}
                 >
-                    Next
+                    {"Next >"}
                 </button>
             </div>
         </div>

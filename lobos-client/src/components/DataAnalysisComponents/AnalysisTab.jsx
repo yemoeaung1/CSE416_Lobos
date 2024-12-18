@@ -24,19 +24,18 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
     // Define styles for tabs
     const tabStyle = {
         cursor: "pointer",
-        paddingBottom: "8px",
-        marginRight: "16px",
-        fontWeight: "bold",
-        fontSize: "20px", // Bigger font size
+        paddingBottom: "4px",
+        marginRight: "8px",
+        fontSize: "16px",
         transition: "color 0.3s ease",
-        color: "#6b7280", // Default gray color
+        color: "#6b7280",
         borderBottom: "2px solid transparent",
     };
 
     const activeTabStyle = {
         ...tabStyle,
-        color: "#2563eb", // Active blue color
-        borderBottom: "4px solid #2563eb", // Active bottom border
+        color: "#2563eb",
+        borderBottom: "4px solid #2563eb",
     };
 
     return (
@@ -75,8 +74,8 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                         <button
                             className={
                                 selectedFilter === "income"
-                                    ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                    : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                                    ? "font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-2 pr-2 bg-blue-400 shadow-2xl text-white"
+                                    : "font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-2 pr-2 hover:bg-blue-200 shadow-2xl"
                             }
                             onClick={() => setSelectedFilter("income")}
                         >
@@ -85,8 +84,8 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                         <button
                             className={
                                 selectedFilter === "race"
-                                    ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                    : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                                    ? "font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-2 pr-2 bg-blue-400 shadow-2xl text-white"
+                                    : "font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-2 pr-2 hover:bg-blue-200 shadow-2xl"
                             }
                             onClick={() => setSelectedFilter("race")}
                         >
@@ -95,8 +94,8 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                         <button
                             className={
                                 selectedFilter === "income&race"
-                                    ? "text-xl font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-4 pr-4 bg-blue-400 shadow-2xl text-white"
-                                    : "text-xl font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-4 pr-4 hover:bg-blue-200 shadow-2xl"
+                                    ? "font-semibold border-2 border-black rounded-xl mr-4 p-1 pl-2 pr-2 bg-blue-400 shadow-2xl text-white"
+                                    : "font-semibold border-2 border-black mr-4 rounded-xl p-1 pl-2 pr-2 hover:bg-blue-200 shadow-2xl"
                             }
                             onClick={() => setSelectedFilter("income&race")}
                         >
@@ -111,11 +110,11 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                                         ? null
                                         : "table"
                                 ),
-                                    (setShowTable = true);
+                                    (setShowTable(true));
                             }}
                             className={`text-sm font-semibold p-2 rounded-md ${selectedAdditionalView === "table"
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-gray-200 hover:bg-gray-300"
+                                ? "bg-blue-500 text-white"
+                                : "bg-gray-200 hover:bg-gray-300"
                                 }`}
                         >
                             Show Table
@@ -139,8 +138,8 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                                         )
                                     }
                                     className={`text-sm font-semibold p-2 rounded-md ${selectedAdditionalView === "curve"
-                                            ? "bg-blue-500 text-white"
-                                            : "bg-gray-200 hover:bg-gray-300"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-gray-200 hover:bg-gray-300"
                                         }`}
                                     disabled={isCurveDisabled}
                                 >
@@ -154,10 +153,10 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                 {/* Chart Display */}
                 <div
                     className={`transition-all duration-300 ${(selectedAdditionalView === "table" ||
-                            selectedAdditionalView === "curve") &&
-                            selectedChart === "precinct-analysis"
-                            ? "h-2/4"
-                            : "h-3/4"
+                        selectedAdditionalView === "curve") &&
+                        selectedChart === "precinct-analysis"
+                        ? "h-2/4"
+                        : "h-3/4"
                         } w-full mt-5`}
                     style={{
                         paddingBottom: showTable ? "10px" : "10px", // Add extra space when the table is shown
