@@ -103,7 +103,7 @@ const VoteShareSeatShareGraph = ({ selectedState }) => {
     if (error) return <div>{error}</div>;
 
     return (
-        <div className="h-64 w-full">
+        <div className="h-full w-full">
             <canvas ref={chartRef}></canvas>
         </div>
     );
