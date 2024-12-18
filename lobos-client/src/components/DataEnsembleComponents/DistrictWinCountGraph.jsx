@@ -3,36 +3,10 @@ import Chart from "chart.js/auto";
 import axios from "axios";
 import { States } from "../../enums";
 
-const DistrictWinCountGraph = ({ selectedState }) => {
+const DistrictWinCountGraph = ({ graphData }) => {
   const chartRef = useRef(null);
-  const [chartInstance, setChartInstance] = useState(null);
-  const [graphData, setGraphData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-
-  useEffect(() => {
-    if (selectedState === States.NONE) {
-      return; // Do not proceed until a state is selected
-    }
-
-    const fetchGraphData = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/api/ensemble/district-win-counts?state=${selectedState}`
-        );
-        setGraphData(response.data);
-        setLoading(false);
-      } catch (error) {
-        setError(error);
-        console.error("Error fetching graph data:", error);
-      }
-    };
-    fetchGraphData();
-  }, [selectedState]);
 
   useEffect(() => {
     if (loading || error || !graphData) {
@@ -134,7 +108,7 @@ const DistrictWinCountGraph = ({ selectedState }) => {
 
   return (
     <div className="w-full h-full my-8">
-      <div className="flex-1 flex w-5/6 h-5/6 mx-auto my-auto">
+      <div className="flex-1 flex w-5/6 mx-auto my-auto">
         <canvas ref={chartRef}></canvas>
       </div>
     </div>

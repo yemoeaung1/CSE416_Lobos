@@ -1,6 +1,7 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import BoxPlotGraph from './EnsembleBoxPlot';
-import { MapViewOptions } from '../../enums';
+import { MapViewOptions, States } from '../../enums';
 import SplitsBarGraph from './SplitsBarGraph';
 import { FormControl, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { fieldNamesToDisplay, groupedCategories } from './Constants';
@@ -114,36 +115,73 @@ function EnsembleTable({ selectedState }) {
 
 function EnsembleSummary({ selectedState }) {
   const [alignment, setAligment] = useState("splits")
+  const [splitsGraphData, setSplitsGraphData] = useState(null);
+  const [winnersGraphData, setWinnersGraphData] = useState(null);
 
-  const handleTabChange = (e, newAlignment) => {
-    if (newAlignment !== null) setAligment(newAlignment);
-  }
+  useEffect(() => {
+    if (selectedState === States.NONE)
+      return;
+
+    axios.get(`http://localhost:8080/api/ensemble/splits`, {
+      params: {
+        state: selectedState
+      }
+    })
+      .then(response => {
+        setSplitsGraphData(response.data);
+      })
+      .catch(error => {
+        console.error("Error Fetching Splits Data:", error);
+      });
+
+
+    axios.get(`http://localhost:8080/api/ensemble/district-win-counts`, {
+      params: {
+        state: selectedState
+      }
+    })
+      .then(response => {
+        setWinnersGraphData(response.data);
+      })
+      .catch(error => {
+        console.error("Error Fetching Winners Data:", error);
+      });
+  }, [selectedState]);
+
   return (
     <>
       <EnsembleTable selectedState={selectedState} />
-      <EnsembleSummaryGraphToggle alignment={alignment} handleChange={handleTabChange} />
-      {alignment === "splits" && <SplitsBarGraph selectedState={selectedState} />}
-      {alignment === "winnerTallyCount" && <DistrictWinCountGraph selectedState={selectedState} />}
+      <EnsembleSummaryGraphToggle alignment={alignment} setAligment={setAligment} />
+      {alignment === "splits" && <SplitsBarGraph graphData={splitsGraphData} />}
+      {alignment === "winnerTallyCount" && <DistrictWinCountGraph graphData={winnersGraphData} />}
     </>
   )
 }
 
-function EnsembleSummaryGraphToggle({ alignment, handleChange }) {
+function EnsembleSummaryGraphToggle({ alignment, setAligment }) {
+  const summaryOptions = [
+    { text: "Republican/Democratic Splits", value: "splits" },
+    { text: "Election Winners", value: "winnerTallyCount" }
+  ];
+
   return (
-    <div className="flex ">
-      <ToggleButtonGroup
-        color="primary"
+    <FormControl fullWidth>
+      <InputLabel id="ensemble-dropdown-label" sx={{ fontFamily: "Montserrat, san-serif" }}>Summary Measures</InputLabel>
+      <Select
+        labelId="ensemble-dropdown-label"
         value={alignment}
-        exclusive={true}
-        onChange={handleChange}
-        aria-label="Platform"
-        size="medium"
+        onChange={(event) => setAligment(event.target.value)}
+        label="Summary Measures"
+        sx={{ fontFamily: 'Montserrat, sans-serif', }}
       >
-        <ToggleButton value="splits">Splits</ToggleButton>
-        <ToggleButton value="winnerTallyCount">District Winners</ToggleButton>
-      </ToggleButtonGroup>
-    </div>
-  )
+        {summaryOptions.map(({text, value}, index) => (
+          <MenuItem sx={{ fontFamily: 'Montserrat, sans-serif', }} key={index} value={value}>
+            {text}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
 }
 
 function EnsembleBoxAndWhiskers({ selectedState }) {
@@ -177,26 +215,18 @@ function EnsembleBoxAndWhiskers({ selectedState }) {
 }
 
 function CategoryDropdown({ categories, setSelectedCategory, selectedGroup, selectedCategory }) {
-  const handleChange = (event) => {
-    setSelectedCategory(event.target.value);
-  };
-
   return (
     <div>
       <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">{selectedGroup.charAt(0).toUpperCase() + selectedGroup.slice(1)}</InputLabel>
+        <InputLabel id="ensemble-dropdown-label">{selectedGroup.charAt(0).toUpperCase() + selectedGroup.slice(1)}</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId="ensemble-dropdown-label"
           value={selectedCategory}
           label={selectedGroup.charAt(0).toUpperCase() + selectedGroup.slice(1)}
-          onChange={handleChange}
-          MenuProps={{
-            PaperProps: {
-              style: {
-                maxHeight: 48 * 4.5
-              },
-            }
+          onChange={(event) => setSelectedCategory(event.target.value)}
+          sx={{
+            fontFamily: 'Montserrat, sans-serif',
+            height: '48px',
           }}
         >
           {categories.map((category, index) => (
