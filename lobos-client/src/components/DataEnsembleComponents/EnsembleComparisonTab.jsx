@@ -289,6 +289,6 @@ function DistrictPlanDistributionSelection({ selectedDistrict, selectedDist, set
 }
 
 const availablePlans = Object.freeze({
-    "Utah": ["None"],
-    "South Carolina": ["None", "Test District Plan"],
+    "Utah": ["None", "Utah-Urban", "Utah-Suburban", "Utah-Rural", "Utah-Republican", "Utah-Poor", "Utah-Black"],
+    "South Carolina": ["None",  "South Carolina-Democratic", "South Carolina-Poor", "South Carolina-Republican","South Carolina-Rural","South Carolina-Suburban", "South Carolina-Urban", "Black Plan"],
 })
