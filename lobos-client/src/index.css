@@ -344,16 +344,16 @@
   color: white;
   background-color: #000000;
 
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
 }
 
 .gingles-table td {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .gingles-table-button {
-  font-size: 12px;
+  font-size: 11px;
   padding: 2px 8px;
 
   border-radius: 8px;
@@ -364,5 +364,5 @@
 }
 
 .gingles-table-page-num {
-  font-size: 12px;
+  font-size: 11px;
 }
