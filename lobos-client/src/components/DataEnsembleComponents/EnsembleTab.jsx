@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import BoxPlotGraph from './EnsembleBoxPlot';
 import { MapViewOptions, States } from '../../enums';
 import SplitsBarGraph from './SplitsBarGraph';
-import { FormControl, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, ButtonGroup, Button } from '@mui/material';
 import { fieldNamesToDisplay, groupedCategories } from './Constants';
 import DistrictWinCountGraph from './DistrictWinCountGraph';
 import EnsembleComparisonTab from './EnsembleComparisonTab';
@@ -174,7 +174,7 @@ function EnsembleSummaryGraphToggle({ alignment, setAligment }) {
         label="Summary Measures"
         sx={{ fontFamily: 'Montserrat, sans-serif', }}
       >
-        {summaryOptions.map(({text, value}, index) => (
+        {summaryOptions.map(({ text, value }, index) => (
           <MenuItem sx={{ fontFamily: 'Montserrat, sans-serif', }} key={index} value={value}>
             {text}
           </MenuItem>
@@ -191,19 +191,36 @@ function EnsembleBoxAndWhiskers({ selectedState }) {
     <>
       <div className='w-full flex flex-row h-16'>
         <div className="flex w-2/3 p-2 flex-row gap-4">
-          {Object.keys(groupedCategories).map((group, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setSelectedGroup(group);
-                setSelectedCategory(groupedCategories[group][0]); // Update default category for the new group
-              }}
-              className={`h-8 text-lg font-semibold border-2 border-black rounded-xl px-4 pb-1 bg-blue-400 shadow-2xl ${selectedGroup === group ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
-                }`}
-            >
-              {fieldNamesToDisplay[group]}
-            </button>
-          ))}
+          <ButtonGroup
+            variant="contained"
+            aria-label="linked button group"
+            orientation="horizontal"
+          >
+            {Object.keys(groupedCategories).map((group, index) => (
+              <Button
+                key={index}
+                onClick={() => {
+                  setSelectedGroup(group);
+                  setSelectedCategory(groupedCategories[group][0]); // Update default category for the new group
+                }}
+                sx={{
+                    textTransform: 'none',
+                    padding: "4px 12px",
+                    minHeight: "32px",
+                    fontSize: "1.0rem",
+                    fontFamily: "Montserrat, san-serif",
+                    backgroundColor: (selectedGroup === group) ? "primary.main" : "grey.200",
+                    color: (selectedGroup === group) ? "grey.200" : "primary.main",
+                    transition: "all 0.3s ease-in-out",
+                    "&:hover": {
+                        backgroundColor: (selectedGroup === group) ? "primary.dark" : "grey.300",
+                    },
+                }}
+              >
+                {fieldNamesToDisplay[group]}
+              </Button>
+            ))}
+          </ButtonGroup>
         </div>
         <div className="p-2 w-1/3">
           <CategoryDropdown categories={groupedCategories[selectedGroup]} setSelectedCategory={setSelectedCategory} selectedGroup={selectedGroup} selectedCategory={selectedCategory} />
