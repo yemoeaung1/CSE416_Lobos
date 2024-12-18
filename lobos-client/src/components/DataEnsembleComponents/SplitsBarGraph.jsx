@@ -3,7 +3,7 @@ import Chart from "chart.js/auto";
 import axios from "axios";
 import { States } from "../../enums";
 
-const SplitsBarGraph = ({selectedState }) => {
+const SplitsBarGraph = ({ selectedState }) => {
     const chartRef = useRef(null);
     const [chartInstance, setChartInstance] = useState(null);
     const [graphData, setGraphData] = useState(null);
@@ -21,7 +21,7 @@ const SplitsBarGraph = ({selectedState }) => {
 
             try {
                 const response = await axios.get(
-                    `http://localhost:8080/api/ensemble-splits?state=${selectedState}`
+                    `http://localhost:8080/api/ensemble/splits?state=${selectedState}`
                 );
                 setGraphData(response.data);
                 console.log(response.data);
@@ -41,21 +41,14 @@ const SplitsBarGraph = ({selectedState }) => {
 
         const ctx = chartRef.current.getContext("2d");
 
-        // const barData = {
-        //     labels: graphData.labels,
-        //     datasets: [
-        //         graphData.dataSets
-        //     ],
-        // };
-
         const BarChart = new Chart(ctx, {
             type: "bar",
             data: {
                 labels: graphData.labels, // x-axis labels
                 datasets: [
                     {
-                        label: "Plan Count", // Label for the dataset
-                        data: graphData.dataSets, // y-axis values
+                        label: graphData.yLabel, // Label for the dataset
+                        data: graphData.data, // y-axis values
                         backgroundColor: graphData.backgroundColor, // Bar colors
                         borderColor: graphData.borderColor, // Border color
                         borderWidth: graphData.borderWidth, // Border width
@@ -68,33 +61,37 @@ const SplitsBarGraph = ({selectedState }) => {
                     x: {
                         title: {
                             display: true,
-                            text: "Republican/Democrat Splits",
+                            text: graphData.xLabel,
                             font: {
                                 size: 20,
+                                family: "Montserrat, sans-serif",
                             },
-                        },
-                        ticks: {
-                            font: {
-                                size: 18,
+                            ticks: {
+                                font: {
+                                    size: 18,
+                                    family: "Montserrat, sans-serif",
+                                },
                             },
+                            color: "#000000",
                         },
-                        color: "#000000",
                     },
                     y: {
                         title: {
                             display: true,
-                            text: "Number of Plans",
+                            text: graphData.yLabel,
                             font: {
                                 size: 20,
+                                family: "Montserrat, sans-serif",
                             },
-                        },
-                        ticks: {
-                            font: {
-                                size: 18,
+                            ticks: {
+                                font: {
+                                    size: 18,
+                                    family: "Montserrat, sans-serif",
+                                },
                             },
+                            beginAtZero: true, // Ensure the y-axis starts at zero
+                            color: "#000000",
                         },
-                        beginAtZero: true, // Ensure the y-axis starts at zero
-                        color: "#000000",
                     },
                 },
                 plugins: {
@@ -103,6 +100,7 @@ const SplitsBarGraph = ({selectedState }) => {
                         labels: {
                             font: {
                                 size: 16,
+                                family: "Montserrat, sans-serif",
                             },
                         },
                     },
@@ -110,8 +108,9 @@ const SplitsBarGraph = ({selectedState }) => {
                         display: true,
                         text: graphData.title, // Chart title
                         font: {
-                            size: 24,
+                            size: 22,
                             weight: "bold",
+                            family: "Montserrat, sans-serif",
                         },
                         color: "#000000",
                     },
@@ -127,9 +126,11 @@ const SplitsBarGraph = ({selectedState }) => {
     }, [graphData]);
 
     return (
-            <div className="flex-1 flex justify-center items-center">
-                <canvas ref={chartRef} className="w-full h-full"></canvas>
+        <div className="w-full h-full my-8">
+            <div className="flex-1 flex w-5/6 h-5/6 mx-auto my-auto">
+                <canvas ref={chartRef}></canvas>
             </div>
+        </div>
     );
 };
 

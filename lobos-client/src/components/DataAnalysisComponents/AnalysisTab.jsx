@@ -55,30 +55,34 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
     borderBottom: "4px solid #2563eb", // Active bottom border
   };
 
-  return (
-    <div className="flex flex-col h-full">
-      {/* Tab Selector */}
-      <nav
-        className="flex justify-end mb-4 space-x-8 border-b-2 border-gray-300"
-        style={{ borderBottom: "2px solid #e5e7eb" }}
-      >
-        <div
-          style={
-            selectedChart === "precinct-analysis" ? activeTabStyle : tabStyle
-          }
-          onClick={() => setSelectedChart("precinct-analysis")}
-        >
-          Gingles 2/3
-        </div>
-        <div
-          style={
-            selectedChart === "ecological-inference" ? activeTabStyle : tabStyle
-          }
-          onClick={() => setSelectedChart("ecological-inference")}
-        >
-          Ecological Inference
-        </div>
-      </nav>
+    return (
+            <div className="flex flex-col h-full">
+                {/* Tab Selector */}
+                <nav
+                    className="flex justify-end mb-4 space-x-8 border-b-2 border-gray-300"
+                    style={{ borderBottom: "2px solid #e5e7eb" }}
+                >
+                    <div
+                        style={
+                            selectedChart === "precinct-analysis"
+                                ? activeTabStyle
+                                : tabStyle
+                        }
+                        onClick={() => setSelectedChart("precinct-analysis")}
+                    >
+                        Gingles 2/3
+                    </div>
+                    <div
+                        style={
+                            selectedChart === "ecological-inference"
+                                ? activeTabStyle
+                                : tabStyle
+                        }
+                        onClick={() => setSelectedChart("ecological-inference")}
+                    >
+                        Ecological Inference
+                    </div>
+                </nav>
 
             {/* Filter Buttons */}
             {selectedChart === "precinct-analysis" && (
