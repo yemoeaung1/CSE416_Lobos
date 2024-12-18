@@ -21,7 +21,7 @@ public class EcologicalInferenceService {
         this.graphRepository = graphRepository;
     }
 
-   public Graph getBarGraphForFilter(String state, String filter) {
+    public Graph getBarGraphForFilter(String state, String filter) {
         EcologicalInferenceInfo info = graphRepository.findByState(state);
         if (info == null) {
             throw new IllegalArgumentException("State not found: " + state);
@@ -33,36 +33,47 @@ public class EcologicalInferenceService {
 
         Map<String, Map<String, Object>> filterData = info.getEcologicalInference().get(filter);
 
-        // Process all filter options under the selected filter
+        // Prepare cumulative lists for Republican and Democratic values
+        List<Double> republicanValues = new ArrayList<>();
+        List<List<Double>> republicanErrorBars = new ArrayList<>();
+        List<Double> democraticValues = new ArrayList<>();
+        List<List<Double>> democraticErrorBars = new ArrayList<>();
+
+        // Extract category labels and aggregate data
         for (String key : filterData.keySet()) {
-            String categoryLabel = key.replace("_Info", ""); // e.g., Rural_Info -> Rural
+            String categoryLabel = key.replace("_Info", "");
             categories.add(categoryLabel);
 
             Map<String, Object> filterInfo = filterData.get(key);
             Map<String, Object> republicanData = (Map<String, Object>) filterInfo.get("Republican");
             Map<String, Object> democraticData = (Map<String, Object>) filterInfo.get("Democratic");
 
-            // Get posterior means for Republican and Democratic
+            // Get posterior means
             Map<String, Object> republicanResult = getPosteriorMean(republicanData);
             Map<String, Object> democraticResult = getPosteriorMean(democraticData);
 
             double republicanMean = (double) republicanResult.get("posterior_mean");
             List<Double> republicanInterval = (List<Double>) republicanResult.get("credible_interval");
-
             double democraticMean = (double) democraticResult.get("posterior_mean");
             List<Double> democraticInterval = (List<Double>) democraticResult.get("credible_interval");
 
-            // Add Republican and Democratic data for this category
-            dataSets.add(createGraphDataSet("Republican - " + categoryLabel, republicanMean, republicanInterval, "rgba(255, 0, 0, 0.7)"));
-            dataSets.add(createGraphDataSet("Democratic - " + categoryLabel, democraticMean, democraticInterval, "rgba(0, 0, 255, 0.7)"));
-        }  
 
-        // Set the data in the graph object
+            republicanErrorBars.add(republicanInterval);
+            democraticErrorBars.add(democraticInterval);
+            republicanValues.add(republicanMean);
+            democraticValues.add(democraticMean);
+        }
+
+        // Create single datasets for Republican and Democratic
+        dataSets.add(createGraphDataSet("Republican", republicanValues, "rgba(255, 0, 0, 0.7)",  republicanErrorBars));
+        dataSets.add(createGraphDataSet("Democratic", democraticValues, "rgba(0, 0, 255, 0.7)",  democraticErrorBars));
+
+        // Set the graph properties
         graph.setDataSets(dataSets);
         graph.setLabels(categories);
-        graph.setXLabel("Categories");
+        graph.setXLabel(filter.substring(0, 1).toUpperCase() + filter.substring(1));
         graph.setYLabel("Posterior Mean Support Level");
-        graph.setTitle("Ecological Inference - " + filter);
+        graph.setTitle("Support By " + filter.substring(0, 1).toUpperCase() + filter.substring(1));
 
         return graph;
     }
@@ -90,21 +101,29 @@ public class EcologicalInferenceService {
             }
         }
 
-        result.put("posterior_mean", count > 0 ? totalMean / count : 0.0);
+        result.put("posterior_mean", totalMean / count);
         result.put("credible_interval", credibleInterval != null ? credibleInterval : List.of(0.0, 0.0));
         return result;
     }
 
 
-    private GraphDataSet createGraphDataSet(String label, double value, List<Double> credibleInterval, String color) {
-        GraphDataSet dataSet = new GraphDataSet(List.of(value));
+    private GraphDataSet createGraphDataSet(String label, List<Double> values, String color, List<List<Double>> errorBars) {
+        GraphDataSet dataSet = new GraphDataSet(values);
         dataSet.setLabel(label);
         dataSet.setBackgroundColor(List.of(color));
         dataSet.setBorderColor(List.of("black"));
         dataSet.setBorderWidth(1);
-        dataSet.setErrorBars(credibleInterval);
+
+        List<Map<String, Double>> errorBarsData = new ArrayList<>();
+        for (List<Double> interval : errorBars) {
+            Map<String, Double> errorBar = new HashMap<>();
+            errorBar.put("yMin", interval.get(0));
+            errorBar.put("yMax", interval.get(1));
+            errorBarsData.add(errorBar);
+        }
+        dataSet.setErrorBars(errorBarsData);
         return dataSet;
-    }
+}
 
     public Graph getEcologicalInferenceForState(String state, String filter, String filterOption) {
         System.out.println("Entered Into this function");

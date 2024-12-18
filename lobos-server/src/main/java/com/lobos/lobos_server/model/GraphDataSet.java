@@ -1,6 +1,7 @@
 package com.lobos.lobos_server.model;
 
 import java.util.List;
+import java.util.Map;
 
 
 public class GraphDataSet {
@@ -9,7 +10,7 @@ public class GraphDataSet {
     private List<String> backgroundColor; 
     private List<String> borderColor; 
     private int borderWidth;
-    private List<Double> errorBars;
+    private List<Map<String, Double>> errorBars;
 
     public GraphDataSet(List<Double> data){
         this.data = data;
@@ -61,11 +62,11 @@ public class GraphDataSet {
         this.borderWidth = borderWidth;
     }
     
-    public void setErrorBars(List<Double> errorBars) {
-        this.errorBars = errorBars;
+   public List<Map<String, Double>> getErrorBars() {
+        return errorBars;
     }
 
-    public List<Double> getErrorBars() {
-        return errorBars;
+    public void setErrorBars(List<Map<String, Double>> errorBars) {
+        this.errorBars = errorBars;
     }
 }

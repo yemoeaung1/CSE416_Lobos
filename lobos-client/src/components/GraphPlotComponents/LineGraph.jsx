@@ -5,14 +5,16 @@ import { data } from "autoprefixer";
 
 export default function LineGraph({ graphData, title }) {
   const chartRef = useRef(null);
-  const [chartInstance, setChartInstance] = useState(null);
+  const chartInstanceRef = useRef(null);
 
   useEffect(() => {
     const ctx = chartRef.current.getContext("2d");
+    
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+    }
 
-    console.log(graphData.labels)
-
-    const LineChart = new Chart(ctx, {
+    chartInstanceRef.current = new Chart(ctx, {
       type: "line",
       data: {
         labels: graphData.labels,
@@ -94,10 +96,11 @@ export default function LineGraph({ graphData, title }) {
       },
     });
 
-    setChartInstance(LineChart);
-
     return () => {
-      LineChart.destroy();
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+        chartInstanceRef.current = null;
+      }
     };
   }, [graphData]);
 

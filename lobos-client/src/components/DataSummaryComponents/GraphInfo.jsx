@@ -20,7 +20,7 @@ export default function GraphContainer({ selectedArea, selectedState, mapView, d
       })
         .then(response => {
           const { labels, dataSets, title, ylabel } = response.data.data;
-
+          console.log(response.data)
           setPopulationData(response.data.population);
           setGraphData({
             labels,

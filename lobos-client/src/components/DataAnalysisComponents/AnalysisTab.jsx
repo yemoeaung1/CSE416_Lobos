@@ -76,7 +76,8 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
       </nav>
 
             {/* Filter Buttons */}
-            <div className="flex items-center">
+            {selectedChart === "precinct-analysis" && (
+              <div className="flex items-center">
                 <div className="flex-grow">
                     <button
                         className={
@@ -124,8 +125,9 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
               )}
 
             </div>
-            
 
+            )}
+            
       {/* Chart Display */}
       <div
                 className={`transition-all duration-300 ${
@@ -141,13 +143,13 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
           <IncomeVotingScatter
             selectedState={selectedState}
             selectedFilter={selectedFilter}
-                        onSelectGEOID={setSelectedGEOID} // Get selected GEOID from scatter plot
-                        onPrecinctDataFetched={setPrecinctData} // Get precinct data
+            onSelectGEOID={setSelectedGEOID} // Get selected GEOID from scatter plot
+            onPrecinctDataFetched={setPrecinctData} // Get precinct data
           />
         )}
         {selectedChart === "ecological-inference" && (
           <>
-            <EcologicalInferenceTab selectedState={selectedState} filter={selectedFilter}/>
+            <EcologicalInferenceTab selectedState={selectedState}/>
           </>
         )}
       </div>
