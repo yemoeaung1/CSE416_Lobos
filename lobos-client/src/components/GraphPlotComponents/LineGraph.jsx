@@ -41,7 +41,7 @@ export default function LineGraph({ graphData, title }) {
               display: true,
               text: "Support Level",
               font: {
-                size: 20,
+                size: 16,
                 family: "Montserrat, sans-serif"
               },
               color: "#000000",
@@ -50,7 +50,7 @@ export default function LineGraph({ graphData, title }) {
               stepSize: 0.1,
               callback: (value) => value.toFixed(1),
               font: {
-                size: 14,
+                size: 12,
                 family: "Montserrat, sans-serif"
               },
             },
@@ -70,7 +70,7 @@ export default function LineGraph({ graphData, title }) {
             },
             ticks: {
               font: {
-                size: 18,
+                size: 12,
                 family: "Montserrat, sans-serif"
               },
             },
@@ -82,7 +82,7 @@ export default function LineGraph({ graphData, title }) {
             position: "top",
             labels: {
               font: {
-                size: 16,
+                size: 10,
                 family: "Montserrat, sans-serif"
               },
             },
@@ -91,7 +91,7 @@ export default function LineGraph({ graphData, title }) {
             display: true,
             text: title,
             font: {
-              size: 22,
+              size: 20,
               weight: "bold",
               family: "Montserrat, sans-serif"
             },

@@ -97,7 +97,7 @@ export default function EcologicalInferenceTab({ selectedState }) {
       {chartType === "line" ? (
             <>
                 {/* Line Graphs for First Selected Option */}
-                <div className="flex justify-around mb-8">
+                <div className="flex justify-around mb-2">
                     {graphData1.republican && (
                         <LineGraph
                             graphData={graphData1.republican}
@@ -113,7 +113,7 @@ export default function EcologicalInferenceTab({ selectedState }) {
                 </div>
 
                 {/* Line Graphs for Second Selected Option */}
-                <div className="flex justify-around border-t-2 border-gray-200 pt-8">
+                <div className="flex justify-around border-t-2 border-gray-200 pt-2">
                     {graphData2.republican && (
                         <LineGraph
                             graphData={graphData2.republican}
