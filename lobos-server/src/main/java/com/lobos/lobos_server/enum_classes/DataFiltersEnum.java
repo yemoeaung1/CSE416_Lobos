@@ -3,6 +3,7 @@ package com.lobos.lobos_server.enum_classes;
 public enum DataFiltersEnum {
     PARTY("Party"),
     RACE("Race"),
+    MINORITY("Minority Group"),
     INCOME("Income"),
     REGION_TYPE("Region Type");
 

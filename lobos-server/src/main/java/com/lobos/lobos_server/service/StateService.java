@@ -1,8 +1,5 @@
 package com.lobos.lobos_server.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -31,14 +28,10 @@ public class StateService {
     }
 
     @Cacheable(value = "state-info-cache", key = "#state")
-    public Map<String, Object> getStateInfo(String state){
+    public StateInfo getStateInfo(String state){
         StateInfo stateInfo = stateInfoRepository.findFirstByState(state);
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("state", stateInfo.getState());
-        data.put("data", stateInfo.getData());
-
-        return data;
+        return stateInfo;
     }
 
     @Cacheable(value = "state-map-cache", key = "#state + '-' + #view")

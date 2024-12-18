@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { DataFilters, MapViewOptions, States } from "../../enums";
+import BarGraph from "../GraphPlotComponents/BarGraph";
 
 export default function GraphContainer({ selectedArea, selectedState, mapView, dataSetType, setDataSetType }) {
   const [graphData, setGraphData] = useState(null);
@@ -51,10 +52,6 @@ export default function GraphContainer({ selectedArea, selectedState, mapView, d
         populationData={populationData}
       />
       <BarGraph
-        mapView={mapView}
-        dataSetType={dataSetType}
-        selectedArea={selectedArea}
-        selectedState={selectedState}
         graphData={graphData}
       />
     </div>
@@ -62,9 +59,9 @@ export default function GraphContainer({ selectedArea, selectedState, mapView, d
 }
 
 function GraphSelection({ mapView, selectedArea, dataSetType, setDataSetType, populationData }) {
-  const graphOptions = [DataFilters.PARTY, DataFilters.RACE, DataFilters.INCOME, DataFilters.REGION_TYPE];
+  const graphOptions = [DataFilters.PARTY, DataFilters.RACE, DataFilters.MINORITY, DataFilters.INCOME, DataFilters.REGION_TYPE];
 
-  if (mapView != MapViewOptions.STATE)
+  if (mapView === MapViewOptions.PRECINCT)
     graphOptions.pop();
 
   return (
@@ -95,86 +92,3 @@ function GraphSelection({ mapView, selectedArea, dataSetType, setDataSetType, po
     </div>
   );
 }
-
-function BarGraph({ graphData }) {
-  const chartRef = useRef(null);
-
-  useEffect(() => {
-    if (!graphData) return;
-
-    const ctx = chartRef.current.getContext("2d");
-
-    const BarChart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: graphData.labels,
-        datasets: graphData.datasets,
-      },
-      options: {
-        responsive: true,
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: graphData.xTitle,
-              font: {
-                size: 20,
-                family: "Montserrat, sans-serif",
-              },
-              color: "#000000",
-            },
-            ticks: {
-              font: {
-                size: 16,
-                family: "Montserrat, sans-serif",
-              },
-            },
-          },
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: graphData.yTitle,
-              font: {
-                size: 20,
-                family: "Montserrat, sans-serif",
-              },
-              color: "#000000",
-            },
-            ticks: {
-              font: {
-                size: 16,
-                family: "Montserrat, sans-serif",
-              },
-            },
-          },
-        },
-        plugins: {
-          legend: {
-            display: false,
-          },
-          title: {
-            display: true,
-            text: graphData.title,
-            font: {
-              size: 24,
-              weight: "bold",
-              family: "Montserrat, sans-serif",
-            },
-            color: "#000000",
-          },
-        },
-      },
-    });
-
-    return () => {
-      BarChart.destroy();
-    };
-  }, [graphData]);
-
-  return (
-    <div className="flex-1">
-      <canvas ref={chartRef} className="w-full h-full"></canvas>
-    </div>
-  );
-};
