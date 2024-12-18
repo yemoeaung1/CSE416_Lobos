@@ -3,18 +3,21 @@ import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter";
 import PrecinctDataTable from "../GraphPlotComponents/PrecinctDataTable";
 import VoteShareSeatShareGraph from "../GraphPlotComponents/VoteShareSeatShareGraph";
 import { Tooltip } from "@mui/material";
+import { States } from "../../enums";
 
-export function GinglesTab({ selectedState }) {
+export default function GinglesTab({ selectedState }) {
     const [selectedFilter, setSelectedFilter] = useState("income");
     const [selectedGEOID, setSelectedGEOID] = useState(null);
     const [precinctData, setPrecinctData] = useState([]);
     const [selectedAdditionalView, setSelectedAdditionalView] = useState(null);
 
-    const isCurveDisabled = selectedState === "Utah";
+    const curveDisabledStates = [States.UTAH]
+    const isCurveDisabled = (curveDisabledStates.includes(selectedState));
 
     return (
         <>
             <GinglesButtons
+                selectedState={selectedState}
                 selectedFilter={selectedFilter}
                 setSelectedFilter={setSelectedFilter}
                 selectedAdditionalView={selectedAdditionalView}
@@ -47,7 +50,7 @@ export function GinglesTab({ selectedState }) {
     );
 }
 
-export function GinglesButtons({ selectedFilter, setSelectedFilter, selectedAdditionalView, setSelectedAdditionalView, isCurveDisabled }) {
+export function GinglesButtons({ selectedState, selectedFilter, setSelectedFilter, selectedAdditionalView, setSelectedAdditionalView, isCurveDisabled }) {
     return (
         <div className="flex items-center">
             <div className="flex-grow">
@@ -83,25 +86,10 @@ export function GinglesButtons({ selectedFilter, setSelectedFilter, selectedAddi
                 </button>
             </div>
             <div className="flex items-center space-x-4 ml-4">
-                <button
-                    onClick={() => {
-                        setSelectedAdditionalView(
-                            selectedAdditionalView === "table"
-                                ? null
-                                : "table"
-                        )
-                    }}
-                    className={`text-sm font-semibold p-2 rounded-md ${selectedAdditionalView === "table"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200 hover:bg-gray-300"
-                        }`}
-                >
-                    Show Table
-                </button>
                 <Tooltip
                     title={
                         isCurveDisabled
-                            ? "Curve graph is disabled for this state."
+                            ? `Disabled for ${selectedState}`
                             : ""
                     }
                     placement="top"
@@ -122,18 +110,35 @@ export function GinglesButtons({ selectedFilter, setSelectedFilter, selectedAddi
                                 }`}
                             disabled={isCurveDisabled}
                         >
-                            Show Curve Graph
+                            Seats-Votes Curve
                         </button>
                     </span>
                 </Tooltip>
+                <button
+                    onClick={() => {
+                        setSelectedAdditionalView(
+                            selectedAdditionalView === "table"
+                                ? null
+                                : "table"
+                        )
+                    }}
+                    className={`text-sm font-semibold p-2 rounded-md ${selectedAdditionalView === "table"
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 hover:bg-gray-300"
+                        }`}
+                >
+                    Display Table
+                </button>
             </div>
         </div>
     );
 }
 
 export function GinglesChart({ selectedAdditionalView, selectedState, selectedFilter, setSelectedGEOID, setPrecinctData }) {
+    const additionalCSS = `${(selectedAdditionalView) ? "h-2/4" : "h-3/4"}`;
+    
     return (
-        <div className={`transition-all duration-300 ${(selectedAdditionalView) ? "h-2/4" : "h-3/4"} w-full mt-5`}>
+        <div className={`transition-all duration-300 w-full mt-4 pb-3 ${additionalCSS}`}>
             <IncomeVotingScatter
                 selectedState={selectedState}
                 selectedFilter={selectedFilter}

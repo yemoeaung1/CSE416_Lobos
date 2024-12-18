@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
-import IncomeVotingScatter from "../GraphPlotComponents/IncomeVotingScatter";
-import PrecinctDataTable from "../GraphPlotComponents/PrecinctDataTable";
-import VoteShareSeatShareGraph from "../GraphPlotComponents/VoteShareSeatShareGraph";
-import { FormControlLabel, Checkbox } from "@mui/material";
 import { MapViewOptions } from "../../enums";
-import { Tooltip } from "@mui/material";
-import { GinglesButtons, GinglesCurve, GinglesTab, GinglesTable } from "./GinglesTab";
+import GinglesTab from "./GinglesTab";
+import EcologicalInferenceTab from "./EcologicalInferenceTab";
 
 export default function AnalysisTab({ selectedState, mapView, setMapView }) {
     const [selectedChart, setSelectedChart] = useState(ChartSelection.GINGLES_PRECINCT_ANALYSIS);
@@ -25,7 +21,7 @@ export default function AnalysisTab({ selectedState, mapView, setMapView }) {
                 }
 
                 {selectedChart === ChartSelection.ECOLOGICAL_INFERENCE &&
-                    <GinglesTab selectedState={selectedState} />
+                    <EcologicalInferenceTab selectedState={selectedState} />
                 }
             </div>
         </div>

@@ -3,7 +3,7 @@ import Chart from "chart.js/auto";
 import regression from "regression";
 import axios from "axios";
 import { States } from "../../enums";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { createCustomDropdown } from "../UtilityComponents/CustomDropdown";
 
 const IncomeVotingScatter = ({
     selectedFilter,
@@ -341,9 +341,8 @@ const IncomeVotingScatter = ({
                     //max: selectedFilter === "race" ? 100 : maxX, // Set to 100 for race
                     ticks: {
                         callback: function (value) {
-                            return `${value.toLocaleString()}${
-                                selectedFilter === "race" ? "%" : ""
-                            }`;
+                            return `${value.toLocaleString()}${selectedFilter === "race" ? "%" : ""
+                                }`;
                         },
                         font: {
                             size: 12,
@@ -486,213 +485,62 @@ const IncomeVotingScatter = ({
         return <div>Error: {error}</div>;
     }
 
-    const dropdownStyles = {
-        formControl: { minWidth: "130px" },
-        inputLabel: { fontSize: "0.8rem", top: "1px" },
-        select: {
-            fontSize: ".9rem",
-            padding: "0px 8px",
-            height: "32px",
-            lineHeight: "1.2",
-        },
-        menuItem: { fontSize: "0.85rem" },
-    };
-
-    if (selectedFilter === "income") {
-        return (
-            <>
+    return (
+        <>
+            {selectedFilter === "income" &&
                 <div className="flex items-center mb-4 space-x-4">
                     {/* Dropdown for Income Filter */}
-                    <FormControl sx={dropdownStyles.formControl} size="small">
-                        <InputLabel
-                            id="income-dropdown-label"
-                            sx={dropdownStyles.inputLabel}
-                        >
-                            Income Range
-                        </InputLabel>
-                        <Select
-                            labelId="income-dropdown-label"
-                            value={selectedIncomeLevel}
-                            onChange={(e) =>
-                                setSelectedIncomeLevel(e.target.value)
-                            }
-                            label="Income Range"
-                            sx={dropdownStyles.select}
-                        >
-                            <MenuItem value="all" sx={dropdownStyles.menuItem}>
-                                All Incomes
-                            </MenuItem>
-                            <MenuItem value="low" sx={dropdownStyles.menuItem}>
-                                Low Income (Below $50,000)
-                            </MenuItem>
-                            <MenuItem
-                                value="medium"
-                                sx={dropdownStyles.menuItem}
-                            >
-                                Medium Income ($50,000 - $100,000)
-                            </MenuItem>
-                            <MenuItem value="high" sx={dropdownStyles.menuItem}>
-                                High Income (Above $100,000)
-                            </MenuItem>
-                        </Select>
-                    </FormControl>
+                    {createCustomDropdown("Income Ranges", "gingles-dropdown-label", selectedIncomeLevel, setSelectedIncomeLevel, [
+                        { text: "All Incomes", value: "all" },
+                        { text: "Low Income (Below $50,000)", value: "low" },
+                        { text: "Medium Income ($50,000 - $100,000)", value: "medium" },
+                        { text: "High Income (Above $100,000)", value: "high" }
+                    ])}
 
                     {/* Dropdown for Region Type Filter */}
-                    <FormControl sx={dropdownStyles.formControl} size="small">
-                        <InputLabel
-                            id="region-dropdown-label"
-                            sx={dropdownStyles.inputLabel}
-                        >
-                            Region Filter
-                        </InputLabel>
-                        <Select
-                            labelId="region-dropdown-label"
-                            value={selectedRegion}
-                            onChange={(e) => setSelectedRegion(e.target.value)}
-                            label="Region Filter"
-                            sx={dropdownStyles.select}
-                        >
-                            <MenuItem value="all" sx={dropdownStyles.menuItem}>
-                                All Regions
-                            </MenuItem>
-                            <MenuItem
-                                value="rural"
-                                sx={dropdownStyles.menuItem}
-                            >
-                                Rural
-                            </MenuItem>
-                            <MenuItem
-                                value="urban"
-                                sx={dropdownStyles.menuItem}
-                            >
-                                Urban
-                            </MenuItem>
-                            <MenuItem
-                                value="suburban"
-                                sx={dropdownStyles.menuItem}
-                            >
-                                Suburban
-                            </MenuItem>
-                        </Select>
-                    </FormControl>
+                    {createCustomDropdown("Region Types", "gingles-dropdown-label", selectedRegion, setSelectedRegion, [
+                        { text: "All Regions", value: "all" },
+                        { text: "Urban", value: "urban" },
+                        { text: "Suburban", value: "suburban" },
+                        { text: "Rural", value: "rural" }
+                    ])}
                 </div>
+            }
+            {selectedFilter === "race" &&
+                <>
+                    {/* Dropdown for Race Filter */}
+                    {createCustomDropdown("Races", "gingles-dropdown-label", selectedRace, setSelectedRace, [
+                        { text: "White", value: "white" },
+                        { text: "Black", value: "black" },
+                        { text: "Asian", value: "asian" },
+                        { text: "Hispanic", value: "hispanic" },
+                        { text: "Non-Hispanic", value: "non_hispanic" }
+                    ])}
+                </>
+            }
 
-                {/* <div className="border-2 rounded-xl border-black h-full w-full"> */}
-                <div className="h-full w-full">
-                    <canvas ref={chartRef} className="w-full h-full"></canvas>
-                </div>
-            </>
-        );
-    } else if (selectedFilter === "race") {
-        return (
-            <>
-                {/* Render race dropdown if selected filter is race */}
-                {selectedFilter === "race" && (
-                    <FormControl sx={dropdownStyles.formControl} size="small">
-                        <InputLabel
-                            id="race-dropdown-label"
-                            sx={dropdownStyles.inputLabel}
-                        >
-                            Select Race
-                        </InputLabel>
-                        <Select
-                            labelId="race-dropdown-label"
-                            value={selectedRace}
-                            onChange={(e) => setSelectedRace(e.target.value)}
-                            label="Race Filter"
-                            sx={dropdownStyles.select}
-                        >
-                            <MenuItem
-                                value="white"
-                                sx={dropdownStyles.menuItem}
-                            >
-                                White
-                            </MenuItem>
-                            <MenuItem
-                                value="black"
-                                sx={dropdownStyles.menuItem}
-                            >
-                                Black
-                            </MenuItem>
-                            <MenuItem
-                                value="asian"
-                                sx={dropdownStyles.menuItem}
-                            >
-                                Asian
-                            </MenuItem>
-                            <MenuItem
-                                value="hispanic"
-                                sx={dropdownStyles.menuItem}
-                            >
-                                Hispanic
-                            </MenuItem>
-                            <MenuItem
-                                value="non_hispanic"
-                                sx={dropdownStyles.menuItem}
-                            >
-                                Non-Hispanic
-                            </MenuItem>
-                        </Select>
-                    </FormControl>
-                )}
-                {/* <div className="border-2 rounded-xl border-black h-full w-full"> */}
-                <div className="h-full w-full">
-                    <canvas ref={chartRef} className="w-full h-full"></canvas>
-                </div>
-            </>
-        );
-    } else if (selectedFilter === "income&race") {
-        return (
-            <>
-                {/* Dropdown for Race Selection */}
-                <FormControl sx={dropdownStyles.formControl} size="small">
-                    <InputLabel
-                        id="race2-dropdown-label"
-                        sx={dropdownStyles.inputLabel}
-                    >
-                        Select Race
-                    </InputLabel>
-                    <Select
-                        labelId="race2-dropdown-label"
-                        value={selectedRace2}
-                        onChange={(e) => setSelectedRace2(e.target.value)}
-                        label="Race Filter"
-                        sx={dropdownStyles.select}
-                    >
-                        <MenuItem value="white" sx={dropdownStyles.menuItem}>
-                            White
-                        </MenuItem>
-                        <MenuItem value="black" sx={dropdownStyles.menuItem}>
-                            Black
-                        </MenuItem>
-                        <MenuItem value="asian" sx={dropdownStyles.menuItem}>
-                            Asian
-                        </MenuItem>
-                        <MenuItem value="hispanic" sx={dropdownStyles.menuItem}>
-                            Hispanic
-                        </MenuItem>
-                        <MenuItem
-                            value="non_hispanic"
-                            sx={dropdownStyles.menuItem}
-                        >
-                            Non-Hispanic
-                        </MenuItem>
-                    </Select>
-                </FormControl>
+            {selectedFilter === "income&race" &&
+                <>
+                    {/* Dropdown for Race Filter */}
+                    {createCustomDropdown("Races", "gingles-dropdown-label", selectedRace2, setSelectedRace2, [
+                        { text: "White", value: "white" },
+                        { text: "Black", value: "black" },
+                        { text: "Asian", value: "asian" },
+                        { text: "Hispanic", value: "hispanic" },
+                        { text: "Non-Hispanic", value: "non_hispanic" }
+                    ])}
+                    <p className="mt-1 text-xs text-gray-700 text-center">
+                        Note: The x-axis represents the combined value of the scaled
+                        income and the percentage of the selected race.
+                    </p>
+                </>
+            }
 
-                {/* Chart Container */}
-                <div //</>className="border-2 rounded-xl border-black h-full w-full"
-                    className="h-full w-full"
-                >
-                    <canvas ref={chartRef} className="w-full h-full"></canvas>
-                </div>
-                <p className="mt-4 text-sm text-gray-700 text-center">
-                    Note: The x-axis represents the combined value of the scaled
-                    income and the percentage of the selected race.
-                </p>
-            </>
-        );
-    }
+            <div className="h-full w-full">
+                <canvas ref={chartRef} className="w-full h-full"></canvas>
+            </div>
+        </>
+    )
 };
 
 export default IncomeVotingScatter;
