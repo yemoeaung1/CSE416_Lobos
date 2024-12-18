@@ -8,6 +8,8 @@ import { Box, ButtonGroup, Button} from "@mui/material";
 export default function EcologicalInferenceTab({ selectedState }) {
   const [filter, setFilter] = useState("race");
   const [dropdownOptions, setDropdownOptions] = useState([]);
+  const [filter1, setFilter1] = useState("race");
+  const [filter2, setFilter2] = useState("income");
   const [selectedFilterOption1, setSelectedFilterOption1] = useState("");
   const [selectedFilterOption2, setSelectedFilterOption2] = useState("");
   const [graphData1, setGraphData1] = useState({republican: null, democratic: null,});
@@ -88,7 +90,7 @@ export default function EcologicalInferenceTab({ selectedState }) {
           {chartType === "line" && (
             <>
               {createCustomDropdown("First Option", "first-option", selectedFilterOption1, setSelectedFilterOption1, dropdownOptions.map((option) => ({ text: option, value: option })))}      
-              {createCustomDropdown("Second Option", "first-option", selectedFilterOption2, setSelectedFilterOption1, dropdownOptions.map((option) => ({ text: option, value: option }))
+              {createCustomDropdown("Second Option", "first-option", selectedFilterOption2, setSelectedFilterOption2, dropdownOptions.map((option) => ({ text: option, value: option }))
 )}                    
           </>
           )}
@@ -101,13 +103,13 @@ export default function EcologicalInferenceTab({ selectedState }) {
                     {graphData1.republican && (
                         <LineGraph
                             graphData={graphData1.republican}
-                            title={`Republican Support - ${selectedFilterOption1}`}
+                            title={`Republican Support for ${selectedFilterOption1}`}
                         />
                     )}
                     {graphData1.democratic && (
                         <LineGraph
                             graphData={graphData1.democratic}
-                            title={`Democratic Support - ${selectedFilterOption1}`}
+                            title={`Democratic Support for ${selectedFilterOption1}`}
                         />
                     )}
                 </div>
@@ -117,13 +119,13 @@ export default function EcologicalInferenceTab({ selectedState }) {
                     {graphData2.republican && (
                         <LineGraph
                             graphData={graphData2.republican}
-                            title={`Republican Support - ${selectedFilterOption2}`}
+                            title={`Republican Support for ${selectedFilterOption2}`}
                         />
                     )}
                     {graphData2.democratic && (
                         <LineGraph
                             graphData={graphData2.democratic}
-                            title={`Democratic Support - ${selectedFilterOption2}`}
+                            title={`Democratic Support for ${selectedFilterOption2}`}
                         />
                     )}
                 </div>
