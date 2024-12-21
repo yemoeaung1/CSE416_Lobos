@@ -44,10 +44,12 @@ public class EnsembleInfoService {
         }
         Map<String, Boxplot> districtData = boxplot.get(filter);
         List<Map.Entry<String, Boxplot>> sortedDistricts = new ArrayList<>(districtData.entrySet());
-        sortedDistricts.sort(Comparator.comparing(entry -> entry.getValue().getMedian()));
+        sortedDistricts.sort(Comparator.comparing(entry -> entry.getValue().getEnacted()));
         Map<String, Boxplot> sortedDistrictMap = new LinkedHashMap<>();
+        int index = 1; // Start index from 1
         for (Map.Entry<String, Boxplot> district : sortedDistricts) {
-            sortedDistrictMap.put(district.getKey(), district.getValue());
+            sortedDistrictMap.put(String.valueOf(index), district.getValue());
+            index++;
         }
         Map<String, Object> formattedData = formatBoxplotData(sortedDistrictMap, filter, category);
         return formattedData;
