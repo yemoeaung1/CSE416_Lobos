@@ -5,13 +5,14 @@ import { MapContainer, GeoJSON, useMap } from "react-leaflet";
 import Color from "color";
 import { HeatMapFilters, MapViewOptions, PoliColors, States } from "../enums";
 
-export default function StateMapContainer({ isLoading, setIsLoading, mapView, setMapView, selectedState, setHoveredArea, setSelectedArea, selectedArea, heatmapOpts, highlightedDistrict }) {
+export default function StateMapContainer({ isLoading, setIsLoading, mapView, setMapView, selectedState, hoveredArea, setHoveredArea, setSelectedArea, selectedArea, heatmapOpts, highlightedDistrict }) {
     return (
         <div className="wrapper" style={{ width: (selectedState !== States.NONE) ? "40%" : "100%" }}>
             <StatesMap
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
                 selectedState={selectedState}
+                hoveredArea={hoveredArea}
                 setHoveredArea={setHoveredArea}
                 setSelectedArea={setSelectedArea}
                 selectedArea={selectedArea}
@@ -28,6 +29,7 @@ function StatesMap({
     isLoading,
     setIsLoading,
     selectedState,
+    hoveredArea,
     setHoveredArea,
     selectedArea,
     setSelectedArea,
@@ -75,8 +77,13 @@ function StatesMap({
 
     const onEachFeature = (feature, layer) => {
         let originalColor;
+        let originalWeight = 1;
     
-        if (feature.properties.ACTIVE == 'R')
+        if(feature.properties.NAME === selectedArea){
+            originalColor = PoliColors.INDEPENDENT;
+            originalWeight = 5;
+        }
+        else if (feature.properties.ACTIVE == 'R')
             originalColor = PoliColors.REPUBLICAN;
         else if(feature.properties.ACTIVE == 'D')
             originalColor = PoliColors.DEMOCRATIC;
@@ -91,17 +98,21 @@ function StatesMap({
             fillColor: originalColor,
             fillOpacity: feature.properties.FOPACITY || 0.75,
             color: feature.properties.COLOR || "#000000",
-            weight: 1,
+            weight: originalWeight,
         });
     
         layer.on({
             mouseover: (e) => {
                 setHoveredArea(feature);
-                e.target.setStyle({ fillColor: darkerColor, weight: 3 });
+
+                if(feature.properties.NAME !== selectedArea)
+                    e.target.setStyle({ fillColor: darkerColor, weight: 3 });
             },
             mouseout: (e) => {
                 setHoveredArea(null);
-                e.target.setStyle({ fillColor: originalColor, weight: 1 });
+
+                if(feature.properties.NAME !== selectedArea)
+                    e.target.setStyle({ fillColor: originalColor, weight: originalWeight });
             },
             click: (e) => {
                 if (mapView != MapViewOptions.NONE || feature.properties.ACTIVE)
@@ -123,6 +134,7 @@ function StatesMap({
             >
                 <MapController
                     selectedArea={selectedArea}
+                    hoveredArea={hoveredArea}
                     mapData={mapData}
                     highlightedDistrict={highlightedDistrict}
                 />
@@ -138,11 +150,13 @@ function StatesMap({
     );
 }
 
-function MapController({ mapData, highlightedDistrict }) {
+function MapController({ selectedArea, hoveredArea, mapData, highlightedDistrict }) {
     const map = useMap();
 
     const oldHighlightedDistrict = useRef(highlightedDistrict);
-
+    const oldSelectedArea = useRef(selectedArea);
+    const oldStyles = useRef({});
+    
     useEffect(() => {
         if (!map) return;
 
@@ -156,6 +170,34 @@ function MapController({ mapData, highlightedDistrict }) {
                     color: feature.properties.COLOR || "#000000",
                     weight: 1,
                 };
+
+                const highlightedStyle = {
+                    fillColor: PoliColors.INDEPENDENT,
+                    fillOpacity: 0.75,
+                    color: "#000000",
+                    weight: 5,
+                }
+
+                if (
+                    selectedArea !== oldSelectedArea.current &&
+                    feature.properties.NAME === oldSelectedArea.current
+                ) {
+                    layer.setStyle(defaultStyle);
+                } else if (feature.properties.NAME === selectedArea) {
+                    layer.setStyle(highlightedStyle);
+                }
+            }
+        });
+
+        oldSelectedArea.current = selectedArea;
+    }, [selectedArea, hoveredArea]);
+
+    useEffect(() => {
+        if (!map) return;
+
+        map.eachLayer((layer) => {
+            if (layer && layer.feature && layer.feature.properties) {
+                const feature = layer.feature;
 
                 let highlightColor;
                 if(highlightedDistrict && highlightedDistrict.party == "Republican")
@@ -176,8 +218,9 @@ function MapController({ mapData, highlightedDistrict }) {
                     highlightedDistrict.name !== oldHighlightedDistrict.current.name &&
                     feature.properties.NAME === oldHighlightedDistrict.current.name
                 ) {
-                    layer.setStyle(defaultStyle);
+                    layer.setStyle(oldStyles.current[feature.properties.NAME]);
                 } else if (feature.properties.NAME === highlightedDistrict.name) {
+                    oldStyles.current[feature.properties.NAME] = { ...layer.options }
                     layer.setStyle(highlightedStyle);
                 }
             }

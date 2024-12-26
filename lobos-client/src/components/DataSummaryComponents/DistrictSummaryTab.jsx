@@ -75,7 +75,7 @@ function CongressionalTable({ districtInfo, setHighlightedDistrict }) {
                         <th style={{ textAlign: 'right' }}>Poverty %</th>
                         <th style={{ textAlign: 'right' }}>Urban %</th>
                         <th style={{ textAlign: 'right' }}>Suburban %</th>
-                        <th style={{ textAlign: 'right' }}>Rural %</th>
+                        <th style={{ width: '96px', textAlign: 'right' }}>Rural %</th>
                         <th style={{ textAlign: 'right' }}>Vote Margin</th>
                     </tr>
                 </thead>

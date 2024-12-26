@@ -57,6 +57,7 @@ function App() {
                 mapView={mapView}
                 setMapView={setMapView}
                 selectedState={selectedState}
+                hoveredArea={hoveredArea}
                 setHoveredArea={setHoveredArea}
                 setSelectedArea={setSelectedArea}
                 selectedArea={selectedArea}
