@@ -114,9 +114,7 @@ function EnsembleTable({ selectedState }) {
 
 
 function EnsembleSummary({ selectedState }) {
-  const [alignment, setAligment] = useState("splits")
   const [splitsGraphData, setSplitsGraphData] = useState(null);
-  const [winnersGraphData, setWinnersGraphData] = useState(null);
 
   useEffect(() => {
     if (selectedState === States.NONE)
@@ -133,55 +131,14 @@ function EnsembleSummary({ selectedState }) {
       .catch(error => {
         console.error("Error Fetching Splits Data:", error);
       });
-
-
-    axios.get(`http://localhost:8080/api/ensemble/district-win-counts`, {
-      params: {
-        state: selectedState
-      }
-    })
-      .then(response => {
-        setWinnersGraphData(response.data);
-      })
-      .catch(error => {
-        console.error("Error Fetching Winners Data:", error);
-      });
   }, [selectedState]);
 
   return (
     <>
       <EnsembleTable selectedState={selectedState} />
-      <EnsembleSummaryGraphToggle alignment={alignment} setAligment={setAligment} />
-      {alignment === "splits" && <SplitsBarGraph graphData={splitsGraphData} />}
-      {alignment === "winnerTallyCount" && <DistrictWinCountGraph graphData={winnersGraphData} />}
+      <SplitsBarGraph graphData={splitsGraphData} />
     </>
   )
-}
-
-function EnsembleSummaryGraphToggle({ alignment, setAligment }) {
-  const summaryOptions = [
-    { text: "Republican/Democratic Splits", value: "splits" },
-    { text: "Election Winners", value: "winnerTallyCount" }
-  ];
-
-  return (
-    <FormControl fullWidth>
-      <InputLabel id="ensemble-dropdown-label" sx={{ fontFamily: "Montserrat, san-serif" }}>Summary Measures</InputLabel>
-      <Select
-        labelId="ensemble-dropdown-label"
-        value={alignment}
-        onChange={(event) => setAligment(event.target.value)}
-        label="Summary Measures"
-        sx={{ fontFamily: 'Montserrat, sans-serif', }}
-      >
-        {summaryOptions.map(({ text, value }, index) => (
-          <MenuItem sx={{ fontFamily: 'Montserrat, sans-serif', }} key={index} value={value}>
-            {text}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  );
 }
 
 function EnsembleBoxAndWhiskers({ selectedState }) {
@@ -204,17 +161,17 @@ function EnsembleBoxAndWhiskers({ selectedState }) {
                   setSelectedCategory(groupedCategories[group][0]); // Update default category for the new group
                 }}
                 sx={{
-                    textTransform: 'none',
-                    padding: "4px 12px",
-                    minHeight: "32px",
-                    fontSize: "1.0rem",
-                    fontFamily: "Montserrat, san-serif",
-                    backgroundColor: (selectedGroup === group) ? "primary.main" : "grey.200",
-                    color: (selectedGroup === group) ? "grey.200" : "primary.main",
-                    transition: "all 0.3s ease-in-out",
-                    "&:hover": {
-                        backgroundColor: (selectedGroup === group) ? "primary.dark" : "grey.300",
-                    },
+                  textTransform: 'none',
+                  padding: "4px 12px",
+                  minHeight: "32px",
+                  fontSize: "1.0rem",
+                  fontFamily: "Montserrat, san-serif",
+                  backgroundColor: (selectedGroup === group) ? "primary.main" : "grey.200",
+                  color: (selectedGroup === group) ? "grey.200" : "primary.main",
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    backgroundColor: (selectedGroup === group) ? "primary.dark" : "grey.300",
+                  },
                 }}
               >
                 {fieldNamesToDisplay[group]}
@@ -246,7 +203,7 @@ function CategoryDropdown({ categories, setSelectedCategory, selectedGroup, sele
             height: '48px',
           }}
         >
-          {categories.map((category, index) => (
+          {categories.map((category) => (
             <MenuItem value={category}>{fieldNamesToDisplay[category]}</MenuItem>
           ))}
         </Select>

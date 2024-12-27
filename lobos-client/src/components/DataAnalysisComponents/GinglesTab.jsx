@@ -100,27 +100,29 @@ function GinglesDisplayOptions({ selectedState, selectedAdditionalView, setSelec
                 placement="top"
                 arrow
             >
-                <Button
-                    onClick={() => { setSelectedAdditionalView(selectedAdditionalView === "curve" ? null : "curve") }}
-                    sx={{
-                        textTransform: 'none',
-                        padding: "4px 8px",
-                        minHeight: "24px",
-                        fontSize: "1.0rem",
-                        fontFamily: "Montserrat, san-serif",
-                        textDecoration: (selectedAdditionalView === "curve") ? "underline" : "none",
-                        color: "#37474f",
-                        "&:hover": {
-                            backgroundColor: "grey.300",
-                        },
-                    }}
-                    disabled={isCurveDisabled}
-                    style={{
-                        cursor: isCurveDisabled ? "not-allowed" : "pointer",
-                    }}
-                >
-                    Seats-Votes Curve
-                </Button>
+                <span>
+                    <Button
+                        onClick={() => { setSelectedAdditionalView(selectedAdditionalView === "curve" ? null : "curve") }}
+                        sx={{
+                            textTransform: 'none',
+                            padding: "4px 8px",
+                            minHeight: "24px",
+                            fontSize: "1.0rem",
+                            fontFamily: "Montserrat, san-serif",
+                            textDecoration: (selectedAdditionalView === "curve") ? "underline" : "none",
+                            color: "#37474f",
+                            "&:hover": {
+                                backgroundColor: "grey.300",
+                            },
+                        }}
+                        disabled={isCurveDisabled}
+                        style={{
+                            cursor: isCurveDisabled ? "not-allowed" : "pointer",
+                        }}
+                    >
+                        Seats-Votes Curve
+                    </Button>
+                </span>
             </Tooltip>
             <Button
                 onClick={() => { setSelectedAdditionalView(selectedAdditionalView === "table" ? null : "table") }}
