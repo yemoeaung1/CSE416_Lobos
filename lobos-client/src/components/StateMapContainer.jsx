@@ -79,11 +79,10 @@ function StatesMap({
         let originalColor;
         let originalWeight = 1;
     
-        if(feature.properties.NAME === selectedArea){
-            originalColor = PoliColors.INDEPENDENT;
+        if(feature.properties.NAME === selectedArea)
             originalWeight = 5;
-        }
-        else if (feature.properties.ACTIVE == 'R')
+        
+        if (feature.properties.ACTIVE == 'R')
             originalColor = PoliColors.REPUBLICAN;
         else if(feature.properties.ACTIVE == 'D')
             originalColor = PoliColors.DEMOCRATIC;
@@ -92,8 +91,6 @@ function StatesMap({
         else
             originalColor = '#FFFFFF';
     
-        const darkerColor = Color(originalColor).darken(0.25).hex();
-    
         layer.setStyle({
             fillColor: originalColor,
             fillOpacity: feature.properties.FOPACITY || 0.75,
@@ -101,6 +98,8 @@ function StatesMap({
             weight: originalWeight,
         });
     
+        const darkerColor = Color(originalColor).darken(0.25).hex();
+
         layer.on({
             mouseover: (e) => {
                 setHoveredArea(feature);
@@ -164,27 +163,13 @@ function MapController({ selectedArea, hoveredArea, mapData, highlightedDistrict
             if (layer && layer.feature && layer.feature.properties) {
                 const feature = layer.feature;
 
-                const defaultStyle = {
-                    fillColor: feature.properties.FCOLOR || "#FFFFFF",
-                    fillOpacity: feature.properties.FOPACITY || 0.75,
-                    color: feature.properties.COLOR || "#000000",
-                    weight: 1,
-                };
-
-                const highlightedStyle = {
-                    fillColor: PoliColors.INDEPENDENT,
-                    fillOpacity: 0.75,
-                    color: "#000000",
-                    weight: 5,
-                }
-
                 if (
                     selectedArea !== oldSelectedArea.current &&
                     feature.properties.NAME === oldSelectedArea.current
                 ) {
-                    layer.setStyle(defaultStyle);
+                    layer.setStyle({ weight: 1 });
                 } else if (feature.properties.NAME === selectedArea) {
-                    layer.setStyle(highlightedStyle);
+                    layer.setStyle({ weight: 5 });
                 }
             }
         });
